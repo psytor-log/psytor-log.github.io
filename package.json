@@ -1,0 +1,17 @@
+{
+  "name": "what-i-think",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "new-post": "node scripts/new-post.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {}
+}

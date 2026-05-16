@@ -1,0 +1,140 @@
+{
+  "AI": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["essay"]
+  },
+  "이해": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["essay"]
+  },
+  "판단": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["essay"]
+  },
+  "일의 변화": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["essay"]
+  },
+  "생산성": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["essay"]
+  },
+  "기록": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 3,
+    "related_categories": ["essay", "books"]
+  },
+  "Astro": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 2,
+    "related_categories": ["study", "portfolio"]
+  },
+  "정적사이트": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["study"]
+  },
+  "GitHub Pages": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["study"]
+  },
+  "Markdown": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["study"]
+  },
+  "frontmatter": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["study"]
+  },
+  "콘텐츠관리": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["study"]
+  },
+  "책": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 2,
+    "related_categories": ["books"]
+  },
+  "독서노트": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 2,
+    "related_categories": ["books"]
+  },
+  "질문": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["books"]
+  },
+  "Codex": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "자동화": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 4,
+    "related_categories": ["portfolio"]
+  },
+  "개발실험": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 2,
+    "related_categories": ["portfolio"]
+  },
+  "HR": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "평가": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "TMOC": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "GA Bot": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "프로토타입": {
+    "first_used_date": "2026-05-16",
+    "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  }
+}

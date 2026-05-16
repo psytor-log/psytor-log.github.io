@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return ['essay', 'study', 'books', 'portfolio'].map((category) => ({ params: { category } }));
+}
+
+const { category } = Astro.params;
+const modules = import.meta.glob('../../../content/{essay,study,books,portfolio}/*.md', { eager: true });
+const posts = Object.entries(modules)
+  .filter(([path]) => path.includes(`/content/${category}/`))
+  .map(([path, mod]) => {
+    const slug = path.split('/').at(-1).replace(/\.md$/, '');
+    return { ...(mod.frontmatter ?? {}), slug, url: `/${category}/${slug}/` };
+  })
+  .filter((post) => !post.draft)
+  .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+
+const labels = {
+  essay: ['Essay', '개인적인 생각과 관찰을 기록합니다.'],
+  study: ['Study', '공부한 내용과 다시 볼 개념을 정리합니다.'],
+  books: ['Books', '읽은 책과 독서 노트를 남깁니다.'],
+  portfolio: ['Portfolio', '만든 것, 실험한 것, 배운 것을 기록합니다.']
+};
+
+const [label, description] = labels[category];
+---
+
+<BaseLayout title={`${label} | What I Think`} current={category}>
+  <section class="hero">
+    <p class="eyebrow">{label}</p>
+    <h1>{label}</h1>
+    <p class="lead">{description}</p>
+  </section>
+
+  <section class="post-list">
+    {posts.map((post) => (
+      <article class="post-item">
+        <time class="post-date">{post.date}</time>
+        <div>
+          <h3 class="post-title"><a href={post.url}>{post.title}</a></h3>
+          <p class="summary">{post.summary}</p>
+          <div class="tag-row">
+            {(post.tags ?? []).map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

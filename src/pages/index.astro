@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const modules = import.meta.glob('../../content/{essay,study,books,portfolio}/*.md', { eager: true });
+const posts = Object.entries(modules)
+  .map(([path, mod]) => {
+    const category = path.split('/').at(-2);
+    const slug = path.split('/').at(-1).replace(/\.md$/, '');
+    return { ...(mod.frontmatter ?? {}), category, slug, url: `/${category}/${slug}/` };
+  })
+  .filter((post) => !post.draft)
+  .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+
+const categories = [
+  ['Essay', '생각, 관찰, 일과 삶의 기록', '/essay/'],
+  ['Study', '공부한 개념과 도구 정리', '/study/'],
+  ['Books', '읽은 책과 남은 문장', '/books/'],
+  ['Portfolio', '만든 것과 실험 기록', '/portfolio/']
+];
+---
+
+<BaseLayout current="home">
+  <section class="hero">
+    <p class="eyebrow">Thinking Log</p>
+    <h1>What I Think</h1>
+    <p class="lead">생각, 공부, 독서, 프로젝트를 Markdown으로 쌓아 두는 개인 홈페이지입니다.</p>
+    <div class="category-grid">
+      {categories.map(([name, text, href]) => (
+        <a class="category-link" href={href}>
+          <strong>{name}</strong>
+          <span>{text}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <h2>Recent Posts</h2>
+  <section class="post-list">
+    {posts.slice(0, 8).map((post) => (
+      <article class="post-item">
+        <time class="post-date">{post.date}</time>
+        <div>
+          <h3 class="post-title"><a href={post.url}>{post.title}</a></h3>
+          <p class="summary">{post.summary}</p>
+          <div class="tag-row">
+            {(post.tags ?? []).map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+
+const {
+  title = 'What I Think',
+  description = 'Thinking Log by psytor-log',
+  current = ''
+} = Astro.props;
+
+const nav = [
+  ['Home', '/'],
+  ['Essay', '/essay/'],
+  ['Study', '/study/'],
+  ['Books', '/books/'],
+  ['Portfolio', '/portfolio/'],
+  ['About', '/about/']
+];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Main navigation">
+        <a class="brand" href="/">What I Think</a>
+        <div class="menu">
+          {nav.map(([label, href]) => (
+            <a href={href} class={current === label.toLowerCase() ? 'active' : ''}>{label}</a>
+          ))}
+        </div>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="footer">
+      <div class="footer-inner">What I Think. Markdown first, portable by default.</div>
+    </footer>
+  </body>
+</html>
