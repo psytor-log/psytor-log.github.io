@@ -7,11 +7,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "new-post": "node scripts/new-post.mjs"
+    "new-post": "node scripts/new-post.mjs",
+    "oauth:deploy": "wrangler deploy --config oauth-worker/wrangler.toml",
+    "oauth:secret": "wrangler secret put --config oauth-worker/wrangler.toml"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
     "astro": "^5.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "wrangler": "^4.92.0"
+  }
 }

@@ -29,11 +29,13 @@ public/images/uploads
 /images/uploads/파일명
 ```
 
-## 아직 필요한 인증 설정
+## OAuth 브리지 설정
 
 GitHub Pages는 정적 호스팅이라서 GitHub OAuth 로그인을 처리할 서버가 없습니다. 그래서 Decap CMS의 GitHub 백엔드를 실제 공개 사이트에서 쓰려면 OAuth 브리지가 하나 필요합니다.
 
-`public/admin/config.yml`의 아래 부분에 OAuth 브리지 주소를 추가해야 합니다.
+이 저장소에는 Cloudflare Worker용 OAuth 브리지 코드가 `oauth-worker`에 들어 있습니다.
+
+GitHub OAuth App과 Cloudflare Worker 배포가 끝나면 `public/admin/config.yml`의 아래 부분에 OAuth 브리지 주소를 추가합니다.
 
 ```yaml
 backend:
@@ -45,6 +47,8 @@ backend:
 ```
 
 비밀값은 저장소에 넣지 않습니다. GitHub OAuth App의 client secret 같은 값은 OAuth 브리지 서비스 쪽 환경변수에만 둡니다.
+
+자세한 배포 절차는 `oauth-worker/README.md`를 봅니다.
 
 ## 권한 원칙
 

@@ -1,0 +1,8 @@
+name = "psytor-log-decap-oauth"
+main = "src/index.js"
+compatibility_date = "2026-05-16"
+workers_dev = true
+
+[vars]
+SITE_URL = "https://psytor-log.github.io"
+GITHUB_SCOPE = "public_repo"
