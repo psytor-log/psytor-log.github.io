@@ -1,0 +1,117 @@
+backend:
+  name: github
+  repo: psytor-log/psytor-log.github.io
+  branch: main
+  # GitHub Pages has no server for OAuth by itself.
+  # After setting up an OAuth bridge, add its URL here:
+  # base_url: https://your-oauth-bridge.example.com
+  # auth_endpoint: auth
+  commit_messages:
+    create: "Create {{collection}} post: {{slug}}"
+    update: "Update {{collection}} post: {{slug}}"
+    delete: "Delete {{collection}} post: {{slug}}"
+    uploadMedia: "Upload media: {{path}}"
+    deleteMedia: "Delete media: {{path}}"
+
+local_backend: true
+
+site_url: https://psytor-log.github.io
+display_url: https://psytor-log.github.io
+locale: ko
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+slug:
+  encoding: "unicode"
+  clean_accents: false
+  sanitize_replacement: "-"
+
+collections:
+  - name: "essay"
+    label: "Essay"
+    label_singular: "Essay 글"
+    folder: "content/essay"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    preview_path: "essay/{{slug}}/"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "카테고리", name: "category", widget: "hidden", default: "essay" }
+      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
+      - { label: "본문", name: "body", widget: "markdown" }
+
+  - name: "study"
+    label: "Study"
+    label_singular: "Study 글"
+    folder: "content/study"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    preview_path: "study/{{slug}}/"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "카테고리", name: "category", widget: "hidden", default: "study" }
+      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
+      - { label: "본문", name: "body", widget: "markdown" }
+
+  - name: "books"
+    label: "Books"
+    label_singular: "Books 글"
+    folder: "content/books"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    preview_path: "books/{{slug}}/"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "카테고리", name: "category", widget: "hidden", default: "books" }
+      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
+      - { label: "본문", name: "body", widget: "markdown" }
+
+  - name: "portfolio"
+    label: "Portfolio"
+    label_singular: "Portfolio 글"
+    folder: "content/portfolio"
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    preview_path: "portfolio/{{slug}}/"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "카테고리", name: "category", widget: "hidden", default: "portfolio" }
+      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
+      - { label: "본문", name: "body", widget: "markdown" }
