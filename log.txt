@@ -18,6 +18,24 @@
 - 실패한 작업과 실패 사유: 없음
 - 다음 개선 포인트: 실제 초안 처리 후 카테고리 및 태그 품질을 보고 키워드 규칙 보완
 
+## 2026-05-16T19:15:00.000+09:00
+- 실행한 작업: README.md의 GitHub 업로드 절차 진행
+- 처리한 초안 파일명: 없음
+- 생성된 Markdown 파일명: 없음
+- 선택된 카테고리: 해당 없음
+- 카테고리 판단 근거: 해당 없음
+- 생성된 제목: 해당 없음
+- 생성된 summary: 해당 없음
+- 생성된 tags: 없음
+- 신규 생성된 tags: 없음
+- 기존 tags 재사용 여부: 해당 없음
+- 연결한 이미지 파일: 없음
+- 이미지 선택 근거: 해당 없음
+- 적용한 기본값: 없음
+- 검토 필요사항: GitHub 원격 저장소 `psytor-log/psytor-log.github.io` 존재 여부와 접근 권한 확인 필요
+- 실패한 작업과 실패 사유: `git push -u origin main` 실패. GitHub 응답은 `Repository not found`.
+- 다음 개선 포인트: GitHub에서 `psytor-log.github.io` 저장소를 생성하거나 인증 권한을 확인한 뒤 `git push -u origin main` 재실행
+
 ## 2026-05-16T09:18:19.913Z
 - 실행한 작업: npm run new-post
 - 처리 결과: inbox/posts에 새 초안 파일 없음
