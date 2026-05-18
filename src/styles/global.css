@@ -218,6 +218,49 @@ h3 {
   border-radius: 8px;
 }
 
+.article-content .cms-image {
+  --image-width: 100%;
+  margin: 32px 0;
+}
+
+.article-content .cms-image img {
+  display: block;
+  width: min(100%, var(--image-width));
+  height: auto;
+  border-radius: 8px;
+}
+
+.article-content .cms-image--left img {
+  margin-right: auto;
+}
+
+.article-content .cms-image--center img {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.article-content .cms-image--right img {
+  margin-left: auto;
+}
+
+.article-content .cms-image figcaption {
+  width: min(100%, var(--image-width));
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.article-content .cms-image--center figcaption {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.article-content .cms-image--right figcaption {
+  margin-left: auto;
+  text-align: right;
+}
+
 .article-content code {
   padding: 0.15em 0.3em;
   border-radius: 4px;

@@ -10,6 +10,82 @@
     <title>What I Think Editor</title>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script is:inline>
+      const escapeAttribute = (value = '') =>
+        String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+
+      const escapeText = (value = '') =>
+        String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+
+      CMS.registerEditorComponent({
+        id: 'sized-image',
+        label: 'Image',
+        fields: [
+          { name: 'src', label: 'Image file', widget: 'image' },
+          { name: 'alt', label: 'Alt text', widget: 'string', required: false },
+          { name: 'caption', label: 'Caption', widget: 'string', required: false },
+          {
+            name: 'width',
+            label: 'Width',
+            widget: 'select',
+            default: '100',
+            options: [
+              { label: 'Small 40%', value: '40' },
+              { label: 'Medium 60%', value: '60' },
+              { label: 'Large 80%', value: '80' },
+              { label: 'Full 100%', value: '100' }
+            ]
+          },
+          {
+            name: 'align',
+            label: 'Alignment',
+            widget: 'select',
+            default: 'center',
+            options: [
+              { label: 'Left', value: 'left' },
+              { label: 'Center', value: 'center' },
+              { label: 'Right', value: 'right' }
+            ]
+          }
+        ],
+        pattern:
+          /^<figure class="cms-image cms-image--(left|center|right)" style="--image-width: ([0-9]+)%;">\n  <img src="([^"]*)" alt="([^"]*)" \/>(?:\n  <figcaption>([\s\S]*?)<\/figcaption>)?\n<\/figure>$/,
+        fromBlock(match) {
+          return {
+            align: match[1],
+            width: match[2],
+            src: match[3],
+            alt: match[4],
+            caption: match[5] || ''
+          };
+        },
+        toBlock(data) {
+          const align = ['left', 'center', 'right'].includes(data.align) ? data.align : 'center';
+          const width = ['40', '60', '80', '100'].includes(data.width) ? data.width : '100';
+          const caption = data.caption
+            ? `\n  <figcaption>${escapeText(data.caption)}</figcaption>`
+            : '';
+
+          return `<figure class="cms-image cms-image--${align}" style="--image-width: ${width}%;">\n  <img src="${escapeAttribute(data.src)}" alt="${escapeAttribute(data.alt)}" />${caption}\n</figure>`;
+        },
+        toPreview(data) {
+          const align = ['left', 'center', 'right'].includes(data.align) ? data.align : 'center';
+          const width = ['40', '60', '80', '100'].includes(data.width) ? data.width : '100';
+          const caption = data.caption
+            ? `<figcaption>${escapeText(data.caption)}</figcaption>`
+            : '';
+
+          return `<figure class="cms-image cms-image--${align}" style="--image-width: ${width}%;">\n  <img src="${escapeAttribute(data.src)}" alt="${escapeAttribute(data.alt)}" />${caption}\n</figure>`;
+        }
+      });
+    </script>
   </body>
 </html>
