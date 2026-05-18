@@ -276,3 +276,37 @@
   - /admin/ 에서 essay 작성 시 + 메뉴에 Image 가 1개만 보이는지 확인.
   - /admin/ Pages 컬렉션에서 "사이트 공통 텍스트", "홈 페이지" 항목이 노출되고 편집·저장 가능한지 확인.
 - work.lock: 삭제.
+
+## 2026-05-19T01:50:00+09:00 - [장애] 라이브 사이트 디자인 사라짐 → 복구
+- 사용한 도구: claude-code
+- 사용자 보고: "홈페이지 디자인이 다 사라졌어"
+- 라이브 진단:
+  - curl https://psytor-log.github.io/ → <meta name="generator" content="Jekyll v3.10.0">, <title>What I Think | psytor</title>, body 가 README.md 를 Jekyll 이 자동 렌더한 결과 (제목/링크/문단만 노출).
+- 근본 원인:
+  - gh api repos/.../pages → build_type: "legacy", source: { branch: "main", path: "/" }.
+    즉 Pages 가 "Deploy from a branch (Jekyll auto-build)" 로 잡혀 있고, 우리가 추가한 Astro Action 의 actions/deploy-pages@v4 결과물은 처음부터 라이브 서빙에 쓰인 적이 없음.
+  - 과거에 사이트가 정상으로 보였던 이유: pages-build-deployment (Jekyll) 가 매번 failure 였기 때문에 마지막 성공한 artifact (= 직전 Astro deploy 의 결과물) 가 fallback 으로 서빙되어 왔던 것으로 추정.
+  - 트리거: 우리가 이번 작업으로 content/pages/site.md, home.md 를 추가하면서 Jekyll 입장에서는 정상 빌드 가능한 frontmatter 가 생김. Jekyll 자동 빌드가 처음으로 success → README.md 를 홈으로 출력한 결과가 라이브를 덮어씀.
+- gh run list 패턴 확인:
+  - 14:45 push: pages-build-deployment FAILURE / Deploy to GitHub Pages SUCCESS → Astro fallback 서빙.
+  - 16:01 push: pages-build-deployment FAILURE / Deploy to GitHub Pages SUCCESS → 동일.
+  - 16:18 push (이번 작업, site.md/home.md 추가): pages-build-deployment SUCCESS / Deploy to GitHub Pages SUCCESS → Jekyll 이 winning.
+  - 16:20 (Decap CMS 가 사용자 about 편집 commit "Update Pages post: about"): 동일 패턴, Jekyll 출력 유지.
+- 해결:
+  1) gh api -X PUT repos/.../pages -f build_type=workflow → build_type 이 legacy → workflow 로 전환됨 (verify 호출에서 확인).
+  2) git pull --rebase origin main → 사용자 about 편집 commit (4318c96) 로컬 sync.
+  3) gh workflow run "Deploy to GitHub Pages" --ref main → workflow_dispatch 로 강제 재실행 (run 26046307642).
+  4) gh run watch 26046307642 → ✓ build, ✓ deploy 정상.
+  5) curl https://psytor-log.github.io/ → <html lang="ko">, .featured-card / .cat-badge / .footer-meta 등 Astro 마크업 정상 노출, Jekyll generator meta 사라짐 확인.
+- 추가 안전조치:
+  - 저장소 루트에 빈 .nojekyll 파일 추가 → 향후 누군가 실수로 Pages 소스를 legacy 로 되돌려도 Jekyll 의 자동 처리가 비활성화되어 같은 사고 방지.
+- 사용자가 알아야 할 점:
+  - build_type 은 Pages REST API 또는 Settings → Pages → Build and deployment Source 드롭다운으로 언제든 되돌릴 수 있음. 일반적으로 GitHub Actions 로 두는 것이 정답.
+  - Decap CMS 의 직접 commit (Update Pages post: ...) 은 이번 워크플로우 트리거가 됐고 Jekyll/Astro 둘 다 재실행되므로 build_type=workflow 인 한 안전.
+- 처리 실패와 복구:
+  - 첫 시도 gh api POST → 409 "GitHub Pages is already enabled" (POST 는 create 전용). PUT 으로 즉시 정정.
+- 수정한 파일: 없음 (라이브 인프라 설정 변경만).
+- 신규 파일: .nojekyll (저장소 루트, 빈 파일).
+- 다음 액션:
+  - 사용자 시각 확인 후 마무리.
+  - 본 인시던트 회고는 README 운영 가이드에는 별도 반영 필요 없음 (Pages settings 가 정상이라는 전제만 유지하면 충분).
