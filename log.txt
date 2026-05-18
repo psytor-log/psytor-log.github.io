@@ -310,3 +310,28 @@
 - 다음 액션:
   - 사용자 시각 확인 후 마무리.
   - 본 인시던트 회고는 README 운영 가이드에는 별도 반영 필요 없음 (Pages settings 가 정상이라는 전제만 유지하면 충분).
+
+## 2026-05-19T02:00:00+09:00 - [장애] 에디터 config 로드 실패 → 핫픽스
+- 사용한 도구: claude-code
+- 사용자 보고: "에디터는 아직 정상이 아니야"
+- 사용자 제공 에러 메시지:
+  Error loading the CMS configuration
+  'collections[*].files[*].fields[*].buttons[10]' must be equal to one of the allowed values
+  '...fields[*]' should match case "color" schema
+- 진단:
+  - 우리가 admin/config.yml 에 넣은 buttons 배열 11개 중 마지막 'code-block' 이 Decap CMS 허용 목록에 없음. Decap CMS 의 markdown 위젯 buttons 허용값은 bold, italic, code, link, quote, bulleted-list, numbered-list, heading-one~heading-six.
+  - 'code-block' 은 + 메뉴 (editor_components) 영역의 개념이며 toolbar button 으로는 지원되지 않음.
+  - 두 번째 줄의 '...should match case "color" schema' 는 JSON Schema 의 oneOf 매칭 실패 후 다른 widget 스키마와 비교하면서 발생하는 follow-up 에러로, 본질적 원인은 buttons[10] invalid.
+  - 결과적으로 admin/config.yml 전체 로드가 거부 → Decap CMS UI 가 컬렉션 트리 전체를 띄우지 못함 → 사용자가 "에디터 정상 아님" 으로 인지.
+- 해결:
+  - public/admin/config.yml 의 5개 본문(field 이름 'body') buttons 배열에서 'code-block' 한 항목 삭제 (replace_all 로 일괄).
+  - node + js-yaml 로 파싱 + Decap 허용 목록과 사전 검증 → All buttons valid.
+  - npm run build → 16 페이지 성공.
+- 자동 판단:
+  - 'code-block' 의도 (펜스 코드 블록 ```...``` 입력 도우미) 는 default 키보드 입력 + 마크다운 자동 인식으로 동일하게 가능하므로 기능 손실 없음.
+- 수정한 파일:
+  - public/admin/config.yml (5개 본문 필드)
+  - log.txt
+- 학습/개선:
+  - Decap CMS 의 markdown widget buttons 는 공식 허용 목록 13개로 한정. 임의 값 추가 시 config 전체 로드가 거부되므로, 사전에 허용 목록을 코드에서 검증하는 헬퍼 스크립트 (node + 화이트리스트 비교) 를 디자인 단계에서 돌리는 게 좋다. 이번 사고로 노하우 확보.
+- work.lock: 삭제.
