@@ -52,7 +52,7 @@ collections:
     preview_path: "essay/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
       - { label: "카테고리", name: "category", widget: "hidden", default: "essay" }
       - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false }
@@ -74,7 +74,7 @@ collections:
     preview_path: "study/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
       - { label: "카테고리", name: "category", widget: "hidden", default: "study" }
       - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false }
@@ -96,7 +96,7 @@ collections:
     preview_path: "books/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
       - { label: "카테고리", name: "category", widget: "hidden", default: "books" }
       - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false }
@@ -118,7 +118,7 @@ collections:
     preview_path: "portfolio/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
       - { label: "카테고리", name: "category", widget: "hidden", default: "portfolio" }
       - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false }

@@ -128,9 +128,29 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
+.post-item.has-thumbnail {
+  grid-template-columns: 150px 132px 1fr;
+}
+
 .post-date {
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.post-thumb {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.post-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .post-title {
@@ -308,6 +328,14 @@ h3 {
   .post-item {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .post-item.has-thumbnail {
+    grid-template-columns: 96px 1fr;
+  }
+
+  .post-item.has-thumbnail .post-date {
+    grid-column: 1 / -1;
   }
 
   .category-grid {

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatKoreanDateTime, getMachineDateTime } from '../../utils/posts.js';
 
 export function getStaticPaths() {
   const modules = import.meta.glob('../../../content/{essay,study,books,portfolio}/*.md', { eager: true });
@@ -15,12 +16,14 @@ export function getStaticPaths() {
 
 const { post, frontmatter, category } = Astro.props;
 const Content = post.Content;
+const displayDate = formatKoreanDateTime(frontmatter.date);
+const machineDate = getMachineDateTime(frontmatter.date);
 ---
 
 <BaseLayout title={`${frontmatter.title} | What I Think`} description={frontmatter.summary} current={category}>
   <article class="article">
     <header class="article-header">
-      <p class="article-meta">{frontmatter.date} · {category}</p>
+      <p class="article-meta"><time datetime={machineDate}>{displayDate}</time> / {category}</p>
       <h1>{frontmatter.title}</h1>
       <p class="lead">{frontmatter.summary}</p>
       <div class="tag-row">

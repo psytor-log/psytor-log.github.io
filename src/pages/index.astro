@@ -1,15 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatKoreanDateTime, getMachineDateTime, getPostDateValue, getPostThumbnail } from '../utils/posts.js';
 
 const modules = import.meta.glob('../../content/{essay,study,books,portfolio}/*.md', { eager: true });
+const rawModules = import.meta.glob('../../content/{essay,study,books,portfolio}/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default'
+});
 const posts = Object.entries(modules)
   .map(([path, mod]) => {
     const category = path.split('/').at(-2);
     const slug = path.split('/').at(-1).replace(/\.md$/, '');
-    return { ...(mod.frontmatter ?? {}), category, slug, url: `/${category}/${slug}/` };
+    const frontmatter = mod.frontmatter ?? {};
+    return {
+      ...frontmatter,
+      category,
+      slug,
+      url: `/${category}/${slug}/`,
+      displayDate: formatKoreanDateTime(frontmatter.date),
+      machineDate: getMachineDateTime(frontmatter.date),
+      thumbnail: getPostThumbnail(frontmatter, rawModules[path] ?? '')
+    };
   })
   .filter((post) => !post.draft)
-  .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+  .sort((a, b) => getPostDateValue(b.date) - getPostDateValue(a.date));
 
 const categories = [
   ['Essay', '생각, 관찰, 일과 삶의 기록', '/essay/'],
@@ -37,9 +52,14 @@ const categories = [
   <h2>Recent Posts</h2>
   <section class="post-list">
     {posts.slice(0, 8).map((post) => (
-      <article class="post-item">
-        <time class="post-date">{post.date}</time>
-        <div>
+      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`}>
+        <time class="post-date" datetime={post.machineDate}>{post.displayDate}</time>
+        {post.thumbnail && (
+          <a class="post-thumb" href={post.url} aria-label={`${post.title} thumbnail`}>
+            <img src={post.thumbnail} alt="" loading="lazy" />
+          </a>
+        )}
+        <div class="post-body">
           <h3 class="post-title"><a href={post.url}>{post.title}</a></h3>
           <p class="summary">{post.summary}</p>
           <div class="tag-row">
