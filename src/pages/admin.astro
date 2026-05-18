@@ -13,6 +13,11 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap"
     />
+    <link
+      href="/admin/config.yml?v=20260519-0145"
+      type="text/yaml"
+      rel="cms-config-url"
+    />
     <title>What I Think Editor</title>
     <style is:global>
       :root {
@@ -69,7 +74,7 @@
     </style>
   </head>
   <body>
-    <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script is:inline src="https://unpkg.com/decap-cms@3.0.0/dist/decap-cms.js"></script>
     <script is:inline>
       const escapeAttribute = (value = '') =>
         String(value)

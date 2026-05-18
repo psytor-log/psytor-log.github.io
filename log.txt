@@ -335,3 +335,108 @@
 - 학습/개선:
   - Decap CMS 의 markdown widget buttons 는 공식 허용 목록 13개로 한정. 임의 값 추가 시 config 전체 로드가 거부되므로, 사전에 허용 목록을 코드에서 검증하는 헬퍼 스크립트 (node + 화이트리스트 비교) 를 디자인 단계에서 돌리는 게 좋다. 이번 사고로 노하우 확보.
 - work.lock: 삭제.
+
+## 2026-05-19T02:10:00+09:00 - [HANDOFF → codex] /admin/ Decap CMS config 로드 실패 미해결
+- 사용한 도구: claude-code
+- 사용자 지시: "codex 에게 맡길 거니까 작업은 하지말고 작업 로그만 남겨놔."
+- claude-code 는 본 시점부터 이 이슈에 대해 코드 수정 / 배포 작업을 진행하지 않음. work.lock 도 생성하지 않음. codex 는 충돌 우려 없이 작업 가능.
+
+### 사용자가 여전히 보고 있는 화면
+URL: https://psytor-log.github.io/admin/#/
+
+```
+Error loading the CMS configuration
+Config Errors:
+'collections[0].files[2].fields[3].buttons[10]' must be equal to one of the allowed values
+'collections[0].files[2].fields[3]' should match case "color" schema
+'collections[1].fields[9].buttons[10]' must be equal to one of the allowed values
+'collections[1].fields[9]' should match case "color" schema
+'collections[2].fields[9].buttons[10]' must be equal to one of the allowed values
+'collections[2].fields[9]' should match case "color" schema
+'collections[3].fields[9].buttons[10]' must be equal to one of the allowed values
+'collections[3].fields[9]' should match case "color" schema
+'collections[4].fields[9].buttons[10]' must be equal to one of the allowed values
+'collections[4].fields[9]' should match case "color" schema
+Check your config.yml file.
+```
+
+### 서버측 상태 (claude-code 가 직접 확인한 사실)
+- 최신 commit: `56213d0` "Hotfix: remove invalid 'code-block' from Decap markdown buttons"
+- 최신 deploy run: `26046713181` (Deploy to GitHub Pages, status: completed/success, 43s)
+- Live config.yml fetch (2026-05-19T02:08 KST):
+  - `Last-Modified: Mon, 18 May 2026 16:35:55 GMT`
+  - `Content-Length: 12077`
+  - `grep "code-block"` → **0건** (이미 제거됨)
+  - 5개 본문 필드의 buttons 배열 모두 10개 항목: `["bold","italic","link","heading-one","heading-two","heading-three","quote","bulleted-list","numbered-list","code"]`
+- 즉 서버 파일에는 `buttons[10]` 인덱스 자체가 존재할 수 없음. 그럼에도 사용자가 받는 에러 메시지는 `buttons[10]` 을 명시 — 사용자 브라우저가 보는 config 와 서버 config 가 다른 상태로 보임.
+
+### 시도한 처치 (사용자에게 안내, 효과 없음으로 추정)
+1. Ctrl+Shift+R / Cmd+Shift+R 강제 새로고침 안내.
+2. DevTools → Network → Disable cache 안내.
+3. DevTools → Application → Clear site data 안내.
+
+### codex 가 우선 점검해 볼 가설
+1. **브라우저/CDN 캐시 미해소**
+   - GitHub Pages 의 Fastly edge 가 사용자 지역에서 갱신 지연. claude-code 가 본 endpoint 와 사용자 endpoint 가 다른 edge 일 수 있음.
+   - 사용자에게 모바일/시크릿창/다른 브라우저에서 같은 URL 접속 확인 요청.
+   - 또는 `https://psytor-log.github.io/admin/config.yml?nocache=$(date +%s)` 같이 쿼리스트링 붙여 직접 본문 확인 요청.
+2. **Service Worker 잔존**
+   - 과거 다른 도구가 admin 경로에 SW 를 등록했을 가능성.
+   - DevTools → Application → Service Workers 에서 unregister.
+3. **Decap CMS 가 다른 config 를 fetch**
+   - Decap 3.x 가 `/config.yml` (루트) 또는 다른 경로를 fallback 으로 시도하지 않는지 확인.
+   - admin/index.html 에 `<link rel="cms-config-url" ...>` 같은 명시 설정이 있는지 점검 (현재는 없음).
+4. **에러 자체가 cached UI 의 출력**
+   - Decap CMS 가 첫 로드 시 config 파싱 실패 결과를 localStorage 에 저장할 가능성.
+   - 사용자 localStorage 의 `netlify-cms-*` / `decap-cms-*` 키 삭제 시도.
+5. **버튼 화이트리스트 추가 점검**
+   - Decap 공식 buttons 13개: bold, italic, code, link, quote, bulleted-list, numbered-list, heading-one~heading-six.
+   - 현재 config 는 이 안에 있으나, 만약 Decap 의 특정 버전에서 `heading-three` 등이 사라졌으면 또 reject 될 수 있음. 사용자 unpkg 로딩 버전 (`@^3.0.0`) 의 정확한 minor 버전과 schema 확인.
+6. **두 번째 에러 줄 `should match case "color" schema` 의 본의**
+   - JSON Schema oneOf/anyOf 매칭 follow-up 에러로 추정 (buttons 문제와 짝). 그러나 만약 `editor_components` 키 자체가 markdown 위젯 스키마에 없는 키라면 별도 원인 가능성. Decap source 의 `markdownControl` schema 확인 후 `editor_components` vs `editorComponents` (camelCase) 표기 차이 검토.
+
+### 참고 파일과 좌표
+- 본 config: `public/admin/config.yml` (이 commit `56213d0` 기준 안전)
+- 본문 필드 정의 라인: 93, 115, 137, 159, 181 (5건, 모두 buttons 10개 + editor_components ["sized-image"])
+- Pages 빌드 type: `workflow` (이전 인시던트에서 legacy → workflow 로 전환됨, 정상)
+- `.nojekyll`: 저장소 루트에 빈 파일 존재 (이중 보호)
+- 카운터 Worker: `oauth-worker/src/index.js` /hit /count 동작 중, 무관
+
+### 인계 시점 코드/배포 일관성
+- 로컬 `main` HEAD = 원격 `main` HEAD = `56213d0`.
+- 본 핸드오프 commit 은 log.txt 에 본 섹션 추가 후 push 예정 (코드 변경 없음).
+- 이후 codex 가 작업 시작할 때 본 log 섹션을 starting point 로 사용 가능.
+
+### codex 작업 시 권장 절차
+1. work.lock 생성 (locked_by="codex").
+2. /admin/ 을 직접 다른 브라우저/네트워크에서 열어 동일 에러가 재현되는지 우선 확인. 재현 안 되면 사용자측 캐시 단독 문제로 종결 가능.
+3. 재현되면 위 가설 2 (SW) → 4 (localStorage) → 5 (Decap 버전 호환) 순으로 점검.
+4. 수정 후 본 log.txt 에 결과 기록 + work.lock 삭제.
+
+## 2026-05-19T01:41:57+09:00 - [codex] Decap CMS editor load stabilization
+- Tool: codex
+- User request: restore the editor after Claude Code homepage UI work; proceed without asking.
+- Confirmation: skipped because the user explicitly requested unconditional yes/auto-progress.
+- work.lock: created by codex; no previous lock existed.
+- Claude Code log reviewed:
+  - `code-block` had already been removed from `public/admin/config.yml`.
+  - The reported live error still referenced `buttons[10]`, even though the deployed config no longer had an 11th button.
+- Judgment:
+  - Local `npm run build` succeeded, so the admin page builds.
+  - `public/admin/config.yml` markdown buttons match Decap's allowed button names.
+  - The admin page loaded `decap-cms@^3.0.0`, leaving the runtime version floating.
+  - Decap config discovery used the default path, so a stale browser/CDN copy of `/admin/config.yml` could still be loaded.
+- Modified files:
+  - `src/pages/admin.astro`
+  - `log.txt`
+- Changes:
+  - Added explicit Decap config link: `/admin/config.yml?v=20260519-0145`.
+  - Pinned Decap CMS script from `decap-cms@^3.0.0` to `decap-cms@3.0.0`.
+- Verification:
+  - Parsed `public/admin/config.yml` with `node` + local `js-yaml`; all markdown buttons valid.
+  - `npm run build` passed; 16 pages built.
+  - Local dev `/admin/` returned HTTP 200.
+  - Local admin HTML contains `cms-config-url`, `config.yml?v=20260519-0145`, and `decap-cms@3.0.0`.
+  - Local `/admin/config.yml?v=20260519-0145` returned HTTP 200; `code-block` count 0; `buttons:` count 5.
+- Remaining action:
+  - Commit, push, wait for GitHub Pages deploy, then verify live `/admin/`.
