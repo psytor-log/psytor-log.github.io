@@ -12,7 +12,6 @@ draft: false
 source_file: sample
 created_by: codex
 ---
-
 이 글은 샘플 콘텐츠입니다. 실제 운영을 시작할 때 삭제하거나 수정하면 됩니다.
 
 일의 속도는 계속 빨라진다. 문서 작성, 자료 정리, 코드 수정처럼 오래 걸리던 일이 점점 짧아진다. 하지만 속도가 빨라진다고 일이 자동으로 좋아지는 것은 아니다.
@@ -24,3 +23,9 @@ created_by: codex
 ## 다음 질문
 
 나는 빠르게 처리한 일 중 무엇을 다시 꺼내 볼 수 있게 만들고 있는가.
+
+![]()
+
+<figure class="cms-image cms-image--center" style="--image-width: 40%;">
+  <img src="" alt="" />
+</figure>
