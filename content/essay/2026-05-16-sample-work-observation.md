@@ -1,13 +1,16 @@
 ---
 title: "샘플: 일의 속도가 빨라질 때 남는 것"
 date: 2026-05-16
-category: "essay"
-tags: ["일의 변화", "생산성", "기록"]
-summary: "도구가 일의 속도를 높일수록 기록과 판단 기준이 더 중요해진다는 관찰을 담은 샘플 글입니다."
-cover: ""
+category: essay
+tags:
+  - 일의 변화
+  - 생산성
+  - 기록
+summary: 도구가 일의 속도를 높일수록 기록과 판단 기준이 더 중요해진다는 관찰을 담은 샘플 글입니다.
+cover: /images/uploads/gemini_generated_image_avf5f0avf5f0avf5.png
 draft: false
-source_file: "sample"
-created_by: "codex"
+source_file: sample
+created_by: codex
 ---
 
 이 글은 샘플 콘텐츠입니다. 실제 운영을 시작할 때 삭제하거나 수정하면 됩니다.
