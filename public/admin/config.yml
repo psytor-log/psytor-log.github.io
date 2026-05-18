@@ -26,6 +26,20 @@ slug:
   sanitize_replacement: "-"
 
 collections:
+  - name: "pages"
+    label: "Pages"
+    files:
+      - name: "about"
+        label: "About"
+        file: "content/pages/about.md"
+        format: "frontmatter"
+        preview_path: "about/"
+        fields:
+          - { label: "제목", name: "title", widget: "string" }
+          - { label: "요약", name: "summary", widget: "text" }
+          - { label: "상단 라벨", name: "eyebrow", widget: "string", default: "About" }
+          - { label: "본문", name: "body", widget: "markdown" }
+
   - name: "essay"
     label: "Essay"
     label_singular: "Essay 글"
