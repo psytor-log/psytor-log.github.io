@@ -440,3 +440,11 @@ Check your config.yml file.
   - Local `/admin/config.yml?v=20260519-0145` returned HTTP 200; `code-block` count 0; `buttons:` count 5.
 - Remaining action:
   - Commit, push, wait for GitHub Pages deploy, then verify live `/admin/`.
+- Final deployment verification:
+  - Commit `fff551c` pushed to `origin/main`.
+  - GitHub Actions run `26047337853` completed successfully.
+  - Live `https://psytor-log.github.io/admin/?codex=202605190148` returned HTTP 200.
+  - Live admin HTML contains `cms-config-url`, `config.yml?v=20260519-0145`, and `decap-cms@3.0.0`.
+  - Live `https://psytor-log.github.io/admin/config.yml?v=20260519-0145` returned HTTP 200; `code-block` count 0; `buttons:` count 5.
+  - Local dev server process started for verification was no longer needed and should be stopped before handoff.
+- work.lock: remove after this final log update.
