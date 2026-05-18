@@ -2,10 +2,8 @@ backend:
   name: github
   repo: psytor-log/psytor-log.github.io
   branch: main
-  # GitHub Pages has no server for OAuth by itself. Deploy oauth-worker first,
-  # then set base_url to the Worker URL, for example:
-  # base_url: https://psytor-log-decap-oauth.<your-cloudflare-subdomain>.workers.dev
-  # auth_endpoint: auth
+  base_url: https://psytor-log-decap-oauth.dejangbu.workers.dev
+  auth_endpoint: auth
   commit_messages:
     create: "Create {{collection}} post: {{slug}}"
     update: "Update {{collection}} post: {{slug}}"
