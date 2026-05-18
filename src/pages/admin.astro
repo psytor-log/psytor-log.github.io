@@ -256,6 +256,185 @@
           }
         })
       );
+
+      /* ===== Site (global text) preview ===== */
+      CMS.registerPreviewTemplate(
+        'site',
+        createClass({
+          render: function () {
+            const data = this.props.entry.get('data');
+            const brand = data.get('brand') || 'What I Think';
+            const menu = data.get('menu');
+            const footer = data.get('footer');
+            const menuItems = menu
+              ? ['home', 'essay', 'study', 'books', 'portfolio', 'about'].map(function (k) {
+                  return { key: k, label: menu.get(k) || k };
+                })
+              : [];
+            return h(
+              'article',
+              { className: 'wit-preview' },
+              h('p', { className: 'eyebrow' }, 'SITE · NAV PREVIEW'),
+              h('h1', null, brand),
+              h(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    gap: '14px',
+                    flexWrap: 'wrap',
+                    padding: '14px 0',
+                    borderTop: '1px solid #dedbd3',
+                    borderBottom: '1px solid #dedbd3',
+                    margin: '18px 0'
+                  }
+                },
+                menuItems.map(function (m, i) {
+                  return h(
+                    'span',
+                    {
+                      key: 'm-' + i,
+                      style: { color: '#6b6b6b', fontWeight: 600 }
+                    },
+                    m.label
+                  );
+                })
+              ),
+              footer
+                ? h(
+                    'div',
+                    {
+                      style: {
+                        padding: '18px',
+                        background: '#ffffff',
+                        border: '1px solid #dedbd3',
+                        borderRadius: '8px'
+                      }
+                    },
+                    h(
+                      'p',
+                      { style: { margin: 0, fontWeight: 700 } },
+                      footer.get('brand') || brand
+                    ),
+                    h(
+                      'p',
+                      { style: { margin: '4px 0 14px', color: '#6b6b6b', fontSize: '0.86rem' } },
+                      footer.get('tagline') || ''
+                    ),
+                    h(
+                      'div',
+                      { style: { display: 'flex', gap: '14px', alignItems: 'center', fontSize: '0.82rem', color: '#6b6b6b' } },
+                      h('span', null, footer.get('admin_label') || '/admin/'),
+                      h('span', null, (footer.get('today_label') || 'Today') + ': 0'),
+                      h('span', null, (footer.get('total_label') || 'Total') + ': 0')
+                    )
+                  )
+                : null
+            );
+          }
+        })
+      );
+
+      /* ===== Home page preview ===== */
+      CMS.registerPreviewTemplate(
+        'home',
+        createClass({
+          render: function () {
+            const data = this.props.entry.get('data');
+            const eyebrow = data.get('hero_eyebrow') || 'Thinking Log';
+            const title = data.get('hero_title') || 'What I Think';
+            const lead = data.get('hero_lead') || '';
+            const categoriesList = data.get('categories');
+            const categories =
+              categoriesList && categoriesList.toJS ? categoriesList.toJS() : [];
+            return h(
+              'article',
+              { className: 'wit-preview' },
+              h('p', { className: 'eyebrow' }, eyebrow),
+              h('h1', null, title),
+              lead ? h('p', { className: 'lead' }, lead) : null,
+              categories.length
+                ? h(
+                    'div',
+                    {
+                      style: {
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                        gap: '12px',
+                        marginTop: '20px'
+                      }
+                    },
+                    categories.map(function (c, i) {
+                      const colorMap = {
+                        essay: '#245c4f',
+                        study: '#b3633c',
+                        books: '#7c6a3a',
+                        portfolio: '#3a5a78'
+                      };
+                      const stripe = colorMap[c.key] || '#245c4f';
+                      return h(
+                        'div',
+                        {
+                          key: 'c-' + i,
+                          style: {
+                            position: 'relative',
+                            padding: '16px 16px 16px 22px',
+                            border: '1px solid #dedbd3',
+                            borderRadius: '8px',
+                            background: '#ffffff'
+                          }
+                        },
+                        h('span', {
+                          style: {
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: '4px',
+                            background: stripe
+                          }
+                        }),
+                        h(
+                          'strong',
+                          { style: { display: 'block', marginBottom: '4px' } },
+                          c.name
+                        ),
+                        h(
+                          'span',
+                          { style: { color: '#6b6b6b', fontSize: '0.88rem' } },
+                          c.description
+                        )
+                      );
+                    })
+                  )
+                : h('p', { className: 'empty' }, '(카테고리 박스 없음)'),
+              h(
+                'div',
+                {
+                  style: {
+                    marginTop: '28px',
+                    padding: '14px',
+                    border: '1px dashed #dedbd3',
+                    borderRadius: '8px',
+                    color: '#6b6b6b',
+                    fontSize: '0.86rem'
+                  }
+                },
+                'Featured/Recent 카드의 실제 데이터는 글 콘텐츠에서 채워집니다. 여기서는 라벨만 미리보기 합니다: ',
+                h(
+                  'span',
+                  { style: { color: '#245c4f', fontWeight: 700 } },
+                  (data.get('section_featured_label') || 'Latest') +
+                    '  /  ' +
+                    (data.get('section_recent_label') || 'Recent') +
+                    '  /  ' +
+                    (data.get('section_view_all_label') || 'View all  →')
+                )
+              )
+            );
+          }
+        })
+      );
     </script>
   </body>
 </html>

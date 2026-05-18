@@ -37,24 +37,44 @@ const posts = Object.entries(modules)
 const featured = posts[0];
 const rest = posts.slice(1, 9);
 
-const categories = [
-  ['essay', 'Essay', '생각, 관찰, 일과 삶의 기록', '/essay/'],
-  ['study', 'Study', '공부한 개념과 도구 정리', '/study/'],
-  ['books', 'Books', '읽은 책과 남은 문장', '/books/'],
-  ['portfolio', 'Portfolio', '만든 것과 실험 기록', '/portfolio/']
-];
+const homeModules = import.meta.glob('../../content/pages/home.md', { eager: true });
+const homeEntry = Object.values(homeModules)[0] ?? {};
+const home = homeEntry.frontmatter ?? {};
+
+const heroEyebrow = home.hero_eyebrow ?? 'Thinking Log';
+const heroTitle = home.hero_title ?? 'What I Think';
+const heroLead = home.hero_lead ?? '생각, 공부, 독서, 프로젝트를 Markdown으로 쌓아 두는 개인 홈페이지입니다.';
+
+const categories = (home.categories && home.categories.length)
+  ? home.categories
+  : [
+      { key: 'essay', name: 'Essay', description: '생각, 관찰, 일과 삶의 기록', href: '/essay/' },
+      { key: 'study', name: 'Study', description: '공부한 개념과 도구 정리', href: '/study/' },
+      { key: 'books', name: 'Books', description: '읽은 책과 남은 문장', href: '/books/' },
+      { key: 'portfolio', name: 'Portfolio', description: '만든 것과 실험 기록', href: '/portfolio/' }
+    ];
+
+const featuredLabel = home.section_featured_label ?? 'Latest';
+const recentLabel = home.section_recent_label ?? 'Recent';
+const viewAllLabel = home.section_view_all_label ?? 'View all  →';
+const viewAllHref = home.section_view_all_href ?? '/essay/';
+const readTemplate = home.read_button_label_template ?? 'Read {category}  →';
+
+const readButtonLabel = featured
+  ? readTemplate.replace('{category}', featured.category)
+  : '';
 ---
 
 <BaseLayout current="home">
   <section class="hero">
-    <p class="eyebrow">Thinking Log</p>
-    <h1>What I Think</h1>
-    <p class="lead">생각, 공부, 독서, 프로젝트를 Markdown으로 쌓아 두는 개인 홈페이지입니다.</p>
+    <p class="eyebrow">{heroEyebrow}</p>
+    <h1>{heroTitle}</h1>
+    <p class="lead">{heroLead}</p>
     <div class="category-grid">
-      {categories.map(([key, name, text, href]) => (
-        <a class="category-link" data-cat={key} href={href}>
-          <strong>{name}</strong>
-          <span>{text}</span>
+      {categories.map((c) => (
+        <a class="category-link" data-cat={c.key} href={c.href}>
+          <strong>{c.name}</strong>
+          <span>{c.description}</span>
         </a>
       ))}
     </div>
@@ -63,7 +83,7 @@ const categories = [
   {featured && (
     <section class="featured-strip">
       <div class="featured-strip-head">
-        <p class="eyebrow">Latest</p>
+        <p class="eyebrow">{featuredLabel}</p>
         <div class="rule"></div>
       </div>
       <article class="featured-card">
@@ -84,16 +104,16 @@ const categories = [
           <p class="featured-meta">
             <time datetime={featured.machineDate}>{featured.displayDate}</time>
           </p>
-          <a class="read-btn" href={featured.url}>Read {featured.category}  →</a>
+          <a class="read-btn" href={featured.url}>{readButtonLabel}</a>
         </div>
       </article>
     </section>
   )}
 
   <div class="section-head">
-    <p class="eyebrow">Recent</p>
+    <p class="eyebrow">{recentLabel}</p>
     <div class="rule"></div>
-    <a class="view-all" href="/essay/">View all  →</a>
+    <a class="view-all" href={viewAllHref}>{viewAllLabel}</a>
   </div>
   <section class="post-list">
     {rest.map((post) => (

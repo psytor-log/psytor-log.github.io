@@ -187,3 +187,92 @@
   5) (Step 6) git add/commit/push
 - 처리 실패: 없음.
 - work.lock: 삭제.
+
+## 2026-05-19T01:05:00+09:00 - 방문자 카운터 Steps 4-6 자동화 완료
+- 사용한 도구: claude-code
+- 사용자 위임: "step1, 2는 완료했어니 확인해봐. 그리고 step4부터는 자동화 가능할 것 같아."
+- Step 1/2 검증:
+  - npx wrangler kv namespace list → VISITOR / id 9aaac3de518142d0b1085bfee484030e 확인.
+  - wrangler.toml binding id 일치 확인.
+- Step 4 - Worker 배포:
+  - npm run oauth:deploy 성공. Version ID 5c520006-2f1c-4bfc-ba3f-08e05f6007f4.
+  - KV binding env.VISITOR 활성화 확인.
+- Step 4 검증 (curl):
+  - /count → {"today":0,"total":0}
+  - /hit  → {"today":1,"total":1,"counted":true}
+  - /hit  → {"today":2,"total":2,"counted":true}
+  - /hit?nocount=1 → {"today":2,"total":2,"counted":false} (nocount 옵션 동작 확인)
+- Step 5 - BaseLayout endpoint 연결:
+  - <script is:inline> 블록 추가, window.WIT_ANALYTICS_ENDPOINT = "https://psytor-log-decap-oauth.dejangbu.workers.dev/hit"
+  - npm run build 통과. dist/index.html, dist/essay/index.html 등에 endpoint 주입 확인. dist/admin/index.html 에는 미주입 (의도: admin 페이지는 카운터에 영향 X).
+- Step 6 - git commit + push:
+  - .gitignore 에 work.lock 추가 (정상 운영 상 commit 대상 아님).
+  - git add 는 파일별 명시 (-A 미사용). 17개 파일 staged.
+  - 원격 main 이 1커밋 앞섬 ("Update Essay 글 post: 2026-05-16-sample-work-observation", Decap CMS 가 사용자가 직접 편집). 파일 충돌 없음을 git show --stat 으로 확인.
+  - git pull --rebase origin main 으로 선형 정리 후 push 성공 (5172239 → 3b8dacb).
+- 배포 검증:
+  - GitHub Actions "Deploy to GitHub Pages" run 26044976456 → ✓ build 16s, ✓ deploy 14s.
+  - https://psytor-log.github.io/ HTML 에 WIT_ANALYTICS_ENDPOINT 문자열 2회 (변수 설정 1 + fetch 스크립트 내 참조 1) 확인.
+  - Live hit (Origin: https://psytor-log.github.io) → today: 2 → 3, total: 2 → 3 정상 증가.
+- 자동 판단:
+  - rebase 전에 git show --stat 으로 원격 변경 파일 (content/essay/2026-05-16-sample-work-observation.md) 이 내 작업 범위와 무관함을 먼저 확인하고 진행. 충돌 가능성이 있었으면 사용자에게 알렸을 것.
+  - Pages 배포는 사용자 인프라이지만 본 작업은 사용자가 명시적으로 자동화 위임한 범위라 진행.
+- 결정 사항:
+  - .gitignore 에 work.lock 추가 → 향후 모든 작업에서 자동 무시.
+  - commit 메시지는 영문 단락 구조 (저장소 기존 스타일과 일관). Co-Authored-By 트레일러 포함.
+- 처리 실패: push 1차 실패 (non-fast-forward) → fetch + rebase + push 로 복구. 추가 사용자 개입 불필요.
+- 검토 필요 항목:
+  - 푸터 카운터 UI 가 브라우저에서 실제로 갱신되는지 사용자 본인 확인 (DevTools Network 에서 /hit 호출 + 응답 확인 권장).
+  - 본인 방문 제외하고 싶으면 https://psytor-log.github.io/?nocount=1 형태로 북마크 저장.
+- 다음 액션 후보:
+  1) Decap 에디터 실제 사용 시 라이브 프리뷰가 site 와 같은 타이포로 나오는지 시각 확인.
+  2) (선택) Cloudflare KV 무료 티어 한도 모니터링 — 일일 100k reads / 1k writes 까지 무료. 일 100명 방문 기준 1년치도 무료 범위 안.
+- work.lock: 삭제.
+
+## 2026-05-19T01:30:00+09:00 - UI/에디터 후속 수정 (3건)
+- 사용한 도구: claude-code
+- 사용자 보고 이슈:
+  1) 홈 Latest 카드 이미지/텍스트 겹침
+  2) 에디터 본문에 Image 메뉴가 2개 노출
+  3) 홈 화면 텍스트(메뉴, 설명)도 에디터에서 편집 가능하게
+- 사전 진단:
+  - 라이브 HTML/CSS 확인. 구조와 클래스 규칙은 정상. 다만 .featured-card 의 align-items: stretch + aspect-ratio 결합이 일부 폭 구간에서 thumb 가 row 높이까지 늘어나거나, .thumb img 가 height: 100% 로 부모 absolute 박스를 채우지 못해 시각적 겹침 가능성 있음을 확인.
+- 수정 1 (featured-card 견고화):
+  - .featured-card 에 align-items: center 와 .featured-card > * { min-width: 0 } 추가.
+  - .featured-card .thumb 에 position: relative 명시, .thumb img / .thumb-placeholder 는 position: absolute; inset: 0 으로 절대 위치 고정 → aspect-ratio 의 폴백 동작과 무관하게 부모 박스를 정확히 채움.
+  - 그리드 비율 (1.05/1.25 → 1/1.15), gap 36 → 32 로 텍스트 영역에 약간 더 공간 배분.
+- 수정 2 (이미지 메뉴 중복 제거):
+  - public/admin/config.yml 의 essay/study/books/portfolio/about 본문 필드에 buttons (이미지 toolbar 버튼 제외 11개만 노출) 과 editor_components: ["sized-image"] 추가.
+  - Decap 기본 image 블록은 + 메뉴에서 사라지고, 사용자가 추가한 sized-image 컴포넌트만 노출 → 의미가 분명한 단일 선택지가 됨.
+  - 1차 시도에서 replace_all + 들여쓰기 실수로 YAML 깨졌고, IDE diagnostic 으로 즉시 인지하여 inline flow 형태 ({ ... }) 로 다시 작성. node + js-yaml 로 파싱 검증.
+- 수정 3 (홈 텍스트 편집 가능화):
+  - content/pages/site.md (신규) — brand, description, menu (home/essay/study/books/portfolio/about), footer (brand, tagline, admin_label, today_label, total_label) 보유. 전역 영향.
+  - content/pages/home.md (신규) — hero_eyebrow/title/lead, categories[{key,name,description,href}], section_*_label 보유. 홈 페이지 한정.
+  - src/layouts/BaseLayout.astro: import.meta.glob 로 site.md 읽고 nav 라벨, 푸터, html title default 를 모두 frontmatter 에서 가져옴. 누락 필드는 코드 fallback.
+  - src/pages/index.astro: home.md 의 hero/categories/section labels 사용. categories.key 기반 color stripe + URL 매핑 유지.
+  - public/admin/config.yml: pages 컬렉션에 site, home 파일 추가. menu 와 footer 는 widget: object, categories 는 widget: list. 각 필드에 한국어 라벨 + hint.
+  - src/pages/admin.astro: CMS.registerPreviewTemplate('site') 와 ('home') 추가. site 프리뷰는 네비/푸터 형태로, home 프리뷰는 hero + 카테고리 4분할 + 섹션 라벨 형태로 렌더 → 사용자가 라이브 프리뷰에서 실제 모습 미리 확인 가능.
+- 자동 판단:
+  - categories.key 는 URL 경로 (/essay/ 등) 와 .cat-badge color CSS 변수에 묶여 있어 자유 변경 시 색이 깨질 수 있음. config.yml 의 select 위젯으로 ["essay","study","books","portfolio"] 4개만 선택하게 제한.
+  - 메뉴의 link href 는 사이트 구조에 묶여 있어 라벨만 편집 가능. config.yml hint 에 명시.
+  - site.md / home.md 가 없는 경우의 fallback (BaseLayout/index.astro 양쪽에 ?? 기본값) 도 모두 작성 → 파일 삭제로도 사이트가 깨지지 않음.
+- 빌드 검증:
+  - npm run build → 16 페이지 성공.
+  - dist/index.html: nav 메뉴 라벨이 site.md 의 menu 값에서 렌더됨 확인. 푸터 footer.tagline (© 2026 psytor ...) 정상. hero 의 eyebrow/title/lead 모두 home.md 값. category-grid 의 4박스도 home.md 의 categories 리스트에서 생성됨.
+  - dist 의 CSS 번들에 새 .featured-card 규칙 (position:relative; min-width:0; absolute inset:0 패턴) 확인.
+- 수정한 파일:
+  - src/styles/global.css (featured-card 블록 재작성)
+  - src/layouts/BaseLayout.astro (site.md 연동)
+  - src/pages/index.astro (home.md 연동)
+  - src/pages/admin.astro (site, home preview 템플릿 추가)
+  - public/admin/config.yml (body editor_components/buttons 제한 + pages 에 site, home 파일 추가)
+- 신규 파일:
+  - content/pages/site.md
+  - content/pages/home.md
+- 처리 실패와 복구:
+  - config.yml replace_all 시 YAML 들여쓰기 깨짐 → IDE diagnostic 즉시 감지 → inline 으로 재작성 후 node yaml.load 검증 통과.
+- 검토 필요 항목:
+  - 사용자 본인이 실제 사이트에서 Latest 카드 겹침 사라졌는지 시각 확인.
+  - /admin/ 에서 essay 작성 시 + 메뉴에 Image 가 1개만 보이는지 확인.
+  - /admin/ Pages 컬렉션에서 "사이트 공통 텍스트", "홈 페이지" 항목이 노출되고 편집·저장 가능한지 확인.
+- work.lock: 삭제.

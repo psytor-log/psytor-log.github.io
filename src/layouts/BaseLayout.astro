@@ -1,20 +1,35 @@
 ---
 import '../styles/global.css';
 
+const siteModules = import.meta.glob('../../content/pages/site.md', { eager: true });
+const siteEntry = Object.values(siteModules)[0] ?? {};
+const siteData = siteEntry.frontmatter ?? {};
+
+const brand = siteData.brand ?? 'What I Think';
+const siteDescription = siteData.description ?? 'Thinking Log by psytor-log';
+const menu = siteData.menu ?? {};
+const footer = siteData.footer ?? {};
+
 const {
-  title = 'What I Think',
-  description = 'Thinking Log by psytor-log',
+  title = brand,
+  description = siteDescription,
   current = ''
 } = Astro.props;
 
 const nav = [
-  ['Home', '/'],
-  ['Essay', '/essay/'],
-  ['Study', '/study/'],
-  ['Books', '/books/'],
-  ['Portfolio', '/portfolio/'],
-  ['About', '/about/']
+  [menu.home ?? 'Home', '/', 'home'],
+  [menu.essay ?? 'Essay', '/essay/', 'essay'],
+  [menu.study ?? 'Study', '/study/', 'study'],
+  [menu.books ?? 'Books', '/books/', 'books'],
+  [menu.portfolio ?? 'Portfolio', '/portfolio/', 'portfolio'],
+  [menu.about ?? 'About', '/about/', 'about']
 ];
+
+const footerBrand = footer.brand ?? brand;
+const footerTagline = footer.tagline ?? '';
+const adminLabel = footer.admin_label ?? '/admin/';
+const todayLabel = footer.today_label ?? 'Today';
+const totalLabel = footer.total_label ?? 'Total';
 ---
 
 <!doctype html>
@@ -34,10 +49,10 @@ const nav = [
   <body>
     <header class="site-header">
       <nav class="nav" aria-label="Main navigation">
-        <a class="brand" href="/">What I Think</a>
+        <a class="brand" href="/">{brand}</a>
         <div class="menu">
-          {nav.map(([label, href]) => (
-            <a href={href} class={current === label.toLowerCase() ? 'active' : ''}>{label}</a>
+          {nav.map(([label, href, key]) => (
+            <a href={href} class={current === key ? 'active' : ''}>{label}</a>
           ))}
         </div>
       </nav>
@@ -48,17 +63,17 @@ const nav = [
     <footer class="footer">
       <div class="footer-inner">
         <div class="footer-brand">
-          <strong>What I Think</strong>
-          <span>&copy; 2026 psytor · All writing on this site is copyrighted by psytor.</span>
+          <strong>{footerBrand}</strong>
+          {footerTagline && <span>{footerTagline}</span>}
         </div>
         <div class="footer-meta">
-          <a class="admin-link" href="/admin/" rel="nofollow">/admin/</a>
+          <a class="admin-link" href="/admin/" rel="nofollow">{adminLabel}</a>
           <div class="stat">
-            <span class="label">Today</span>
+            <span class="label">{todayLabel}</span>
             <span class="value" id="visitor-today">—</span>
           </div>
           <div class="stat">
-            <span class="label">Total</span>
+            <span class="label">{totalLabel}</span>
             <span class="value" id="visitor-total">—</span>
           </div>
         </div>

@@ -29,6 +29,58 @@ collections:
   - name: "pages"
     label: "Pages"
     files:
+      - name: "site"
+        label: "사이트 공통 텍스트"
+        file: "content/pages/site.md"
+        format: "frontmatter"
+        fields:
+          - { label: "브랜드명", name: "brand", widget: "string", hint: "헤더 좌측·푸터 좌측·기본 페이지 제목에 사용됩니다." }
+          - { label: "사이트 설명 (메타)", name: "description", widget: "string", hint: "각 페이지가 자기 description 을 안 줄 때 쓰는 기본값." }
+          - label: "메뉴 텍스트"
+            name: "menu"
+            widget: "object"
+            hint: "헤더 네비게이션에 표시되는 라벨. 링크 경로는 사이트 구조에 묶여 있어 변경되지 않습니다."
+            fields:
+              - { label: "Home", name: "home", widget: "string" }
+              - { label: "Essay", name: "essay", widget: "string" }
+              - { label: "Study", name: "study", widget: "string" }
+              - { label: "Books", name: "books", widget: "string" }
+              - { label: "Portfolio", name: "portfolio", widget: "string" }
+              - { label: "About", name: "about", widget: "string" }
+          - label: "푸터"
+            name: "footer"
+            widget: "object"
+            fields:
+              - { label: "브랜드명 (푸터)", name: "brand", widget: "string" }
+              - { label: "한 줄 설명 / 저작권", name: "tagline", widget: "string" }
+              - { label: "Admin 링크 라벨", name: "admin_label", widget: "string" }
+              - { label: "Today 라벨", name: "today_label", widget: "string" }
+              - { label: "Total 라벨", name: "total_label", widget: "string" }
+
+      - name: "home"
+        label: "홈 페이지"
+        file: "content/pages/home.md"
+        format: "frontmatter"
+        preview_path: ""
+        fields:
+          - { label: "히어로 상단 라벨", name: "hero_eyebrow", widget: "string", hint: "예: Thinking Log" }
+          - { label: "히어로 제목", name: "hero_title", widget: "string" }
+          - { label: "히어로 설명", name: "hero_lead", widget: "text", hint: "홈 상단의 한두 줄 소개." }
+          - label: "카테고리 박스"
+            name: "categories"
+            widget: "list"
+            hint: "홈 화면 4분할 박스. key 는 URL/색상 구분에 묶여 있어 변경하면 색이 깨질 수 있습니다."
+            fields:
+              - { label: "키", name: "key", widget: "select", options: ["essay", "study", "books", "portfolio"] }
+              - { label: "이름", name: "name", widget: "string" }
+              - { label: "설명", name: "description", widget: "string" }
+              - { label: "링크", name: "href", widget: "string" }
+          - { label: "Latest 섹션 라벨", name: "section_featured_label", widget: "string", hint: "최근 글 카드 위에 표시됩니다." }
+          - { label: "Recent 섹션 라벨", name: "section_recent_label", widget: "string" }
+          - { label: "View all 링크 텍스트", name: "section_view_all_label", widget: "string" }
+          - { label: "View all 링크 경로", name: "section_view_all_href", widget: "string", hint: "기본 /essay/" }
+          - { label: "Read 버튼 템플릿", name: "read_button_label_template", widget: "string", hint: "{category} 자리에 카테고리명이 들어갑니다. 예: 'Read {category}  →'" }
+
       - name: "about"
         label: "About"
         file: "content/pages/about.md"
@@ -38,7 +90,7 @@ collections:
           - { label: "제목", name: "title", widget: "string" }
           - { label: "요약", name: "summary", widget: "text" }
           - { label: "상단 라벨", name: "eyebrow", widget: "string", default: "About" }
-          - { label: "본문", name: "body", widget: "markdown" }
+          - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code", "code-block"], editor_components: ["sized-image"] }
 
   - name: "essay"
     label: "Essay"
@@ -60,7 +112,7 @@ collections:
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown" }
+      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code", "code-block"], editor_components: ["sized-image"] }
 
   - name: "study"
     label: "Study"
@@ -82,7 +134,7 @@ collections:
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown" }
+      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code", "code-block"], editor_components: ["sized-image"] }
 
   - name: "books"
     label: "Books"
@@ -104,7 +156,7 @@ collections:
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown" }
+      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code", "code-block"], editor_components: ["sized-image"] }
 
   - name: "portfolio"
     label: "Portfolio"
@@ -126,4 +178,4 @@ collections:
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown" }
+      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code", "code-block"], editor_components: ["sized-image"] }
