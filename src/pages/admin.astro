@@ -7,7 +7,66 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap"
+    />
     <title>What I Think Editor</title>
+    <style is:global>
+      :root {
+        --wit-bg: #f6f4ee;
+        --wit-surface: #ffffff;
+        --wit-line: #dedbd3;
+        --wit-text: #222222;
+        --wit-muted: #6b6b6b;
+        --wit-accent: #245c4f;
+        --wit-accent-soft: #e6f0ec;
+        --wit-serif: "Source Serif Pro", "Noto Serif KR", Georgia,
+          "Apple SD Gothic Neo", "Malgun Gothic", serif;
+      }
+
+      html, body { background: var(--wit-bg); }
+      body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+
+      /* Title in the entry editor — best-effort selector */
+      [class*="EntryEditor"] input[type="text"][class*="title" i],
+      [class*="EditorControlPane"] textarea[id*="title" i],
+      [class*="EditorControlPane"] input[id*="title" i] {
+        font-family: var(--wit-serif) !important;
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.2 !important;
+      }
+
+      /* Sidebar / nav accents (best-effort across Decap class names) */
+      a[class*="SidebarNavLink"][class*="active"],
+      a[class*="NavLink"][class*="active"] {
+        color: var(--wit-accent) !important;
+        background: var(--wit-accent-soft) !important;
+        border-left: 3px solid var(--wit-accent) !important;
+      }
+
+      /* Buttons */
+      button[class*="primary"],
+      button[class*="Primary"] {
+        background-color: var(--wit-accent) !important;
+        border-color: var(--wit-accent) !important;
+      }
+
+      /* Field labels: small caps */
+      label[class*="ControlContainer"] > [class*="Label"],
+      label[class*="FieldLabel"] {
+        text-transform: uppercase !important;
+        letter-spacing: 0.12em !important;
+        font-size: 0.72rem !important;
+        color: var(--wit-muted) !important;
+        font-weight: 700 !important;
+      }
+    </style>
   </head>
   <body>
     <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
@@ -25,6 +84,7 @@
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
 
+      /* ===== Sized image editor component (preserved from existing code) ===== */
       CMS.registerEditorComponent({
         id: 'sized-image',
         label: 'Image',
@@ -86,6 +146,116 @@
           return `<figure class="cms-image cms-image--${align}" style="--image-width: ${width}%;">\n  <img src="${escapeAttribute(data.src)}" alt="${escapeAttribute(data.alt)}" />${caption}\n</figure>`;
         }
       });
+
+      /* ===== Live preview styling — matches the site ===== */
+      CMS.registerPreviewStyle('/admin/preview.css');
+
+      /* ===== Preview template that mirrors src/pages/[category]/[slug].astro ===== */
+      const h = CMS.h;
+      const createClass = CMS.createClass;
+
+      const formatPreviewDate = (raw) => {
+        if (!raw) return '';
+        const d = new Date(raw);
+        if (Number.isNaN(d.valueOf())) return String(raw);
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())} KST`;
+      };
+
+      const readingMinutes = (text = '') => {
+        if (!text) return 1;
+        const stripped = String(text)
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/```[\s\S]*?```/g, '')
+          .replace(/`[^`]*`/g, '');
+        const koreanChars = (stripped.match(/[가-힯]/g) || []).length;
+        const englishWords = (stripped.match(/[A-Za-z0-9]+/g) || []).length;
+        return Math.max(1, Math.round(koreanChars / 500 + englishWords / 220));
+      };
+
+      const buildPostPreview = (category) =>
+        createClass({
+          render: function () {
+            const entry = this.props.entry;
+            const data = entry.get('data');
+            const title = data.get('title') || '(제목 없음)';
+            const summary = data.get('summary') || '';
+            const cover = this.props.getAsset
+              ? (data.get('cover') ? this.props.getAsset(data.get('cover')) : null)
+              : null;
+            const tagsField = data.get('tags');
+            const tags = tagsField && tagsField.toJS ? tagsField.toJS() : [];
+            const draft = data.get('draft');
+            const status = draft ? 'draft' : 'published';
+            const dateText = formatPreviewDate(data.get('date'));
+            const rawBody = data.get('body') || '';
+            const minutes = readingMinutes(rawBody);
+
+            return h(
+              'article',
+              { className: 'wit-preview' },
+              h(
+                'p',
+                { className: 'eyebrow', 'data-cat': category },
+                category.toUpperCase() + ' · ' + minutes + ' MIN READ',
+                h(
+                  'span',
+                  { className: 'status', 'data-state': status },
+                  draft ? 'DRAFT' : 'PUBLISHED'
+                )
+              ),
+              h('h1', null, title),
+              summary
+                ? h('p', { className: 'lead' }, summary)
+                : null,
+              h(
+                'p',
+                { className: 'meta' },
+                (dateText ? dateText + '  /  ' : '') + category
+              ),
+              tags && tags.length
+                ? h(
+                    'div',
+                    { className: 'tag-row' },
+                    tags.map(function (t, i) {
+                      return h('span', { className: 'tag', key: 'tag-' + i }, t);
+                    })
+                  )
+                : null,
+              cover
+                ? h('img', { className: 'cover', src: cover.toString(), alt: '' })
+                : null,
+              h('div', { className: 'body' }, this.props.widgetFor('body'))
+            );
+          }
+        });
+
+      CMS.registerPreviewTemplate('essay', buildPostPreview('essay'));
+      CMS.registerPreviewTemplate('study', buildPostPreview('study'));
+      CMS.registerPreviewTemplate('books', buildPostPreview('books'));
+      CMS.registerPreviewTemplate('portfolio', buildPostPreview('portfolio'));
+
+      /* ===== About page preview ===== */
+      CMS.registerPreviewTemplate(
+        'about',
+        createClass({
+          render: function () {
+            const entry = this.props.entry;
+            const data = entry.get('data');
+            const title = data.get('title') || 'About';
+            const summary = data.get('summary') || '';
+            const eyebrow = data.get('eyebrow') || 'About';
+            return h(
+              'article',
+              { className: 'wit-preview' },
+              h('p', { className: 'eyebrow' }, eyebrow),
+              h('h1', null, title),
+              summary ? h('p', { className: 'lead' }, summary) : null,
+              h('div', { className: 'body' }, this.props.widgetFor('body'))
+            );
+          }
+        })
+      );
     </script>
   </body>
 </html>

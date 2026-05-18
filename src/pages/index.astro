@@ -1,6 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { formatKoreanDateTime, getMachineDateTime, getPostDateValue, getPostThumbnail } from '../utils/posts.js';
+import {
+  formatKoreanDateTime,
+  getMachineDateTime,
+  getPostDateValue,
+  getPostThumbnail,
+  getReadingTime
+} from '../utils/posts.js';
 
 const modules = import.meta.glob('../../content/{essay,study,books,portfolio}/*.md', { eager: true });
 const rawModules = import.meta.glob('../../content/{essay,study,books,portfolio}/*.md', {
@@ -13,6 +19,7 @@ const posts = Object.entries(modules)
     const category = path.split('/').at(-2);
     const slug = path.split('/').at(-1).replace(/\.md$/, '');
     const frontmatter = mod.frontmatter ?? {};
+    const raw = rawModules[path] ?? '';
     return {
       ...frontmatter,
       category,
@@ -20,17 +27,21 @@ const posts = Object.entries(modules)
       url: `/${category}/${slug}/`,
       displayDate: formatKoreanDateTime(frontmatter.date),
       machineDate: getMachineDateTime(frontmatter.date),
-      thumbnail: getPostThumbnail(frontmatter, rawModules[path] ?? '')
+      thumbnail: getPostThumbnail(frontmatter, raw),
+      readingTime: getReadingTime(raw)
     };
   })
   .filter((post) => !post.draft)
   .sort((a, b) => getPostDateValue(b.date) - getPostDateValue(a.date));
 
+const featured = posts[0];
+const rest = posts.slice(1, 9);
+
 const categories = [
-  ['Essay', '생각, 관찰, 일과 삶의 기록', '/essay/'],
-  ['Study', '공부한 개념과 도구 정리', '/study/'],
-  ['Books', '읽은 책과 남은 문장', '/books/'],
-  ['Portfolio', '만든 것과 실험 기록', '/portfolio/']
+  ['essay', 'Essay', '생각, 관찰, 일과 삶의 기록', '/essay/'],
+  ['study', 'Study', '공부한 개념과 도구 정리', '/study/'],
+  ['books', 'Books', '읽은 책과 남은 문장', '/books/'],
+  ['portfolio', 'Portfolio', '만든 것과 실험 기록', '/portfolio/']
 ];
 ---
 
@@ -40,8 +51,8 @@ const categories = [
     <h1>What I Think</h1>
     <p class="lead">생각, 공부, 독서, 프로젝트를 Markdown으로 쌓아 두는 개인 홈페이지입니다.</p>
     <div class="category-grid">
-      {categories.map(([name, text, href]) => (
-        <a class="category-link" href={href}>
+      {categories.map(([key, name, text, href]) => (
+        <a class="category-link" data-cat={key} href={href}>
           <strong>{name}</strong>
           <span>{text}</span>
         </a>
@@ -49,9 +60,43 @@ const categories = [
     </div>
   </section>
 
-  <h2>Recent Posts</h2>
+  {featured && (
+    <section class="featured-strip">
+      <div class="featured-strip-head">
+        <p class="eyebrow">Latest</p>
+        <div class="rule"></div>
+      </div>
+      <article class="featured-card">
+        <a class="thumb" href={featured.url} aria-label={`${featured.title} thumbnail`}>
+          {featured.thumbnail ? (
+            <img src={featured.thumbnail} alt="" loading="lazy" />
+          ) : (
+            <span class="thumb-placeholder" />
+          )}
+        </a>
+        <div class="featured-body">
+          <div class="post-meta-row">
+            <span class="cat-badge" data-cat={featured.category}>{featured.category}</span>
+            <span class="read-time">{featured.readingTime} min read</span>
+          </div>
+          <h2 class="featured-title"><a href={featured.url}>{featured.title}</a></h2>
+          {featured.summary && <p class="featured-summary">{featured.summary}</p>}
+          <p class="featured-meta">
+            <time datetime={featured.machineDate}>{featured.displayDate}</time>
+          </p>
+          <a class="read-btn" href={featured.url}>Read {featured.category}  →</a>
+        </div>
+      </article>
+    </section>
+  )}
+
+  <div class="section-head">
+    <p class="eyebrow">Recent</p>
+    <div class="rule"></div>
+    <a class="view-all" href="/essay/">View all  →</a>
+  </div>
   <section class="post-list">
-    {posts.slice(0, 8).map((post) => (
+    {rest.map((post) => (
       <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`}>
         <time class="post-date" datetime={post.machineDate}>{post.displayDate}</time>
         {post.thumbnail && (
@@ -60,8 +105,12 @@ const categories = [
           </a>
         )}
         <div class="post-body">
+          <div class="post-meta-row">
+            <span class="cat-badge" data-cat={post.category}>{post.category}</span>
+            <span class="read-time">{post.readingTime} min read</span>
+          </div>
           <h3 class="post-title"><a href={post.url}>{post.title}</a></h3>
-          <p class="summary">{post.summary}</p>
+          {post.summary && <p class="summary">{post.summary}</p>}
           <div class="tag-row">
             {(post.tags ?? []).map((tag) => <span class="tag">{tag}</span>)}
           </div>

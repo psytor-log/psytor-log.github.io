@@ -55,6 +55,29 @@ export function getPostThumbnail(frontmatter = {}, rawContent = '') {
   return '';
 }
 
+const KOREAN_CHAR = /[가-힯ᄀ-ᇿ㄰-㆏]/g;
+const NON_KOREAN_WORD = /[A-Za-z0-9]+/g;
+
+export function getReadingTime(rawContent = '') {
+  if (!rawContent) return 1;
+
+  const stripped = String(rawContent)
+    .replace(/^---[\s\S]*?---/, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]*`/g, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, ' ')
+    .replace(/\[[^\]]*\]\([^)]+\)/g, ' ');
+
+  const koreanChars = (stripped.match(KOREAN_CHAR) || []).length;
+  const englishWords = (stripped.match(NON_KOREAN_WORD) || []).length;
+
+  const koreanMinutes = koreanChars / 500;
+  const englishMinutes = englishWords / 220;
+
+  return Math.max(1, Math.round(koreanMinutes + englishMinutes));
+}
+
 function parsePostDate(date) {
   if (date instanceof Date) {
     if (

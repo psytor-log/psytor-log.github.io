@@ -1,0 +1,35 @@
+{
+  "project_name": "what-i-think",
+  "project_type": "personal-homepage",
+  "status": "진행중",
+  "created_at": "2026-05-16",
+  "last_updated_at": "2026-05-19",
+  "goal": "What I Think 홈페이지와 /admin/ Decap CMS 에디터의 디자인을 사용자 컨펌 범위로 리뉴얼한다. 산출물: 변경된 CSS, 레이아웃, admin 프리뷰 템플릿. 완료 상태: build 통과 + 변경 항목별 시각 확인.",
+  "success_metrics": [
+    "npm run build 가 에러 없이 통과한다",
+    "홈페이지의 카테고리 그리드가 Featured Latest 위에 배치된다",
+    "홈페이지 H1/H2/포스트 제목이 세리프 폰트로 렌더된다",
+    "홈페이지 카테고리 박스마다 좌측 컬러 스트라이프가 보인다",
+    "최근 포스트 리스트에 카테고리 배지와 읽는 시간이 표시된다",
+    "푸터에 admin 링크, 오늘 방문자, 전체 방문자 요소가 배치된다",
+    "/admin/ 에디터 프리뷰가 실제 사이트와 동일한 타이포로 렌더된다",
+    "에디터 사이드바의 활성 컬렉션이 강조 표시된다",
+    "DRAFT/PUBLISHED 상태 pill 이 표시된다",
+    "커버 이미지 필드에 4:3 권장 안내가 보인다"
+  ],
+  "completion_criteria": [
+    "위 success_metrics 10항목이 모두 만족된다",
+    "log.txt 에 작업 시작/종료/수정 파일이 기록된다",
+    "work.lock 이 작업 종료 시 삭제된다"
+  ],
+  "current_stage": "구현",
+  "next_action": "구현 후 npm run build 검증",
+  "blocked_reason": "",
+  "tags": ["design", "redesign", "astro", "decap-cms"],
+  "goal_confirmation": {
+    "status": "confirmed",
+    "confirmed_at": "2026-05-19T00:34:00+09:00",
+    "revision_count": 1,
+    "note": "사용자가 design-proposals/01,02 의 채택 항목과 ④→③ 순서 및 ⑥ 요소 변경을 명시적으로 지정함."
+  }
+}

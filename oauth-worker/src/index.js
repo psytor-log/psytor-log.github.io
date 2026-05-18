@@ -22,6 +22,14 @@ export default {
       return handleCallback(request, env);
     }
 
+    if (url.pathname === "/hit") {
+      return handleHit(request, env);
+    }
+
+    if (url.pathname === "/count") {
+      return handleCount(env);
+    }
+
     return new Response("Not found", { status: 404, headers: corsHeaders(env) });
   }
 };
@@ -173,4 +181,70 @@ function corsHeaders(env = {}) {
     "access-control-allow-methods": "GET, OPTIONS",
     "access-control-allow-headers": "content-type"
   };
+}
+
+function kstDateString() {
+  const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+}
+
+function isBotUserAgent(ua = "") {
+  return /bot|crawler|spider|crawling|preview|fetcher|monitor/i.test(ua);
+}
+
+async function readCounters(env) {
+  if (!env.VISITOR) {
+    throw new Error("Missing KV binding: VISITOR");
+  }
+  const todayKey = "today:" + kstDateString();
+  const [todayRaw, totalRaw] = await Promise.all([
+    env.VISITOR.get(todayKey),
+    env.VISITOR.get("total")
+  ]);
+  return {
+    todayKey,
+    today: Number(todayRaw || 0),
+    total: Number(totalRaw || 0)
+  };
+}
+
+async function handleHit(request, env) {
+  if (!env.VISITOR) {
+    throw new Error("Missing KV binding: VISITOR");
+  }
+
+  const counters = await readCounters(env);
+  const ua = request.headers.get("user-agent") || "";
+  const noCount =
+    new URL(request.url).searchParams.get("nocount") === "1" || isBotUserAgent(ua);
+
+  if (noCount) {
+    return jsonResponse({ today: counters.today, total: counters.total, counted: false }, env);
+  }
+
+  const today = counters.today + 1;
+  const total = counters.total + 1;
+  await Promise.all([
+    env.VISITOR.put(counters.todayKey, String(today), {
+      expirationTtl: 60 * 60 * 24 * 7
+    }),
+    env.VISITOR.put("total", String(total))
+  ]);
+
+  return jsonResponse({ today, total, counted: true }, env);
+}
+
+async function handleCount(env) {
+  const counters = await readCounters(env);
+  return jsonResponse({ today: counters.today, total: counters.total }, env);
+}
+
+function jsonResponse(data, env) {
+  return new Response(JSON.stringify(data), {
+    headers: {
+      ...corsHeaders(env),
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store"
+    }
+  });
 }

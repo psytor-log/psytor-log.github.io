@@ -6,3 +6,7 @@ workers_dev = true
 [vars]
 SITE_URL = "https://psytor-log.github.io"
 GITHUB_SCOPE = "public_repo"
+
+[[kv_namespaces]]
+binding = "VISITOR"
+id =  "9aaac3de518142d0b1085bfee484030e"

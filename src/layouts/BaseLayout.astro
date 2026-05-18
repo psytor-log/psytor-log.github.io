@@ -23,6 +23,12 @@ const nav = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap"
+    />
     <title>{title}</title>
   </head>
   <body>
@@ -40,7 +46,43 @@ const nav = [
       <slot />
     </main>
     <footer class="footer">
-      <div class="footer-inner">&copy; 2026 psytor. All writing on this site is copyrighted by psytor.</div>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <strong>What I Think</strong>
+          <span>&copy; 2026 psytor · All writing on this site is copyrighted by psytor.</span>
+        </div>
+        <div class="footer-meta">
+          <a class="admin-link" href="/admin/" rel="nofollow">/admin/</a>
+          <div class="stat">
+            <span class="label">Today</span>
+            <span class="value" id="visitor-today">—</span>
+          </div>
+          <div class="stat">
+            <span class="label">Total</span>
+            <span class="value" id="visitor-total">—</span>
+          </div>
+        </div>
+      </div>
     </footer>
+    <script is:inline>
+      window.WIT_ANALYTICS_ENDPOINT =
+        "https://psytor-log-decap-oauth.dejangbu.workers.dev/hit";
+    </script>
+    <script is:inline>
+      (function () {
+        var endpoint = window.WIT_ANALYTICS_ENDPOINT;
+        if (!endpoint) return;
+        fetch(endpoint, { credentials: 'omit' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (data) {
+            if (!data) return;
+            var t = document.getElementById('visitor-today');
+            var a = document.getElementById('visitor-total');
+            if (t && data.today != null) t.textContent = Number(data.today).toLocaleString('ko-KR');
+            if (a && data.total != null) a.textContent = Number(data.total).toLocaleString('ko-KR');
+          })
+          .catch(function () {});
+      })();
+    </script>
   </body>
 </html>

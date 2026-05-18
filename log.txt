@@ -76,3 +76,114 @@
 ## 2026-05-16T09:18:19.913Z
 - 실행한 작업: npm run new-post
 - 처리 결과: inbox/posts에 새 초안 파일 없음
+
+## 2026-05-19T00:32:00+09:00 - 디자인 리뷰 및 리디자인 목업 제안 (read-only review)
+- 사용한 도구: claude-code
+- 작업 성격: 코드 수정 없음 (리뷰 + 시각 제안만)
+- 입력 사항: 사용자가 현재 홈페이지/에디터 디자인을 검토하고 개선안을 시각화 요청
+- 점검한 파일:
+  - src/layouts/BaseLayout.astro
+  - src/styles/global.css
+  - src/pages/index.astro
+  - src/pages/[category]/index.astro
+  - src/pages/[category]/[slug].astro
+  - src/pages/admin.astro
+  - public/admin/config.yml
+  - README.md, EDITOR_GUIDE.md
+- 자동 판단:
+  - project.meta.json과 work.lock이 존재하지 않음. 본 작업은 코드를 수정하지 않는 리뷰성 작업이므로 work.lock을 생성하지 않음.
+  - 실제 구현 단계로 넘어가기 전에 project.meta.json 생성과 goal 컨펌이 선행되어야 함.
+- 생성한 파일 (소스 트리 바깥):
+  - design-proposals/01-homepage-redesign.svg
+  - design-proposals/02-editor-redesign.svg
+- 수정한 파일: 없음
+- 백업 파일: 없음 (수정 없음)
+- 검토 필요 항목:
+  - 실제 적용 전 사용자 컨펌 필요 (특히 serif 디스플레이 폰트 도입, 카테고리 컬러 스트라이프, Decap CMS preview 커스터마이즈 범위).
+  - 본 사이트는 아직 Goal-Driven Project 표준 (project.meta.json) 으로 마이그레이션되지 않았음. 디자인 변경을 본격 시작하기 전에 표준화 권장.
+- 다음 액션 후보:
+  1) project.meta.json 작성 + goal 컨펌
+  2) 사용자가 어떤 제안 항목을 채택할지 선택
+  3) work.lock 생성 후 CSS / 템플릿 적용
+- 처리 실패: 없음
+- 개선 패턴:
+  - 디자인 변경 제안은 SVG 목업으로 먼저 제출하여 사용자가 코드 변경 전에 시각적으로 합의 가능하게 함.
+
+## 2026-05-19T00:35:00+09:00 - 디자인 리뉴얼 구현 시작
+- 사용한 도구: claude-code
+- 사용자 컨펌: 사용자가 design-proposals/01,02 채택 항목을 명시적으로 지정. 별도 목표 컨펌 요약 절차는 사용자 요청에 따라 생략.
+- 채택 범위:
+  - 홈페이지: ① 세리프 디스플레이 폰트, ③ Featured Latest 카드, ④ 카테고리 컬러 스트라이프, ⑤ 포스트 리스트 카테고리 배지 + 읽는 시간, ⑥ 푸터 (admin / 오늘 방문자 / 전체 방문자). 배치는 ④ → ③ 순서.
+  - 홈페이지 비채택: ② Activity 통계 스트립.
+  - 에디터: ① 사이드바 활성 강조, ② 세리프 타이틀, ③ DRAFT/PUBLISHED pill, ④ 커버 이미지 가이드, ⑤ 라이브 프리뷰 패널 사이트 매칭, ⑥ sized-image 위젯 프리뷰.
+- 생성한 표준 파일:
+  - project.meta.json (status="진행중", goal_confirmation.status="confirmed")
+  - work.lock (locked_by="claude-code", in_progress)
+- 자동 판단:
+  - 방문자 카운터는 GitHub Pages 정적 호스팅 제약상 외부 분석 서비스가 필요하므로, UI는 배치하되 카운터 endpoint 는 향후 사용자가 지정할 수 있도록 옵션 처리 (window.WIT_ANALYTICS_ENDPOINT 미설정 시 "—" placeholder).
+  - 사이드바 컬렉션별 포스트 개수 (47, 12 등) 는 Decap CMS 가 빌드 타임 카운트 주입을 직접 지원하지 않아 정적 텍스트로 입력하지 않고 생략. 대신 활성 컬렉션 강조만 적용.
+
+## 2026-05-19T00:46:00+09:00 - 디자인 리뉴얼 구현 완료
+- 사용한 도구: claude-code
+- 작업 종료 시각: 2026-05-19T00:46:00+09:00
+- 수정/생성한 파일:
+  - src/styles/global.css (덮어쓰기 — 세리프 폰트, 카테고리 컬러, 배지, hover, 새 푸터 레이아웃)
+  - src/layouts/BaseLayout.astro (Google Fonts preconnect/link, 새 푸터 마크업, visitor-counter 부트 스크립트)
+  - src/utils/posts.js (getReadingTime 추가)
+  - src/pages/index.astro (구조 재배치: hero → category-grid → featured Latest → recent list with badges)
+  - src/pages/[category]/index.astro (포스트 아이템에 cat-badge + read-time 일관 적용)
+  - src/pages/admin.astro (전면 개편: registerPreviewStyle, essay/study/books/portfolio/about preview 템플릿, sized-image 컴포넌트 유지, is:global 에디터 chrome CSS)
+  - public/admin/config.yml (필드별 hint 추가: 제목/날짜/태그/요약/커버/draft)
+  - public/admin/preview.css (신규 — 라이브 프리뷰가 사이트와 동일 타이포로 렌더)
+  - project.meta.json (신규)
+- 결정 사항:
+  - Astro 의 자동 CSS 스코프(data-astro-cid) 가 Decap CMS DOM 에는 매칭되지 않으므로 admin.astro 의 <style> 블록에 is:global 적용.
+  - 방문자 카운터는 window.WIT_ANALYTICS_ENDPOINT 가 설정된 경우에만 fetch. 미설정 시 "—" 그대로 두어 사이트는 항상 안전하게 빌드된다. 사용자는 GoatCounter/Plausible/Umami 등을 붙이거나 oauth-worker 에 KV 카운터를 확장하는 식으로 endpoint 만 지정하면 된다.
+  - getReadingTime 은 한국어 분당 500자 + 영어 분당 220단어 가중 평균, 최소 1분으로 반올림.
+- 발견한 이슈와 처리:
+  - 첫 빌드에서 admin.astro <style> 가 자동 스코프 처리되어 Decap DOM 셀렉터가 동작하지 않음을 확인. is:global 로 수정 후 재빌드.
+- 검증:
+  - npm run build: 16개 페이지 모두 성공 (essay 2 + study 2 + books 2 + portfolio 3 + categories 4 + index + about + admin).
+  - dist/index.html: category-grid(1104) → featured-card(1743) → section-head Recent(2623). 사용자가 지정한 ④→③ 순서 확인.
+  - dist/admin/index.html: data-astro-cid 스코프 0개. CMS.registerPreviewStyle, registerPreviewTemplate, registerEditorComponent 등 핵심 API 호출 7건 인라인 포함.
+- 검토 필요 항목:
+  - 실제 사이트 dev 또는 GitHub Pages 배포 후 시각 확인 권장 (특히 모바일 760px 미만에서 featured-card 가 단일 컬럼으로 무너지는지, 푸터가 1열로 떨어지는지).
+  - Decap CMS 에디터 chrome CSS 의 클래스 셀렉터 (EntryEditor / SidebarNavLink / FieldLabel) 는 Decap 내부 구현에 의존하므로 Decap 메이저 업그레이드 시 깨질 수 있음. 깨지면 데브툴로 새 클래스명 확인 후 admin.astro <style is:global> 블록만 갱신.
+  - 방문자 카운터 endpoint 미설정 상태 → 사용자가 분석 서비스 선택 후 연결 필요.
+- 처리 실패: 없음.
+- work.lock: 삭제 (작업 종료).
+- 다음 액션:
+  1) git add . && git commit && git push 로 GitHub Pages 배포.
+  2) 시각 확인 후 추가 조정.
+  3) (선택) 방문자 카운터 endpoint 연결.
+
+## 2026-05-19T00:55:00+09:00 - 방문자 카운터 Step 3 (Worker 라우트) 적용
+- 사용한 도구: claude-code
+- 사용자 요청: "step3는 니가 해" — Step 1,2,4,5,6 은 사용자가 직접 진행.
+- 수정한 파일:
+  - oauth-worker/src/index.js
+- 추가한 라우트:
+  - GET /hit  → KV 의 today:<KST-date> 와 total 을 +1 후 { today, total, counted } 반환.
+                ?nocount=1 또는 bot UA 패턴 매칭 시 카운트 스킵 (counted: false).
+                Cache-Control: no-store, 동일 CORS.
+  - GET /count → 카운터 읽기 전용, 같은 페이로드 (counted 필드 없음).
+- 추가한 헬퍼:
+  - kstDateString()  — KST 보정된 YYYY-MM-DD 키.
+  - isBotUserAgent() — 일반적인 bot/crawler UA 제외.
+  - readCounters(env) — today/total 동시 조회.
+  - jsonResponse(data, env) — JSON + CORS + no-store.
+- 자동 판단:
+  - today 키는 7일 expirationTtl 로 KV 정리. total 은 영구.
+  - bot 필터링과 ?nocount=1 옵션을 기본 포함 (자기 방문 제외 패턴 즉시 사용 가능).
+  - env.VISITOR 바인딩 누락 시 즉시 throw (Worker 콘솔에서 즉시 인지 가능).
+- 검증:
+  - node --input-type=module --check < src/index.js → syntax OK.
+  - 라우트 등록 확인 (/hit, /count) 및 helper 5개 grep 확인.
+- 사용자가 남은 단계:
+  1) (Step 1) cd oauth-worker; npx wrangler kv namespace create VISITOR
+  2) (Step 2) wrangler.toml 에 [[kv_namespaces]] binding="VISITOR", id="<위 id>"
+  3) (Step 4) npm run oauth:deploy
+  4) (Step 5) BaseLayout 에 window.WIT_ANALYTICS_ENDPOINT = ".../hit" 추가
+  5) (Step 6) git add/commit/push
+- 처리 실패: 없음.
+- work.lock: 삭제.

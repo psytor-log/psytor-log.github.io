@@ -1,0 +1,194 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap");
+
+:root {
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --text: #222222;
+  --muted: #6b6b6b;
+  --line: #dedbd3;
+  --accent: #245c4f;
+  --accent-soft: #e6f0ec;
+
+  --cat-essay: #245c4f;
+  --cat-study: #b3633c;
+  --cat-books: #7c6a3a;
+  --cat-portfolio: #3a5a78;
+
+  --serif: "Source Serif Pro", "Noto Serif KR", Georgia, "Apple SD Gothic Neo",
+    "Malgun Gothic", serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.72;
+  margin: 0;
+}
+
+.wit-preview {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+.wit-preview .eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cat-color, var(--accent));
+}
+
+.wit-preview .eyebrow[data-cat="essay"]     { --cat-color: var(--cat-essay); }
+.wit-preview .eyebrow[data-cat="study"]     { --cat-color: var(--cat-study); }
+.wit-preview .eyebrow[data-cat="books"]     { --cat-color: var(--cat-books); }
+.wit-preview .eyebrow[data-cat="portfolio"] { --cat-color: var(--cat-portfolio); }
+
+.wit-preview h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+  line-height: 1.18;
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+
+.wit-preview h2 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  margin: 36px 0 12px;
+  font-weight: 700;
+}
+
+.wit-preview h3 {
+  font-family: var(--serif);
+  font-size: 1.18rem;
+  margin: 28px 0 8px;
+  font-weight: 700;
+}
+
+.wit-preview .lead {
+  font-size: 1.06rem;
+  color: #4b4b4b;
+  margin: 0 0 18px;
+}
+
+.wit-preview .meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 14px;
+}
+
+.wit-preview .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.wit-preview .status[data-state="published"] {
+  background: #eef5e9;
+  color: #2e6a1f;
+  border-color: #b9dba4;
+}
+
+.wit-preview .tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 24px;
+}
+
+.wit-preview .tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 1px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.wit-preview .cover {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  margin: 0 0 28px;
+}
+
+.wit-preview .body {
+  font-size: 1.04rem;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+
+.wit-preview .body p {
+  margin: 0 0 18px;
+}
+
+.wit-preview .body a {
+  color: var(--accent);
+}
+
+.wit-preview .body img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.wit-preview .body .cms-image {
+  --image-width: 100%;
+  margin: 28px 0;
+}
+.wit-preview .body .cms-image img {
+  display: block;
+  width: min(100%, var(--image-width));
+  height: auto;
+  border-radius: 8px;
+}
+.wit-preview .body .cms-image--left img   { margin-right: auto; }
+.wit-preview .body .cms-image--center img { margin-right: auto; margin-left: auto; }
+.wit-preview .body .cms-image--right img  { margin-left: auto; }
+.wit-preview .body .cms-image figcaption {
+  width: min(100%, var(--image-width));
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.wit-preview .body .cms-image--center figcaption { margin-right: auto; margin-left: auto; text-align: center; }
+.wit-preview .body .cms-image--right figcaption  { margin-left: auto; text-align: right; }
+
+.wit-preview .body code {
+  padding: 0.15em 0.3em;
+  border-radius: 4px;
+  background: #ece8df;
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+.wit-preview .body pre {
+  overflow-x: auto;
+  padding: 16px;
+  border-radius: 8px;
+  background: #ece8df;
+}
+
+.wit-preview .empty {
+  color: var(--muted);
+  font-style: italic;
+}

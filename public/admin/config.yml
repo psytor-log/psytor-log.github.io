@@ -51,13 +51,13 @@ collections:
     format: "frontmatter"
     preview_path: "essay/{{slug}}/"
     fields:
-      - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+      - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
       - { label: "카테고리", name: "category", widget: "hidden", default: "essay" }
-      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
-      - { label: "요약", name: "summary", widget: "text", required: false }
-      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
-      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown" }
@@ -73,13 +73,13 @@ collections:
     format: "frontmatter"
     preview_path: "study/{{slug}}/"
     fields:
-      - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+      - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
       - { label: "카테고리", name: "category", widget: "hidden", default: "study" }
-      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
-      - { label: "요약", name: "summary", widget: "text", required: false }
-      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
-      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown" }
@@ -95,13 +95,13 @@ collections:
     format: "frontmatter"
     preview_path: "books/{{slug}}/"
     fields:
-      - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+      - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
       - { label: "카테고리", name: "category", widget: "hidden", default: "books" }
-      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
-      - { label: "요약", name: "summary", widget: "text", required: false }
-      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
-      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown" }
@@ -117,13 +117,13 @@ collections:
     format: "frontmatter"
     preview_path: "portfolio/{{slug}}/"
     fields:
-      - { label: "제목", name: "title", widget: "string" }
-      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+      - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
+      - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
       - { label: "카테고리", name: "category", widget: "hidden", default: "portfolio" }
-      - { label: "태그", name: "tags", widget: "list", required: false, field: { label: "태그", name: "tag", widget: "string" } }
-      - { label: "요약", name: "summary", widget: "text", required: false }
-      - { label: "대표 이미지", name: "cover", widget: "image", required: false }
-      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
+      - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
+      - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
+      - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown" }
