@@ -1,7 +1,7 @@
 ---
-hero_eyebrow: Thinking Log
+hero_eyebrow: 생각을 남겨두는 곳
 hero_title: What I Think
-hero_lead: 생각, 공부, 독서, 프로젝트를 Markdown으로 쌓아 두는 개인 홈페이지입니다.
+hero_lead: 요즘 생각하는 것, 관심 갖는 것, 프로젝트를 기록해 두는 개인 홈페이지
 categories:
   - key: essay
     name: Essay
@@ -21,7 +21,7 @@ categories:
     href: /portfolio/
 section_featured_label: Latest
 section_recent_label: Recent
-section_view_all_label: "View all  →"
+section_view_all_label: View all  →
 section_view_all_href: /essay/
-read_button_label_template: "Read {category}  →"
+read_button_label_template: Read {category}  →
 ---
