@@ -61,11 +61,11 @@ async function handleCallback(request, env) {
   const error = url.searchParams.get("error");
 
   if (error) {
-    return oauthResult("error", { error, error_description: url.searchParams.get("error_description") || "" });
+    return oauthResult("error", { error, error_description: url.searchParams.get("error_description") || "" }, env);
   }
 
   if (!code) {
-    return oauthResult("error", { error: "missing_code" });
+    return oauthResult("error", { error: "missing_code" }, env);
   }
 
   const token = await exchangeCodeForToken({
@@ -81,11 +81,11 @@ async function handleCallback(request, env) {
       return oauthResult("error", {
         error: "unauthorized_user",
         error_description: `GitHub user ${login} is not allowed to edit this site.`
-      });
+      }, env);
     }
   }
 
-  return oauthResult("success", { token, provider: "github" });
+  return oauthResult("success", { token, provider: "github" }, env);
 }
 
 async function exchangeCodeForToken({ code, clientId, clientSecret, redirectUri }) {
@@ -131,8 +131,9 @@ async function fetchGitHubLogin(token) {
   return result.login;
 }
 
-function oauthResult(status, content) {
+function oauthResult(status, content, env = {}) {
   const message = `authorization:github:${status}:${JSON.stringify(content)}`;
+  const allowedOrigin = siteOrigin(env);
   return html(`<!doctype html>
 <html lang="ko">
   <head>
@@ -142,17 +143,31 @@ function oauthResult(status, content) {
   <body>
     <script>
       (function () {
+        const allowedOrigin = ${JSON.stringify(allowedOrigin)};
         function receiveMessage(event) {
-          window.opener.postMessage(${JSON.stringify(message)}, event.origin);
+          if (!window.opener || event.source !== window.opener || event.origin !== allowedOrigin) {
+            return;
+          }
+          window.opener.postMessage(${JSON.stringify(message)}, allowedOrigin);
           window.close();
         }
         window.addEventListener("message", receiveMessage, false);
-        window.opener.postMessage("authorizing:github", "*");
+        if (window.opener) {
+          window.opener.postMessage("authorizing:github", allowedOrigin);
+        }
       })();
     </script>
     <p>Authentication complete. You can close this window.</p>
   </body>
 </html>`);
+}
+
+function siteOrigin(env = {}) {
+  try {
+    return new URL(env.SITE_URL || "https://psytor-log.github.io").origin;
+  } catch {
+    return "https://psytor-log.github.io";
+  }
 }
 
 function encodeState(value) {
