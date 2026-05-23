@@ -86,7 +86,7 @@ const readButtonLabel = featured
         <p class="eyebrow">{featuredLabel}</p>
         <div class="rule"></div>
       </div>
-      <article class="featured-card">
+      <article class="featured-card" data-cat={featured.category}>
         <a class="thumb" href={featured.url} aria-label={`${featured.title} thumbnail`}>
           {featured.thumbnail ? (
             <img src={featured.thumbnail} alt="" loading="lazy" />
@@ -117,7 +117,7 @@ const readButtonLabel = featured
   </div>
   <section class="post-list">
     {rest.map((post) => (
-      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`}>
+      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`} data-cat={post.category}>
         <time class="post-date" datetime={post.machineDate}>{post.displayDate}</time>
         {post.thumbnail && (
           <a class="post-thumb" href={post.url} aria-label={`${post.title} thumbnail`}>

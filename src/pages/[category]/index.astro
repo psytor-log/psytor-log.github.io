@@ -57,7 +57,7 @@ const [label, description] = labels[category];
 
   <section class="post-list">
     {posts.map((post) => (
-      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`}>
+      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`} data-cat={category}>
         <time class="post-date" datetime={post.machineDate}>{post.displayDate}</time>
         {post.thumbnail && (
           <a class="post-thumb" href={post.url} aria-label={`${post.title} thumbnail`}>

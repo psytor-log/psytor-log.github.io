@@ -448,3 +448,175 @@ Check your config.yml file.
   - Live `https://psytor-log.github.io/admin/config.yml?v=20260519-0145` returned HTTP 200; `code-block` count 0; `buttons:` count 5.
   - Local dev server process started for verification was no longer needed and should be stopped before handoff.
 - work.lock: remove after this final log update.
+2026-05-24T00:20:53+09:00 ~ 2026-05-24T00:25:08+09:00
+- 도구: codex + gstack /investigate 방식
+- 작업: Decap CMS 글 작성 중 오류 관련 upstream GitHub 이슈 확인.
+- work.lock: 생성 후 조사 완료 시 삭제.
+- 확인 범위:
+  - 로컬 `public/admin/config.yml` YAML 파싱.
+  - 라이브 `/admin/` 및 `/admin/config.yml?v=20260519-0145` 응답.
+  - decaporg/decap-cms GitHub issues 및 latest release.
+- 확인 결과:
+  - 로컬 config YAML 파싱 성공. folder collection 4개 본문 markdown buttons 는 모두 10개로 확인.
+  - 라이브 `/admin/` HTTP 200. Decap script 는 `decap-cms@3.0.0`, config 는 `config.yml?v=20260519-0145`.
+  - 라이브 config HTTP 200. 이전 오류 원인이었던 `code-block` 은 0개, `buttons:` 는 5개.
+  - Decap 최신 release 는 `decap-cms@3.12.2`(2026-04-17).
+  - GitHub issues 에 본문 작성 중 에디터 크래시로 보이는 이슈가 다수 존재:
+    - `Cannot find a descendant at path` 검색 결과 29건. `area: extensions/widgets/markdown` 라벨이 붙은 closed/completed 이슈가 있고, 최신 3.12.2에서도 유사 자동 리포트가 존재.
+    - `Failed to execute removeChild` 검색 결과 중 #7826, #7821 이 2026-05-20~22에 open 상태이며 Decap 3.12.2 + GitHub backend 설정을 포함.
+  - 이번 증상은 config 로드 실패보다 Decap Markdown/Rich Text 에디터 내부 크래시 가능성이 높음.
+- 판단:
+  - 현재 사이트가 `decap-cms@3.0.0`에 고정되어 있어 최신 markdown/richtext 관련 수정이 반영되지 않음.
+  - 단, 최신 3.12.2에서도 `removeChild`류 open issue 가 있어 단순 업그레이드만으로 완전 해결을 보장할 수 없음.
+  - 재현 오류 문구가 확보되면 `Cannot find descendant`, `removeChild`, `toArray` 중 어느 계열인지 확정 가능.
+- 수정한 파일: log.txt
+- 코드 변경: 없음
+- 검토 필요:
+  - 단기 우회: 본문 field 에 `modes: ["raw"]` 또는 raw 우선 설정을 적용해 rich text 편집 경로를 피하는 방안 검토.
+  - 장기 대응: 별도 브랜치에서 `decap-cms@3.12.2` + `widget: richtext` 전환을 테스트한 뒤 배포 여부 결정.
+2026-05-24T00:33:55+09:00 ~ 2026-05-24T00:34:51+09:00
+- 도구: codex + gstack /investigate 방식
+- 작업: Decap CMS 글 작성 중 에디터 오류 단기 우회 패치.
+- 사용자 입력:
+  - "에디터로 작성 중에 이런 오류가 남. 오류", 이후 "오류" 반복.
+  - 정확한 stack trace 는 전달되지 않았으나, 직전 조사에서 Decap Markdown/Rich Text 에디터 내부 크래시 계열 가능성이 가장 높다고 판단.
+- work.lock: 생성 후 작업 완료 시 삭제 예정.
+- Root cause hypothesis:
+  - Decap `markdown` widget 의 Rich Text 편집 경로가 작성 중 DOM/Slate 상태 오류(`removeChild`, `toArray`, `Cannot find a descendant at path` 계열)로 크래시.
+  - Decap 공식 문서상 markdown/richtext widget 은 `modes: ["raw"]` 설정을 지원하므로 Rich Text 경로를 끄면 본문 작성 기능은 유지하면서 해당 크래시 경로를 피할 수 있음.
+- 수정한 파일:
+  - public/admin/config.yml
+  - src/pages/admin.astro
+  - log.txt
+- 수정 내용:
+  - about/essay/study/books/portfolio 의 `body` markdown field 5곳에 `modes: ["raw"]` 추가.
+  - `/admin/` 이 새 config 를 읽도록 `cms-config-url` 쿼리 버전을 `20260524-0034` 로 갱신.
+- 검증:
+  - `node` + local `js-yaml` 로 `public/admin/config.yml` 파싱 통과.
+  - body field 5곳 모두 `modes: ["raw"]` 확인.
+  - `npm run build` 통과. 16 pages built.
+- 남은 작업:
+  - 실제 라이브 반영은 commit/push 및 GitHub Pages 배포 필요.
+  - 현재 로컬 브랜치는 `origin/main` 보다 7 commits behind 이고, 이전 작업에서 남은 `oauth-worker/src/index.js` 변경이 있어 배포 전 동기화/변경 분리 필요.
+2026-05-24T00:39:15+09:00 ~ 2026-05-24T00:41:30+09:00
+- 도구: codex + gstack /investigate 방식
+- 작업: Decap CMS `Cannot find a descendant at path [13,1,1]` 오류 패치 배포.
+- 사용자 제공 오류:
+  - `Error: Cannot find a descendant at path [13,1,1] in node: {"children":[{"type":"heading-two","chi...`
+  - Decap CMS version: `decap-cms@3.0.0`
+  - Git provider: `github`
+  - Browser: Edge/Chrome 148 on Windows 10
+- 판단:
+  - Decap upstream 에 반복 보고된 markdown/rich text editor 내부 상태 오류 계열과 일치.
+  - 이미 적용한 `modes: ["raw"]` 우회가 해당 Rich Text 편집 경로를 피하는 가장 좁은 수정.
+- 배포:
+  - 원격 main 의 7 commits 는 content 파일 변경뿐이라 admin 설정과 충돌 없음 확인.
+  - `public/admin/config.yml`, `src/pages/admin.astro` 만 커밋.
+  - commit: `1b65d8c Fix Decap editor writing crash`
+  - push: `main -> main`
+  - GitHub Actions run `26336812268` 성공.
+- 검증:
+  - rebase 후 `npm run build` 통과. 12 pages built.
+  - 라이브 `https://psytor-log.github.io/admin/?codex=202605240041` HTTP 200.
+  - 라이브 admin HTML 이 `config.yml?v=20260524-0034` 및 `decap-cms@3.0.0` 포함.
+  - 라이브 `https://psytor-log.github.io/admin/config.yml?v=20260524-0034` HTTP 200.
+  - 라이브 config 에 `modes: ["raw"]` 5곳 확인.
+- 남은 리스크:
+  - raw 모드는 WYSIWYG/Rich Text 편집 대신 Markdown 원문 입력 방식이라 사용성은 약간 낮아짐.
+  - 장기적으로는 별도 브랜치에서 `decap-cms@3.12.2` + `widget: richtext` 전환을 테스트하는 것이 좋음.
+  - 로컬에 이전 작업의 미커밋 변경 `oauth-worker/src/index.js`, `log.txt` 가 남아 있으므로 별도 정리 필요.
+2026-05-19T23:48:11+09:00 ~ 2026-05-19T23:52:55+09:00
+- 도구: codex
+- 작업: 홈페이지 보안 점검(CSO 방식, 로컬 코드/Git 이력/GitHub/Cloudflare Worker/의존성 확인)
+- work.lock: 생성 후 점검 완료 시 삭제 예정.
+- 확인 범위:
+  - GitHub 저장소 psytor-log/psytor-log.github.io 공개 여부, collaborator, main branch 보호 상태, Actions 권한, Pages 설정.
+  - Decap CMS admin 설정(public/admin/config.yml), 관리자 페이지(src/pages/admin.astro), OAuth Worker(oauth-worker/src/index.js), GitHub Actions(.github/workflows/deploy.yml).
+  - 코드/현재 파일/Git 이력의 주요 secret 패턴(AWS/GitHub/OpenAI/Cloudflare/OAuth secret 등).
+  - npm audit 의존성 취약점.
+  - Cloudflare Worker secret 이름 목록 확인: ALLOWED_GITHUB_LOGIN, GITHUB_OAUTH_ID, GITHUB_OAUTH_SECRET 존재 확인(값은 출력되지 않음).
+- 주요 판단:
+  - 일반 타 GitHub 사용자가 저장소 글을 임의 수정/삭제할 수 있는 상태는 아님. GitHub collaborator는 psytor-log 1개만 확인됨.
+  - /admin/은 공개 접근 가능하지만 Decap CMS 편집은 GitHub OAuth 및 저장소 write 권한/Worker 허용 계정 검사를 통과해야 함.
+  - 단, OAuth callback postMessage가 허용 origin을 검증하지 않아, 소유자가 악성 페이지에서 OAuth를 완료하면 public_repo 토큰이 악성 opener로 전달될 수 있는 구조를 확인함.
+  - main branch protection 없음. 계정/토큰 탈취 시 바로 main에 push/CMS delete 가능.
+  - 코드와 Git 이력에서 실제 secret 값 커밋은 확인하지 못함. secret 이름/문서/환경변수 참조만 확인됨.
+  - npm audit 결과 Astro/ws 관련 moderate 취약점 5개 확인.
+- 수정한 파일: log.txt
+- 코드 변경: 없음
+- 검토 필요:
+  - OAuth Worker callback에서 event.origin을 SITE_URL로 제한하고 targetOrigin도 고정.
+  - Decap CMS 스크립트 CDN 로딩을 자체 호스팅 또는 무결성 검증 가능한 방식으로 변경.
+  - main branch protection 및 CODEOWNERS/secret scanning 설정 추가.
+2026-05-20T00:03:51+09:00 ~ 2026-05-20T00:06:30+09:00
+- 도구: codex + gstack /investigate 방식
+- 작업: 즉시 수정 대상 보안 리스크 패치 - OAuth Worker callback postMessage origin 검증 부족
+- work.lock: 생성 후 작업 완료 시 삭제.
+- Root cause:
+  - oauth-worker/src/index.js 의 OAuth callback HTML 이 GitHub OAuth token 을 포함한 `authorization:github:success` 메시지를 만들고,
+    opener가 보낸 메시지의 `event.origin`을 그대로 targetOrigin 으로 사용했다.
+  - `ALLOWED_GITHUB_LOGIN`은 로그인한 GitHub 계정만 검증하고, token 을 전달받는 opener origin 은 검증하지 못했다.
+  - 따라서 소유자가 악성 페이지에서 OAuth popup 을 완료하면 악성 opener 가 메시지를 보내 token 을 받을 수 있는 구조였다.
+- 수정한 파일:
+  - oauth-worker/src/index.js
+- 수정 내용:
+  - `oauthResult(status, content, env)` 로 env 를 전달해 `SITE_URL` origin 을 계산.
+  - popup script 에서 `event.source === window.opener` 및 `event.origin === allowedOrigin` 일 때만 token 메시지를 전달.
+  - `postMessage` targetOrigin 을 `event.origin` 또는 `*` 대신 `allowedOrigin` 으로 고정.
+  - `window.opener` 가 없을 때 오류가 나지 않도록 guard 추가.
+- 검증:
+  - `node --check oauth-worker/src/index.js` 통과.
+  - `npm run build` 통과.
+  - 로컬 Worker module 호출로 `/callback` missing_code 응답 HTML 에 origin/source guard 문자열 포함 확인: `OAUTH_ORIGIN_GUARD_OK`.
+  - `npm run oauth:deploy` 성공. Cloudflare Worker Version ID: f5e3205a-ff0f-4c55-8220-60e91c4a828f.
+  - 라이브 `https://psytor-log-decap-oauth.dejangbu.workers.dev/callback` 응답에 origin/source guard 및 `https://psytor-log.github.io` 포함 확인: True.
+  - 라이브 `/count` API HTTP 200 확인.
+- 남은 리스크:
+  - main branch protection 없음: Decap CMS 가 main 직접 커밋 방식이라 PR 강제 보호를 바로 켜면 편집 흐름이 깨질 수 있어 이번 패치 범위에서 제외.
+  - Decap CMS CDN 스크립트 직접 로딩: 자체 호스팅/고정은 별도 작업으로 처리 권장.
+  - npm audit moderate 취약점: Astro major 업데이트 영향 검토 후 별도 처리 권장.
+
+## 2026-05-24 01:10:00 +09:00 - 카테고리별 색상 팔레트 도입 + Recent 리스트 색 구분
+
+- Work start: 2026-05-24 01:05 +09:00
+- Work end:   2026-05-24 01:10 +09:00
+- Tool used:  claude-code
+- 사용자 요청: "카테고리 색깔을 구분해서 넣고, recent 에도 색별로 카테고리가 구분되도록 수정. 팔레트는 적당히 선택. 끝까지 일단 진행."
+- 사전 점검 결과:
+  - global.css 에 --cat-essay/study/books/portfolio 변수와 .category-link[data-cat=]·.cat-badge[data-cat=] 셀렉터는 이미 정의되어 있었음.
+  - 기존 4색이 전부 어두운 톤(특히 --cat-essay 가 --accent 와 동일) 이라 시각적 구분이 약하고, Recent 의 cat-badge 는 8px 박스 + 단색 텍스트로 신호가 약했음.
+  - .post-item 자체에는 카테고리 색 신호가 전혀 없었음.
+- 자동 판단:
+  - work.lock 없음 → claude-code 명의로 lock 생성.
+  - 사용자가 "팔레트 적당히 선택" + "물어보지 마, 끝까지 진행" 명시 → 팔레트·디자인 결정은 본 세션에서 즉시 확정.
+- 처치:
+  1) 팔레트 교체 + soft 색 추가 (src/styles/global.css):
+     - --cat-essay #245c4f → #2f7a5e (+ #d8ebe2 soft)
+     - --cat-study #b3633c → #c0633b (+ #f1d9c9 soft)
+     - --cat-books #7c6a3a → #b8902c (+ #f0e3bd soft)
+     - --cat-portfolio #3a5a78 → #3f6ea8 (+ #d3e0ee soft)
+  2) [data-cat="*"] 공용 셀렉터로 --cat-color + --cat-color-soft 두 토큰을 동시에 노출 → 자식 요소가 자유롭게 두 색을 끌어다 씀.
+  3) .category-link: stripe 4px → 5px, strong 텍스트를 --cat-color 로, hover 시 border/배경을 --cat-color-soft 로 tint, 카테고리 그리드의 4개 박스가 한눈에 구분되도록 강화.
+  4) .cat-badge: 단순 dot+텍스트에서 soft pill 로 재설계 (배경: --cat-color-soft, 텍스트: --cat-color 의 86% 어두운 변형, dot: --cat-color). Featured 와 Recent 모두 적용.
+  5) .post-item: 좌측에 ::before 컬러 바(3px, opacity 0.55, hover 시 4px+1.0) 추가, hover 배경을 --cat-color-soft tint 로 → 리스트에서 각 항목이 카테고리별로 즉시 구분.
+  6) .read-btn / .featured-card .thumb-placeholder: --cat-color / --cat-color-soft 를 받도록 변경 → Featured 카드 전체가 카테고리 색으로 통일.
+  7) 페이지에 data-cat 배선:
+     - src/pages/index.astro: .featured-card 와 .post-item 양쪽에 data-cat 추가.
+     - src/pages/[category]/index.astro: .post-item 에 data-cat 추가 (이미 cat-badge 에는 있었음).
+- 수정한 파일:
+  - i:/AI for works/what-i-think/src/styles/global.css
+  - i:/AI for works/what-i-think/src/pages/index.astro
+  - i:/AI for works/what-i-think/src/pages/[category]/index.astro
+- 생성한 파일:
+  - i:/AI for works/what-i-think/work.lock (작업 종료 시 삭제)
+- 처리 실패: 없음.
+- 검증:
+  - npm run build 통과 (12 page(s) built in 995ms).
+  - dist/_astro/*.css 에 --cat-*: #... / --cat-*-soft: #... 8개 토큰 정상 직렬화.
+  - dist/index.html 에 data-cat 14건 출력 (essay 3 / study 1 / books 3 / portfolio 7).
+  - .post-item[data-cat]::before 와 .cat-badge pill 규칙 모두 번들 CSS 에 포함됨.
+- Review needed:
+  - 모바일(<=720px) 의 .post-item 좌측 padding 이 12px 인데 ::before 가 left:6px width:3px → 콘텐츠와 바 사이 갭이 좁은 편. 실기기 확인 후 필요시 모바일 padding-left 만 약간 증가 권장.
+  - --cat-books #b8902c 위 흰색 read-btn 텍스트는 대비 4.5:1 부근으로 경계선. Featured 가 books 일 때 가독성 추가 검증 권장.
+- Improvement pattern:
+  - CSS 토큰을 두 종(--cat-color 와 --cat-color-soft) 으로 분리하고 [data-cat] 공용 셀렉터로 동시 노출하면, 자식 컴포넌트는 추가 셀렉터 없이 두 톤을 자유롭게 조합 가능. 향후 카테고리 추가 시 토큰 2개와 [data-cat="새카테고리"] 한 줄만 더하면 끝.

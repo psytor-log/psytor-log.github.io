@@ -10,10 +10,14 @@
   --accent-soft: #e6f0ec;
   --max: 980px;
 
-  --cat-essay: #245c4f;
-  --cat-study: #b3633c;
-  --cat-books: #7c6a3a;
-  --cat-portfolio: #3a5a78;
+  --cat-essay: #2f7a5e;
+  --cat-essay-soft: #d8ebe2;
+  --cat-study: #c0633b;
+  --cat-study-soft: #f1d9c9;
+  --cat-books: #b8902c;
+  --cat-books-soft: #f0e3bd;
+  --cat-portfolio: #3f6ea8;
+  --cat-portfolio-soft: #d3e0ee;
 
   --serif: "Source Serif Pro", "Noto Serif KR", Georgia, "Apple SD Gothic Neo",
     "Malgun Gothic", serif;
@@ -172,26 +176,32 @@ h3 {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 5px;
   background: var(--cat-color, var(--accent));
 }
 
-.category-link[data-cat="essay"] {
+[data-cat="essay"] {
   --cat-color: var(--cat-essay);
+  --cat-color-soft: var(--cat-essay-soft);
 }
-.category-link[data-cat="study"] {
+[data-cat="study"] {
   --cat-color: var(--cat-study);
+  --cat-color-soft: var(--cat-study-soft);
 }
-.category-link[data-cat="books"] {
+[data-cat="books"] {
   --cat-color: var(--cat-books);
+  --cat-color-soft: var(--cat-books-soft);
 }
-.category-link[data-cat="portfolio"] {
+[data-cat="portfolio"] {
   --cat-color: var(--cat-portfolio);
+  --cat-color-soft: var(--cat-portfolio-soft);
 }
 
 .category-link:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px -8px rgba(0, 0, 0, 0.18);
+  border-color: color-mix(in srgb, var(--cat-color, var(--accent)) 40%, var(--line));
+  background: color-mix(in srgb, var(--cat-color-soft, var(--accent-soft)) 55%, var(--surface));
 }
 
 .category-link strong {
@@ -199,6 +209,7 @@ h3 {
   margin-bottom: 6px;
   font-family: var(--serif);
   font-size: 1.1rem;
+  color: var(--cat-color, var(--text));
 }
 
 .category-link span {
@@ -304,7 +315,7 @@ h3 {
   align-self: flex-start;
   padding: 10px 18px;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--cat-color, var(--accent));
   color: #ffffff;
   font-size: 0.92rem;
   font-weight: 600;
@@ -312,7 +323,11 @@ h3 {
 }
 
 .read-btn:hover {
-  background: color-mix(in srgb, var(--accent) 88%, black);
+  background: color-mix(in srgb, var(--cat-color, var(--accent)) 88%, black);
+}
+
+.featured-card[data-cat] .thumb .thumb-placeholder {
+  background: linear-gradient(135deg, var(--cat-color-soft, var(--accent-soft)), color-mix(in srgb, var(--cat-color, var(--accent)) 22%, white));
 }
 
 /* ---------- Recent list / Post items ---------- */
@@ -348,18 +363,37 @@ h3 {
 }
 
 .post-item {
+  position: relative;
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 24px;
-  padding: 26px 16px;
+  padding: 26px 16px 26px 22px;
   margin: 0 -16px;
   border-bottom: 1px solid var(--line);
   border-radius: 8px;
   transition: background 0.15s ease;
 }
 
+.post-item[data-cat]::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 22px;
+  bottom: 22px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--cat-color, var(--accent));
+  opacity: 0.55;
+  transition: opacity 0.15s ease, width 0.15s ease;
+}
+
 .post-item:hover {
-  background: var(--surface-soft);
+  background: color-mix(in srgb, var(--cat-color-soft, var(--surface-soft)) 40%, var(--surface));
+}
+
+.post-item[data-cat]:hover::before {
+  opacity: 1;
+  width: 4px;
 }
 
 .post-item.has-thumbnail {
@@ -402,32 +436,22 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 3px 10px 3px 9px;
+  border-radius: 999px;
+  background: var(--cat-color-soft, var(--accent-soft));
+  color: color-mix(in srgb, var(--cat-color, var(--accent)) 86%, black);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--cat-color, var(--accent));
 }
 
 .cat-badge::before {
   content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
   background: var(--cat-color, var(--accent));
-}
-
-.cat-badge[data-cat="essay"] {
-  --cat-color: var(--cat-essay);
-}
-.cat-badge[data-cat="study"] {
-  --cat-color: var(--cat-study);
-}
-.cat-badge[data-cat="books"] {
-  --cat-color: var(--cat-books);
-}
-.cat-badge[data-cat="portfolio"] {
-  --cat-color: var(--cat-portfolio);
 }
 
 .read-time {
