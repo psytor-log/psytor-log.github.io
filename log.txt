@@ -1,5 +1,34 @@
 # What I Think 작업 로그
 
+## 2026-05-26T00:55:00+09:00 ~ 2026-05-26T01:10:00+09:00 - sized-image 신규 업로드 이미지 프리뷰 깨짐 수정 (claude-code)
+
+- 사용 도구: claude-code
+- 사용자 보고: "새로운 이미지를 추가하면 이미지가 보이지 않는 오류 발생함." / 시나리오: 라이브 /admin/ 편집 중 우측 프리뷰에서 갓 삽입한 이미지가 깨짐.
+- 진단:
+  - Decap CMS 의 editor_component `toPreview(data, getAsset)` 시그니처에서 우리 admin.astro 의 sized-image 컴포넌트는 두 번째 인자 `getAsset` 을 받지 않고 raw `data.src` 를 그대로 figure HTML 에 박아 넣고 있었음.
+  - GitHub backend 의 경우 신규 업로드 파일은 commit 전까지 서버에 존재하지 않음. Decap 은 메모리에 blob 으로 보관하다가 `getAsset(path)` 호출 시 blob URL 을 돌려줌. 우리 컴포넌트가 이 호출을 안 했기 때문에 프리뷰 `<img src="/images/uploads/newfile.png">` 가 commit 전에 404 → 깨짐 표시.
+  - local_backend (decap-server) 환경에서는 업로드 즉시 디스크에 쓰이므로 동일 증상이 재현되지 않음. 따라서 본 버그는 GitHub backend 한정.
+- 자동 판단:
+  - toBlock 은 그대로 raw `data.src` 사용 (markdown 본문에는 미래의 public path 가 저장되어야 함).
+  - toPreview 만 getAsset 으로 해소.
+  - try/catch 로 감싸서 getAsset 호출이 실패하거나 미정의일 때 raw path 로 폴백.
+- 처치:
+  1) `src/pages/admin.astro` 의 toPreview 시그니처를 `(data, getAsset)` 로 변경.
+  2) `resolvedSrc` 변수에 `data.src` 폴백 + getAsset 결과의 `.toString()` 우선 적용.
+  3) 결과 figure HTML 의 `<img src>` 를 `resolvedSrc` 로 변경.
+  4) cms-config-url 캐시버스팅 쿼리 `?v=20260526-0010` → `?v=20260526-0055`.
+- 수정한 파일:
+  - i:/AI for works/what-i-think/src/pages/admin.astro
+- 생성한 파일:
+  - i:/AI for works/what-i-think/work.lock (본 로그 직후 삭제)
+- 검증:
+  - `npm run build` 통과 (11 페이지, 1.13s).
+  - dist/admin/index.html 에 `toPreview(data, getAsset)` + `getAsset(data.src)` 호출 코드 직렬화 확인.
+  - dist/admin/index.html 의 캐시버스팅 쿼리 `config.yml?v=20260526-0055` 반영 확인.
+  - local_backend 환경에서는 본 변경이 재현/검증 불가 (위 진단 참조). 라이브 배포 후 사용자 측 검증 필요.
+- 개선 패턴:
+  - Decap CMS 의 editor_component API 에서 image 필드를 다룰 때는 toPreview 가 받는 두 번째 인자 `getAsset` 을 반드시 활용해서 blob URL fallback 을 보장한다. registerPreviewTemplate 쪽 cover 이미지 처리는 이미 `this.props.getAsset(...)` 으로 잘 되어 있었는데, editor_component 쪽에는 동일 패턴이 누락돼 있었음.
+
 ## 2026-05-26T00:10:00+09:00 ~ 2026-05-26T00:35:00+09:00 - sized-image 크기/정렬 라이브 프리뷰 적용 불가 수정 (claude-code)
 
 - 사용 도구: claude-code (Edge headless + Node CDP 자동화)

@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap"
     />
     <link
-      href="/admin/config.yml?v=20260526-0010"
+      href="/admin/config.yml?v=20260526-0055"
       type="text/yaml"
       rel="cms-config-url"
     />
@@ -141,14 +141,25 @@
 
           return `<figure class="cms-image cms-image--${align}" style="--image-width: ${width}%;">\n  <img src="${escapeAttribute(data.src)}" alt="${escapeAttribute(data.alt)}" />${caption}\n</figure>`;
         },
-        toPreview(data) {
+        toPreview(data, getAsset) {
           const align = ['left', 'center', 'right'].includes(data.align) ? data.align : 'center';
           const width = ['40', '60', '80', '100'].includes(data.width) ? data.width : '100';
           const caption = data.caption
             ? `<figcaption>${escapeText(data.caption)}</figcaption>`
             : '';
+          // Resolve src through getAsset so newly uploaded (not yet committed)
+          // images render as the blob URL Decap holds in memory. Without this,
+          // the preview <img> requests the future public path, which 404s
+          // until Save → commit → deploy lands the file on the live server.
+          let resolvedSrc = data.src || '';
+          if (getAsset && data.src) {
+            try {
+              const asset = getAsset(data.src);
+              if (asset) resolvedSrc = asset.toString();
+            } catch (_) { /* fall back to raw path */ }
+          }
 
-          return `<figure class="cms-image cms-image--${align}" style="--image-width: ${width}%;">\n  <img src="${escapeAttribute(data.src)}" alt="${escapeAttribute(data.alt)}" />${caption}\n</figure>`;
+          return `<figure class="cms-image cms-image--${align}" style="--image-width: ${width}%;">\n  <img src="${escapeAttribute(resolvedSrc)}" alt="${escapeAttribute(data.alt)}" />${caption}\n</figure>`;
         }
       });
 
