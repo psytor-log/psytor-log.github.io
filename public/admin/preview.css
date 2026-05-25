@@ -152,27 +152,31 @@ html, body {
   border-radius: 8px;
 }
 
-.wit-preview .body .cms-image {
+/* sized-image rules are de-scoped so they match inside Decap's preview iframe,
+   which does not include .wit-preview / .body ancestors around the figure
+   that registerPreviewTemplate emits. Inline style="--image-width: N%;" on the
+   <figure> wins over the 100% fallback below by normal cascade. */
+.cms-image {
   --image-width: 100%;
   margin: 28px 0;
 }
-.wit-preview .body .cms-image img {
+.cms-image img {
   display: block;
   width: min(100%, var(--image-width));
   height: auto;
   border-radius: 8px;
 }
-.wit-preview .body .cms-image--left img   { margin-right: auto; }
-.wit-preview .body .cms-image--center img { margin-right: auto; margin-left: auto; }
-.wit-preview .body .cms-image--right img  { margin-left: auto; }
-.wit-preview .body .cms-image figcaption {
+.cms-image--left img   { margin-right: auto; }
+.cms-image--center img { margin-right: auto; margin-left: auto; }
+.cms-image--right img  { margin-left: auto; }
+.cms-image figcaption {
   width: min(100%, var(--image-width));
   margin-top: 8px;
   color: var(--muted);
   font-size: 0.9rem;
 }
-.wit-preview .body .cms-image--center figcaption { margin-right: auto; margin-left: auto; text-align: center; }
-.wit-preview .body .cms-image--right figcaption  { margin-left: auto; text-align: right; }
+.cms-image--center figcaption { margin-right: auto; margin-left: auto; text-align: center; }
+.cms-image--right figcaption  { margin-left: auto; text-align: right; }
 
 .wit-preview .body code {
   padding: 0.15em 0.3em;

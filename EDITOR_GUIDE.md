@@ -70,3 +70,17 @@ npm run dev
 ```text
 http://localhost:4321/admin/
 ```
+
+## 본문 편집 중 크래시 응급 조치
+
+`Cannot find a descendant at path`, `Failed to execute removeChild`, `toArray` 류 오류가 본문 작성 중 다시 발생하면 Decap CMS의 Rich Text/Slate 편집 경로 크래시입니다. 5/24에 적용했던 raw-only 우회를 다시 켜는 방식이 가장 좁고 안전한 응급 처치입니다.
+
+`public/admin/config.yml`의 5개 본문(`body`) 필드(`about`, `essay`, `study`, `books`, `portfolio`)에 다음 옵션을 추가합니다.
+
+```yaml
+{ label: "본문", name: "body", widget: "markdown", modes: ["raw"], buttons: [...], editor_components: ["sized-image"] }
+```
+
+그러면 raw 마크다운 입력 모드만 남아서 크래시 경로가 차단됩니다. 단 이 모드에서는 툴바 버튼과 본문 이미지 삽입 컴포넌트가 보이지 않으므로 마크다운 문법을 직접 타이핑해야 합니다 (`**굵게**`, `_기울임_`, `![설명](/images/uploads/파일명)`).
+
+응급 복구가 끝나면 `src/pages/admin.astro` 상단의 `config.yml?v=YYYYMMDD-HHMM` 쿼리값을 새 시각으로 바꿔서 브라우저가 캐시된 옛 config 를 사용하지 않도록 합니다.

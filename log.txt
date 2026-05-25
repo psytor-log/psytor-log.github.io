@@ -1,5 +1,134 @@
 # What I Think 작업 로그
 
+## 2026-05-26T00:10:00+09:00 ~ 2026-05-26T00:35:00+09:00 - sized-image 크기/정렬 라이브 프리뷰 적용 불가 수정 (claude-code)
+
+- 사용 도구: claude-code (Edge headless + Node CDP 자동화)
+- 사용자 보고: "이미지 크기와 정렬은 반영이 안되고 있어." / 관찰 위치: "/admin/ 우측 라이브 프리뷰".
+- 사전 점검 결과:
+  - 격리 CSS 테스트 (.cms-image 셀렉터와 동일 규칙을 가진 정적 HTML) 에서는 40%/60%/80% + left/center/right 모두 정확히 적용됨. CSS 규칙 자체는 정상이고 inline style 도 cascade 상 정상 우선 적용.
+  - Decap CMS 라이브 프리뷰 iframe 안의 figure DOM 점검 결과:
+    원문: `<figure class="cms-image cms-image--center" style="--image-width: 100%;">` 보존됨, preview.css 도 styleSheets 에 정상 로드.
+    한국어 요약: figure 의 클래스와 inline `--image-width` 변수가 모두 보존되고 preview.css 도 로드되지만, `.wit-preview` 와 `.body` 래퍼는 iframe 안에 없음 (previewRootFound=false, previewBodyFound=false).
+  - 결과적으로 [`preview.css`](public/admin/preview.css) 의 `.wit-preview .body .cms-image` 류 셀렉터가 한 건도 매칭 안 됨 → img 가 `display: block` 도 못 받고, `width: min(100%, var(--image-width))` 도 안 걸리고, `margin-left/right: auto` 도 안 걸림. 따라서 inline default img 로 렌더 → 사용자가 보기엔 "크기·정렬 반영 안 됨".
+- 자동 판단:
+  - 원본 figure HTML 자체와 변수 전달 경로는 무결하므로 admin.astro 의 editor_component 정의를 손대지 않음.
+  - 가장 좁은 수정은 preview.css 의 5개 cms-image 관련 룰에서 `.wit-preview .body` 접두를 제거하는 것. `.cms-image` 클래스는 사이트·프리뷰 양쪽에서 본 sized-image 컴포넌트가 만든 figure 에만 쓰이므로 충돌 위험 없음.
+  - 사이트 본문 (`src/pages/[category]/[slug].astro` 의 `<div class="article-content">` wrapper) 은 그대로 두면 됨. global.css 의 `.article-content .cms-image` 룰은 site DOM 에 정상 적용 중이라 무수정. 사이트 dist HTML 도 inline `style="--image-width: N%;"` 가 직렬화되어 있음을 직전 작업에서 확인.
+- 처치:
+  1) `public/admin/preview.css` 의 5개 selector group 에서 `.wit-preview .body` 접두 제거 → `.cms-image`, `.cms-image img`, `.cms-image--left/center/right img`, `.cms-image figcaption`, `.cms-image--center/right figcaption` 로 단순화. 의도 설명 주석 4줄 추가.
+  2) `src/pages/admin.astro` 의 cms-config-url 쿼리 갱신: `?v=20260525-2315` → `?v=20260526-0010` (브라우저가 옛 preview.css/config.yml 캐시를 안 쓰도록).
+- 수정한 파일:
+  - i:/AI for works/what-i-think/public/admin/preview.css
+  - i:/AI for works/what-i-think/src/pages/admin.astro
+- 생성한 파일:
+  - i:/AI for works/what-i-think/work.lock (작업 종료 시 삭제)
+- 처리 실패: 없음.
+- 라이브 검증 (CDP 자동화):
+  - 동일 portfolio 샘플 글 (2026-05-16-sample-codex-homepage-builder) 의 figure 에 inline 으로 `--image-width: 40%; class: cms-image cms-image--left` 적용 → 프리뷰 iframe DOM 의 computed style 측정.
+  - 결과: figClass=cms-image cms-image--left, figInlineWidthVar=40%, figCSWidthVar (figure computed) = 40%, imgCSWidthVar (img inherits) = 40%, imgDisplay=block, imgComputedWidth=273.188px (iframe 너비 ≈ 683px 의 40%), imgMarginLeft=0, imgMarginRight=409.812px → 정확히 좌측 정렬 + 40% 너비 적용 확인.
+  - 60% center, 80% right 변형도 추가 캡처 진행 (figure 가 iframe 안에서 site preview 영역 위쪽에 묻혀 시각 캡처는 어려웠으나, computed style 수치로 left/center/right 모두 의도대로 동작 검증됨).
+- 추가 관찰 (별도 이슈, 본 작업 범위 밖):
+  - 라이브 프리뷰 우측 상단에 ISO 원본 날짜 (2026-05-19T23:33:23.002+09:00) 와 태그가 plain text 로 나열되는 등, admin.astro 에서 `registerPreviewTemplate('portfolio', ...)` 로 등록한 wit-preview 템플릿이 일부만 적용되는 것으로 보임. Decap 3.12.2 의 preview template 적용 동작이 3.0.0 과 달라졌을 가능성 있음. 본건은 사용자 보고 범위 밖이라 별도 작업으로 분리.
+  - 라이브 프리뷰 하단에 site_url/display_url 기반 사이트 iframe 도 함께 표시되는데, 현재는 빌드된 사이트의 홈페이지가 함께 노출되어 시각적으로 어수선함. UX 다듬기는 차후.
+- 검토 필요 항목:
+  - 사이트 실제 페이지 (localhost:4321/portfolio/<slug>/) 와 라이브 배포 (psytor-log.github.io/<...>) 에서 40%/60%/80% + left/right 가 시각적으로 정확히 보이는지 사용자 수동 확인 필요. 본 검증은 admin 프리뷰 iframe 한정.
+  - 향후 카테고리·페이지 외 컬렉션에서도 cms-image 가 쓰일 경우, global.css 의 `.article-content` 접두가 너무 좁으면 동일 증상 재발 가능. 현재는 모든 본문이 [slug].astro 단일 템플릿이라 무문제.
+- 개선 패턴:
+  - Decap CMS 의 `registerPreviewStyle(path)` 로 로드된 CSS 는 프리뷰 iframe 의 root 까지의 ancestor chain 이 우리 React 템플릿 (registerPreviewTemplate) 의 출력과 1:1 일치한다는 가정을 만들기 쉬운데, 실제로는 Decap 의 내부 wrapper/iframe 이 우리가 기대한 클래스를 뒤집어 씌우지 않을 수도 있음. 프리뷰 전용 스타일은 가능한 한 컴포넌트 클래스 (`.cms-image`) 같이 자기 자신만으로 식별 가능한 selector 로 작성하는 게 안전. 사이트용 CSS 는 사이트 템플릿의 wrapper (`.article-content`) 를 신뢰해도 되지만, 프리뷰용은 그 가정을 피한다.
+- work.lock 삭제 여부: 본 로그 기록 직후 삭제.
+
+## 2026-05-25T23:37:00+09:00 ~ 2026-05-25T23:50:00+09:00 - Decap CMS rich 편집 기능 복구 라이브 검증 (claude-code)
+
+- 사용 도구: claude-code (Edge headless + Node CDP 자동화)
+- 사용자 요청: "로컬에서 npx decap-server + npm run dev 띄우고 http://localhost:4321/admin/를 니가 해보ㅓㅏ"
+- 작업 목적: 직전 패치(3.0.0 → 3.12.2 + modes:["raw"] 제거) 가 실제 브라우저에서 toolbar 와 editor_components 메뉴를 다시 살리는지 라이브 검증.
+- 자동 판단 근거:
+  - 본 작업은 검증 전용이고 프로젝트 파일을 수정하지 않으므로 work.lock 미생성.
+  - gstack /browse 스킬은 bun 미설치 + 미빌드 상태라 사용 불가. 대안으로 Windows 내장 Microsoft Edge (Edg/148.0.3967.83) 의 --headless=new 모드를 --remote-debugging-port=9222 와 함께 띄워 Node v24.15.0 의 글로벌 WebSocket + fetch 로 CDP (Chrome DevTools Protocol) 직접 호출.
+- 수행 절차:
+  1) `cd I:\AI for works\what-i-think && npx decap-server` 백그라운드 실행. 출력: "Decap CMS Proxy Server listening on port 8081".
+  2) `cd I:\AI for works\what-i-think && npm run dev` 백그라운드 실행. 출력: "astro v5.18.1 ready in 306 ms / Local http://localhost:4321/".
+  3) HTTP 레벨 검증:
+     - `GET http://localhost:4321/admin/` → 200, 응답 HTML 에 `decap-cms@3.12.2` 1건 + `config.yml?v=20260525-2315` 1건 확인.
+     - `GET http://localhost:4321/admin/config.yml` → 200, `grep -c 'modes: \["raw"\]'` → 0, `buttons:` → 5, `editor_components: ["sized-image"]` → 5.
+     - `POST http://localhost:8081/api/v1` (action=info) → 200, 응답: `{"repo":"what-i-think","publish_modes":["simple"],"type":"local_fs"}`. 한국어 요약: local backend proxy 가 GitHub OAuth 없이 로컬 파일시스템을 backend 로 사용함.
+  4) 헤드리스 브라우저 검증 1 - 초기 로드:
+     - msedge --headless=new --screenshot=admin-test.png http://localhost:4321/admin/ 실행.
+     - 캡처된 PNG (17,176 bytes) 에 Decap CMS 로고 + 한국어 "로그인" 버튼 + "사이트로 돌아가기" 링크 노출 확인. config.yml 파싱 성공, decap-cms.js 정상 로드, 치명적 JS 오류 없음.
+  5) 헤드리스 브라우저 검증 2 - 에디터 진입 (CDP 자동화 .admin-probe.mjs):
+     - Target.createTarget → Page.navigate(/admin/) → 로그인 버튼 자동 클릭 ("clicked:로그인") → Page.navigate(/admin/#/collections/essay/new) → 5.5초 대기 → Page.captureScreenshot.
+     - 캡처된 admin-editor.png (58,468 bytes): Essay 폼 정상 렌더. 제목, 작성일시, 태그, 요약, 대표 이미지, 비공개 초안 등 6개 필드 hint 와 함께 노출. 상단에 "Essay 컬렉션에 작성하는 중", "변경사항 저장됨" 배지.
+     - DOM 인스펙트 결과: editorPaneFound=true, 페이지 내 총 button 22개, locale=ko 정상 (모든 라벨 한글).
+  6) 헤드리스 브라우저 검증 3 - 본문 markdown widget 툴바 (CDP 자동화 .admin-probe-body.mjs):
+     - 본문 라벨로 scrollIntoView → 본문 위젯 컨테이너 식별 → 내부 버튼 라벨 전수 수집.
+     - 캡처된 admin-body-toolbar.png (54,380 bytes): "본문" 섹션 아래에 8개 툴바 버튼 (B, I, <>, 링크 🔗, H 드롭다운, "" 인용, 글머리 기호, 번호 매기기) + 9번째 "+" 구성요소 추가 버튼 + 우측에 "리치 텍스트 ⬤ 마크다운" 모드 토글 시각 확인.
+     - DOM 인스펙트 결과 (수집한 buttonLabels):
+       원문: ["굵은체","기울임체","코드","링크","제목","인용","글머리 기호 목록","번호 매기기 목록","구성요소 추가"]
+       한국어 요약: config.yml 의 buttons 배열 8개 (bold/italic/code/link/heading-*/quote/bulleted-list/numbered-list) 와 editor_components 배열 1개 (sized-image) 가 모두 렌더링됨.
+       widget 내부 slate editor 인스턴스 1개, textarea 0개 → rich text 모드가 정상 활성. raw 모드 단일 경로였다면 textarea 1개 + slateEditor 0개 였을 것.
+- 검증 결론:
+  - 5/24 codex 가 적용한 modes:["raw"] 우회의 부작용 (toolbar 비표시, "+" 구성요소 메뉴 비표시) 이 완전히 해소됨.
+  - 사용자가 보고한 "이미지 편집이나 글자 편집 기능 작동 안 함" 증상은 본 패치로 해결.
+  - decap-cms@3.12.2 + rich 모드에서 본문 작성 중 5/24 류 크래시 (`Cannot find a descendant at path`, `removeChild`, `toArray`) 가 재발할지는 본 검증에서는 미확인 (단순 로드 + 1회 페이지 진입까지만 자동화).
+- 수정한 파일: 본 log.txt 만 추가 기록. 프로젝트 파일은 무수정.
+- 임시 생성/삭제 파일 (검증 잔재, 모두 삭제됨):
+  - .admin-probe.mjs (Node CDP 자동화 스크립트)
+  - .admin-probe-body.mjs (본문 위젯 인스펙터)
+  - admin-test.png, admin-dom.html, admin-editor.png, admin-body-toolbar.png (스크린샷·DOM 덤프)
+- 백그라운드 프로세스: decap-server (port 8081), astro dev (port 4321), msedge --headless --remote-debugging-port=9222 모두 검증 종료 후 종료.
+- 처리 실패: 없음.
+- 검토 필요 항목:
+  - 본 검증은 페이지 로드 + 에디터 진입 + DOM 인스펙트까지. 실제 1~2분간 다양한 본문 (제목+리스트+인용+인라인 이미지) 을 작성하면서 5/24 류 크래시가 재현되는지는 사용자 수동 테스트가 필요. 응급 롤백 절차는 EDITOR_GUIDE.md "본문 편집 중 크래시 응급 조치" 섹션 참고.
+  - 본 변경은 push 전 단계. 라이브 (https://psytor-log.github.io/admin/) 반영은 별도 commit + push 필요.
+- 개선 패턴:
+  - bun 의존 도구 (gstack /browse) 가 미빌드 상태일 때, Node v22+ 의 글로벌 WebSocket + fetch + Chrome DevTools Protocol 만으로도 ~80 줄로 충분한 헤드리스 자동화가 가능. 외부 의존성 (puppeteer/playwright) 추가 없이도 검증 가능. 본 세션의 .admin-probe.mjs / .admin-probe-body.mjs 가 그 예.
+
+## 2026-05-25T23:15:00+09:00 ~ 2026-05-25T23:35:00+09:00 - Decap CMS rich 편집 기능 복구 (3.0.0 → 3.12.2 업그레이드 + raw 우회 해제)
+
+- 사용 도구: claude-code
+- 사용자 보고: "내 홈페이지 에디터 기능 중 이미지 편집이나 글자 편집 기능이 작동하지 않는 것 같다. 체크해봐."
+- 사전 점검 결과:
+  - public/admin/config.yml 의 5개 본문 필드(about/essay/study/books/portfolio) 모두 `modes: ["raw"]` 적용된 상태.
+  - 본 설정은 5/24 codex 작업(commit 1b65d8c "Fix Decap editor writing crash")에서 의도적으로 적용된 Rich Text 크래시 우회. 원인은 decap-cms@3.0.0 의 Slate/DOM 상태 버그 (`Cannot find a descendant at path [13,1,1]`).
+  - 부작용: raw 모드에서는 markdown 위젯의 toolbar buttons 와 editor_components("+" 컴포넌트 메뉴) 가 렌더되지 않음 → 사용자가 "이미지/글자 편집 안 됨"으로 인지.
+  - 즉, 보고된 증상은 코드 버그가 아니라 5/24 우회 패치의 trade-off.
+- 사용자 컨펌:
+  - Option A "Decap 3.12.2 로 올리고 rich 모드 복구" 선택. 부수 조건: 5/24 류 크래시가 다시 나타나면 raw 우회로 빠르게 되돌릴 수 있는 응급 레시피를 문서에 남길 것.
+- 자동 판단:
+  - work.lock 없음 → claude-code 명의로 lock 생성.
+  - 패치 범위: admin.astro (CDN script src) + config.yml (5곳 modes 옵션 제거) + EDITOR_GUIDE.md (롤백 레시피). 본 작업은 사용자 대면 UI 변경이므로 빌드 검증 필수.
+- 처치:
+  1) src/pages/admin.astro 의 `cms-config-url` 쿼리 버전 갱신: `?v=20260524-0034` → `?v=20260525-2315` (브라우저 캐시 무효화).
+  2) src/pages/admin.astro 의 Decap CMS CDN 버전 갱신: `decap-cms@3.0.0` → `decap-cms@3.12.2`.
+  3) public/admin/config.yml: 5개 본문 필드(`body` widget)에 박혀 있던 `modes: ["raw"], ` 토큰을 일괄 제거 (Edit replace_all). buttons 와 editor_components 배열은 변경 없이 유지 → rich 모드에서 자연스럽게 활성화.
+  4) EDITOR_GUIDE.md 끝에 "본문 편집 중 크래시 응급 조치" 섹션 추가. raw-only 우회 한 줄 패치 예시 + 트레이드오프 안내 + 쿼리 버전 갱신 절차 포함.
+  5) `npm run build` 실행: 10 page(s) built in 1.22s, 에러 없음.
+- 수정한 파일:
+  - i:/AI for works/what-i-think/src/pages/admin.astro (CDN 버전 + 쿼리)
+  - i:/AI for works/what-i-think/public/admin/config.yml (5곳 modes 제거)
+  - i:/AI for works/what-i-think/EDITOR_GUIDE.md (응급 조치 섹션 추가)
+- 생성한 파일:
+  - i:/AI for works/what-i-think/work.lock (작업 종료 시 삭제)
+- 처리 실패: 없음.
+- 검증:
+  - public/admin/config.yml: `grep -c "modes: "` → 0 (5건 모두 제거 확인).
+  - src/pages/admin.astro: `decap-cms@3.12.2` 1건 + `config.yml?v=20260525-2315` 1건 확인.
+  - dist/admin/index.html: `decap-cms@3.12.2` 및 `config.yml?v=20260525-2315` 직렬화 확인.
+  - dist/admin/config.yml: `modes:` 0건 확인.
+  - npm run build: 10 페이지 모두 성공.
+- 사용자 안내 (배포 전 확인):
+  1) 로컬에서 `npx decap-server` + `npm run dev` 실행 후 `http://localhost:4321/admin/` 접속.
+  2) Essay/Study/Books/Portfolio 중 임의 글 편집창에서 본문 영역에 굵게/기울임/제목/링크/리스트 버튼이 보이는지, "+" 메뉴에서 Image 컴포넌트가 보이는지 확인.
+  3) 약 1~2분간 다양한 마크다운(제목 + 리스트 + 인용 + 인라인 이미지) 을 섞어 작성해보면서 `Cannot find a descendant at path` / `removeChild` / `toArray` 류 콘솔 오류가 나오는지 확인.
+  4) 정상 동작 확인되면 commit + push → GitHub Pages 배포. 크래시 재현 시 EDITOR_GUIDE.md "본문 편집 중 크래시 응급 조치" 섹션의 절차로 raw 우회 복구.
+- Review needed:
+  - 본 변경은 push 전 단계. 라이브 반영은 사용자가 직접 commit/push (혹은 별도 세션에서 codex/ship 사용).
+  - 미커밋 로컬 변경 (log.txt 의 5/24 기록에서 언급된 oauth-worker/src/index.js 등) 이 남아 있을 수 있음. 본 작업과는 무관하므로 별도 정리 권장.
+- Improvement pattern:
+  - 외부 라이브러리의 알려진 버그를 우회하는 설정 변경(예: `modes: ["raw"]`) 은 반드시 EDITOR_GUIDE.md 같은 사용자 대면 문서에 "왜 적용했고 어떻게 되돌리는지"를 함께 남겨야 한다. 그렇지 않으면 우회의 부작용이 새 증상으로 다시 보고된다 — 본건이 그 사례. 앞으로는 우회 패치 직후 반드시 문서화 단계를 거치도록 한다.
+  - decap-cms 메이저 버전 고정(3.0.0)이 12+ 개월 지나 누적 버그를 함께 끌고 있었음. 향후 admin 도구는 분기별 또는 사용자 보고 시점에 minor 업그레이드 검토 루틴화 권장.
+- work.lock 삭제 여부: 본 로그 기록 직후 삭제.
+
 ## 2026-05-16T00:00:00.000Z
 - 실행한 작업: 초기 Astro + GitHub Pages 개인 홈페이지 프로젝트 생성
 - 처리한 초안 파일명: 없음
