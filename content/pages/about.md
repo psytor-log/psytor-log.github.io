@@ -13,7 +13,7 @@ eyebrow: About
 
 여기의 글은 완성된 소개서라기보다 계속 업데이트되는 작업 노트에 가깝습니다. 제가 무엇을 중요하게 보는지, 어떤 문제를 붙잡고 있는지, 그리고 AI 시대에 사람의 판단과 이해가 어디에 남아야 하는지를 기록하는 공간입니다.
 
-![](/images/uploads/카페_커피_음악_책.png)
+![](/images/uploads/img_0964.png)
 
 <figure class="cms-image cms-image--center" style="--image-width: 40%;">
   <img src="" alt="" />
