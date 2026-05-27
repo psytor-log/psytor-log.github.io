@@ -84,3 +84,20 @@ http://localhost:4321/admin/
 그러면 raw 마크다운 입력 모드만 남아서 크래시 경로가 차단됩니다. 단 이 모드에서는 툴바 버튼과 본문 이미지 삽입 컴포넌트가 보이지 않으므로 마크다운 문법을 직접 타이핑해야 합니다 (`**굵게**`, `_기울임_`, `![설명](/images/uploads/파일명)`).
 
 응급 복구가 끝나면 `src/pages/admin.astro` 상단의 `config.yml?v=YYYYMMDD-HHMM` 쿼리값을 새 시각으로 바꿔서 브라우저가 캐시된 옛 config 를 사용하지 않도록 합니다.
+
+## "백엔드 서비스 장애" 팝업에 대해
+
+`/admin/` 에서 가끔 "백엔드 서비스에 장애가 발생했습니다" 류의 토스트가 뜰 수 있습니다.
+이는 우리 사이트나 OAuth 워커의 버그가 아니라, Decap CMS 가 GitHub 의 공개 상태 페이지
+(`githubstatus.com`)를 5분마다 확인하다가 **Git Operations / API Requests** 가
+`operational` 이 아닐 때 띄우는 알림입니다.
+
+GitHub 이 단순 "degraded_performance"(느리지만 동작함, 저장/커밋은 대개 성공) 상태일 때도
+이 팝업이 떠서 불필요하게 불안을 줬습니다. 그래서 `src/pages/admin.astro` 에 작은
+`window.fetch` 가드를 넣어, 그 상태 응답의 `degraded_performance` 만 `operational` 로
+완화합니다. 실제 `partial_outage` / `major_outage`(부분/전면 장애)는 그대로 두기 때문에
+**진짜 장애 시에는 팝업이 계속 정상적으로 뜹니다.**
+
+따라서 저장이 진짜로 안 될 때는 https://www.githubstatus.com 를 직접 확인하세요.
+가드를 완전히 끄고 GitHub 상태를 있는 그대로 보고 싶으면 `admin.astro` 의
+"Backend status false-alarm guard" 주석이 달린 `<script>` 블록을 지우면 됩니다.

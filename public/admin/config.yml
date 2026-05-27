@@ -106,6 +106,7 @@ collections:
             name: "entries"
             widget: "list"
             label_singular: "기록 한 줄"
+            add_to_top: true
             summary: "{{fields.date}} · {{fields.text}}"
             hint: "특별한 이벤트나 기억할 만한 날을 날짜와 한 줄로 남깁니다. 순서는 상관없이 사이트에서 최신 날짜가 위로 정렬됩니다."
             fields:

@@ -237,16 +237,59 @@ async function handleHit(request, env) {
     return jsonResponse({ today: counters.today, total: counters.total, counted: false }, env);
   }
 
+  // Unique-visitor gate: count each visitor at most once per KST day.
+  // We dedup on a SHA-256 hash of IP + User-Agent (raw IP is never stored),
+  // so page reloads/refreshes by the same visitor no longer inflate the count.
+  // The "seen" marker expires at KST midnight, in step with the daily counter,
+  // so the same visitor is counted again the next day.
+  const seenKey = "seen:" + counters.todayKey.slice("today:".length) + ":" + (await visitorHash(request));
+  const alreadyCounted = await env.VISITOR.get(seenKey);
+
+  if (alreadyCounted) {
+    return jsonResponse({ today: counters.today, total: counters.total, counted: false }, env);
+  }
+
   const today = counters.today + 1;
   const total = counters.total + 1;
   await Promise.all([
     env.VISITOR.put(counters.todayKey, String(today), {
       expirationTtl: 60 * 60 * 24 * 7
     }),
-    env.VISITOR.put("total", String(total))
+    env.VISITOR.put("total", String(total)),
+    env.VISITOR.put(seenKey, "1", {
+      expirationTtl: secondsUntilKstMidnight()
+    })
   ]);
 
   return jsonResponse({ today, total, counted: true }, env);
+}
+
+// Stable per-visitor identifier for daily dedup. Hashes IP + User-Agent with
+// SHA-256 and keeps 32 hex chars — enough to avoid collisions for a personal
+// site while never persisting the raw IP address.
+async function visitorHash(request) {
+  const ip =
+    request.headers.get("CF-Connecting-IP") ||
+    request.headers.get("x-forwarded-for") ||
+    "unknown";
+  const ua = request.headers.get("user-agent") || "";
+  const data = new TextEncoder().encode(ip + "|" + ua);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  const bytes = new Uint8Array(digest);
+  let hex = "";
+  for (let i = 0; i < bytes.length; i++) {
+    hex += bytes[i].toString(16).padStart(2, "0");
+  }
+  return hex.slice(0, 32);
+}
+
+// Seconds remaining until the next KST midnight (>= 60, the KV minimum TTL).
+// Aligns the "seen" marker expiry with the daily counter rollover.
+function secondsUntilKstMidnight() {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const kstNowMs = Date.now() + 9 * 60 * 60 * 1000;
+  const msUntilEnd = dayMs - (kstNowMs % dayMs);
+  return Math.max(60, Math.ceil(msUntilEnd / 1000));
 }
 
 async function handleCount(env) {

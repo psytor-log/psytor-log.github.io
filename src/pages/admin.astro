@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap"
     />
     <link
-      href="/admin/config.yml?v=20260527-0045"
+      href="/admin/config.yml?v=20260527-0130"
       type="text/yaml"
       rel="cms-config-url"
     />
@@ -74,6 +74,57 @@
     </style>
   </head>
   <body>
+    <!--
+      Backend status false-alarm guard.
+      Decap's GitHub backend polls https://www.githubstatus.com/api/v2/components.json
+      and only treats the backend as healthy when BOTH "Git Operations" and
+      "API Requests" report exactly "operational". When GitHub posts a mere
+      "degraded_performance" (slow but working — commits still succeed), Decap
+      fires the recurring "백엔드 서비스 장애" toast. This patch relaxes only
+      degraded_performance -> operational for that one status endpoint, so the
+      false alarm stops. Genuine partial_outage / major_outage are left intact
+      and still surface. Must run before decap-cms.js so the first poll is wrapped.
+    -->
+    <script is:inline>
+      (function () {
+        const STATUS_HOST = 'githubstatus.com/api/v2/components.json';
+        const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
+        if (!nativeFetch) return;
+        window.fetch = function (input, init) {
+          const url = typeof input === 'string' ? input : (input && input.url) || '';
+          const pending = nativeFetch(input, init);
+          if (url.indexOf(STATUS_HOST) === -1) return pending;
+          return pending
+            .then(function (res) {
+              return res
+                .clone()
+                .json()
+                .then(function (data) {
+                  if (data && Array.isArray(data.components)) {
+                    data.components = data.components.map(function (c) {
+                      if (c && c.status === 'degraded_performance') {
+                        const relaxed = Object.assign({}, c, { status: 'operational' });
+                        return relaxed;
+                      }
+                      return c;
+                    });
+                  }
+                  return new Response(JSON.stringify(data), {
+                    status: res.status,
+                    statusText: res.statusText,
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                })
+                .catch(function () {
+                  return res;
+                });
+            })
+            .catch(function (err) {
+              throw err;
+            });
+        };
+      })();
+    </script>
     <script is:inline src="https://unpkg.com/decap-cms@3.12.2/dist/decap-cms.js"></script>
     <script is:inline>
       const escapeAttribute = (value = '') =>
