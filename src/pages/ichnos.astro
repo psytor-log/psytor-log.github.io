@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const modules = import.meta.glob('../../content/pages/ichnos.md', { eager: true });
+const entry = Object.values(modules)[0] ?? {};
+const data = entry.frontmatter ?? {};
+
+const title = data.title ?? 'Vestigo';
+const eyebrow = data.eyebrow ?? '발자취';
+const summary = data.summary ?? '기억할 만한 날과 특별한 순간을 날짜와 함께 한 줄로 남깁니다.';
+
+function toDateString(value) {
+  if (!value) return '';
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return String(value).slice(0, 10);
+}
+
+function displayDate(iso) {
+  return iso ? iso.replaceAll('-', '.') : '';
+}
+
+const entries = (data.entries ?? [])
+  .map((item) => {
+    const iso = toDateString(item.date);
+    return { iso, text: item.text ?? '' };
+  })
+  .filter((item) => item.iso && item.text)
+  .sort((a, b) => (a.iso < b.iso ? 1 : a.iso > b.iso ? -1 : 0));
+---
+
+<BaseLayout title={`${title} | What I Think`} description={summary} current="ichnos">
+  <section class="hero">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="lead">{summary}</p>
+  </section>
+
+  {entries.length > 0 ? (
+    <ol class="ichnos-list">
+      {entries.map((item) => (
+        <li class="ichnos-item">
+          <time class="ichnos-date" datetime={item.iso}>{displayDate(item.iso)}</time>
+          <p class="ichnos-text">{item.text}</p>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <p class="ichnos-empty">아직 남긴 발자취가 없습니다.</p>
+  )}
+</BaseLayout>

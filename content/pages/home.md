@@ -19,6 +19,10 @@ categories:
     name: Portfolio
     description: 만든 것과 실험 기록
     href: /portfolio/
+  - key: ichnos
+    name: Vestigo
+    description: 기억할 만한 날의 발자취
+    href: /ichnos/
 section_featured_label: Latest
 section_recent_label: Recent
 section_view_all_label: View all  →

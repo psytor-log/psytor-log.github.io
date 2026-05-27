@@ -1,5 +1,66 @@
 # What I Think 작업 로그
 
+## 2026-05-27T00:30:00+09:00 - 히스토리 메뉴 명칭 Ichnos → Vestigo 변경 + 시안 확인 (claude-code)
+
+- 사용 도구: claude-code
+- 사용자 요청: "타이틀을 'ichnos'에서 'Vestigo'로 바꿔줘. 그다음 시안을 확인할 수 있도록 해줘."
+- 상위 규칙 적용: §0 Auto-Yes 대원칙에 따라 yes/no 컨펌 없이 자동 진행.
+- 자동 판단 근거:
+  - 사용자 노출 명칭(타이틀/메뉴 라벨/CMS 라벨/샘플 텍스트)만 Vestigo 로 변경.
+  - 라우트·내부 키·파일명(/ichnos/, current="ichnos", content/pages/ichnos.md)은 유지. 이유: 사용자가 "타이틀"만 지정했고, 아직 미배포라 URL 변경 실익이 적으며 변경 시 preview_path 등 연쇄 수정/리스크가 생김. URL 까지 vestigo 로 바꾸길 원하면 별도 요청 시 처리.
+  - 참고: Vestigo(라틴어, 추적하다 / vestigium=발자국)로 "발자취" 의미와 부합.
+- 수정한 파일:
+  - content/pages/ichnos.md (title Ichnos→Vestigo, 샘플 entry 텍스트 내 표기)
+  - src/pages/ichnos.astro (title 기본값 Ichnos→Vestigo)
+  - src/layouts/BaseLayout.astro (nav 라벨 fallback Ichnos→Vestigo)
+  - content/pages/site.md (menu.ichnos 값 Ichnos→Vestigo)
+  - public/admin/config.yml (menu 라벨, 파일 label "Vestigo (발자취)", title default)
+  - src/pages/admin.astro (config.yml 캐시버스팅 ?v=20260527-0000 → 20260527-0030)
+- 시안 확인 수단:
+  - npm run dev 백그라운드 실행 (astro v5.18.1, http://localhost:4321/).
+  - curl 검증: /ichnos/ <title>Vestigo | What I Think</title>, 홈 nav 라벨 "Vestigo" 확인.
+- 처리 실패: 없음.
+- 검토 필요 항목:
+  - dev 서버는 확인용으로 계속 실행 중. 사용자가 시각 확인 후 종료 가능.
+  - 라이브 반영은 push 전 단계 (commit + push → GitHub Pages).
+- 후속 (같은 세션, 2026-05-27T00:45:00+09:00): 사용자가 시안 확인 중 "홈 중간 카테고리 박스 그리드에 Vestigo 가 없다"고 보고. 상단 nav 에만 있고 홈 category-grid(essay/study/books/portfolio)에는 누락. 자동 yes 로 추가 진행.
+  - content/pages/home.md: categories 에 {key: ichnos, name: Vestigo, description: 기억할 만한 날의 발자취, href: /ichnos/} 추가.
+  - src/styles/global.css: --cat-ichnos(#7a5ea0)/--cat-ichnos-soft 색상 + [data-cat="ichnos"] 블록 추가. .category-grid 를 repeat(4, ...) → repeat(auto-fit, minmax(160px, 1fr)) 로 변경 (박스 5개 이상에서도 정렬 유지).
+  - public/admin/config.yml: categories key select options 에 "ichnos" 추가 (CMS 편집 가능 유지). 캐시버스팅 ?v=20260527-0030 → 20260527-0045.
+  - 검증: dev 서버 /에서 category-link 박스 5개(Essay/Study/Books/Portfolio/Vestigo) 렌더 확인.
+- work.lock: 삭제 (전체 작업 종료, dev 서버는 별개로 유지).
+
+## 2026-05-27T00:00:00+09:00 - Ichnos(발자취) 히스토리 메뉴 추가 (claude-code)
+
+- 사용 도구: claude-code
+- 사용자 요청: "개인 홈페이지에 나의 히스토리를 남기는 메뉴 하나. 특별한 이벤트나 기억할 만한 날이 생기면 날짜와 함께 간략한 내용을 누적. 메뉴 이름은 발자취의 그리스어. 인터페이스 단순하게(년월일 + 한 줄), 최신 이벤트가 위로. home/essay/study/books/portfolio/about 와 나란히."
+- 상위 규칙 적용: AGENTS.md/CLAUDE.md §0 Auto-Yes 대원칙에 따라 진행 여부 yes/no 컨펌은 묻지 않고 자동 진행.
+- 자동 판단 근거:
+  - 메뉴 이름: 발자취의 그리스어 "Ichnos" (ίχνος, 흔적·발자취) 선택. 사용자가 그리스어 사용을 위임함. 기존 메뉴가 모두 영문 단어라 로마자 표기가 일관됨. 라우트 /ichnos/.
+  - 데이터 구조: 기존 content/pages/*.md 패턴과 동일하게 content/pages/ichnos.md frontmatter 의 entries 리스트({date, text})로 구현. 글 컬렉션(폴더+개별 md)이 아니라 단일 파일 리스트로 둬서 "한 줄 누적" 성격에 맞춤. /admin Decap CMS 에서 list 위젯으로 편집 가능.
+  - 정렬: 페이지에서 date 내림차순 정렬 → 파일 내 순서와 무관하게 최신이 항상 위로.
+  - 메뉴 위치: portfolio 와 about 사이에 배치.
+- 수정/생성한 파일:
+  - content/pages/ichnos.md (신규 — title/eyebrow/summary + entries 샘플 2건)
+  - src/pages/ichnos.astro (신규 — entries 읽어 최신순 정렬 후 날짜+한줄 타임라인 렌더, 빈 목록 폴백 포함)
+  - src/layouts/BaseLayout.astro (nav 배열에 ichnos 항목 추가)
+  - content/pages/site.md (menu.ichnos 라벨 추가)
+  - src/styles/global.css (.ichnos-list / .ichnos-item / .ichnos-date / .ichnos-text / .ichnos-empty + 720px 반응형 추가)
+  - public/admin/config.yml (pages 컬렉션 menu.object 에 Ichnos 라벨 필드 추가 + ichnos 파일 항목 신규: entries list 위젯, date(datetime, time 없음) + text(string))
+  - src/pages/admin.astro (config.yml 캐시버스팅 쿼리 ?v=20260526-0055 → ?v=20260527-0000)
+- 생성한 파일: work.lock (locked_by=claude-code, 본 로그 직후 삭제)
+- 검증:
+  - npm run build: 12 page(s) built in 1.26s, 에러 없음. /ichnos/index.html 생성 확인.
+  - dist/ichnos/index.html: entries 가 2026.05.27 → 2026.05.16 순(최신 위)으로 직렬화됨 확인.
+  - dist/index.html: nav 에 href="/ichnos/" 존재 확인.
+  - public/admin/config.yml: node + js-yaml 파싱 통과 (valid YAML). 직전 사고(buttons 허용값) 재발 방지 차원에서 사전 검증.
+- 처리 실패: 없음.
+- 검토 필요 항목:
+  - 라이브 반영은 push 전 단계. git add/commit/push → GitHub Pages 배포 필요.
+  - /admin/ 에서 "Ichnos (발자취)" 항목으로 기록 추가/삭제가 정상 동작하는지, datetime 위젯이 날짜만(시간 없이) 저장하는지 사용자 확인 권장.
+- 다음 액션: (1) 사용자 시각 확인 (2) commit + push 배포.
+- work.lock: 삭제 (작업 종료).
+
 ## 2026-05-26T00:55:00+09:00 ~ 2026-05-26T01:10:00+09:00 - sized-image 신규 업로드 이미지 프리뷰 깨짐 수정 (claude-code)
 
 - 사용 도구: claude-code

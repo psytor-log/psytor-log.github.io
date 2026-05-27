@@ -46,6 +46,7 @@ collections:
               - { label: "Study", name: "study", widget: "string" }
               - { label: "Books", name: "books", widget: "string" }
               - { label: "Portfolio", name: "portfolio", widget: "string" }
+              - { label: "Vestigo", name: "ichnos", widget: "string" }
               - { label: "About", name: "about", widget: "string" }
           - label: "푸터"
             name: "footer"
@@ -71,7 +72,7 @@ collections:
             widget: "list"
             hint: "홈 화면 4분할 박스. key 는 URL/색상 구분에 묶여 있어 변경하면 색이 깨질 수 있습니다."
             fields:
-              - { label: "키", name: "key", widget: "select", options: ["essay", "study", "books", "portfolio"] }
+              - { label: "키", name: "key", widget: "select", options: ["essay", "study", "books", "portfolio", "ichnos"] }
               - { label: "이름", name: "name", widget: "string" }
               - { label: "설명", name: "description", widget: "string" }
               - { label: "링크", name: "href", widget: "string" }
@@ -91,6 +92,25 @@ collections:
           - { label: "요약", name: "summary", widget: "text" }
           - { label: "상단 라벨", name: "eyebrow", widget: "string", default: "About" }
           - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
+
+      - name: "ichnos"
+        label: "Vestigo (발자취)"
+        file: "content/pages/ichnos.md"
+        format: "frontmatter"
+        preview_path: "ichnos/"
+        fields:
+          - { label: "제목", name: "title", widget: "string", default: "Vestigo" }
+          - { label: "상단 라벨", name: "eyebrow", widget: "string", default: "발자취" }
+          - { label: "설명", name: "summary", widget: "text", hint: "페이지 상단 한두 줄 소개." }
+          - label: "발자취 기록"
+            name: "entries"
+            widget: "list"
+            label_singular: "기록 한 줄"
+            summary: "{{fields.date}} · {{fields.text}}"
+            hint: "특별한 이벤트나 기억할 만한 날을 날짜와 한 줄로 남깁니다. 순서는 상관없이 사이트에서 최신 날짜가 위로 정렬됩니다."
+            fields:
+              - { label: "날짜", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, hint: "년-월-일 (KST)." }
+              - { label: "내용 (한 줄)", name: "text", widget: "string", hint: "그날 있었던 일을 한 줄로." }
 
   - name: "essay"
     label: "Essay"

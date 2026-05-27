@@ -18,6 +18,8 @@
   --cat-books-soft: #f0e3bd;
   --cat-portfolio: #3f6ea8;
   --cat-portfolio-soft: #d3e0ee;
+  --cat-ichnos: #7a5ea0;
+  --cat-ichnos-soft: #e4dcf0;
 
   --serif: "Source Serif Pro", "Noto Serif KR", Georgia, "Apple SD Gothic Neo",
     "Malgun Gothic", serif;
@@ -153,7 +155,7 @@ h3 {
 /* ---------- Category grid (with color stripes) ---------- */
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 14px;
   margin-top: 28px;
 }
@@ -195,6 +197,10 @@ h3 {
 [data-cat="portfolio"] {
   --cat-color: var(--cat-portfolio);
   --cat-color-soft: var(--cat-portfolio-soft);
+}
+[data-cat="ichnos"] {
+  --cat-color: var(--cat-ichnos);
+  --cat-color-soft: var(--cat-ichnos-soft);
 }
 
 .category-link:hover {
@@ -495,6 +501,51 @@ h3 {
   background: var(--surface);
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+/* ---------- Ichnos (발자취 / history) ---------- */
+.ichnos-list {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.ichnos-item {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: 18px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ichnos-date {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.ichnos-text {
+  margin: 0;
+  font-size: 1.04rem;
+  color: var(--text);
+}
+
+.ichnos-empty {
+  margin-top: 28px;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .ichnos-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 16px 2px;
+  }
 }
 
 /* ---------- Article (single post) ---------- */

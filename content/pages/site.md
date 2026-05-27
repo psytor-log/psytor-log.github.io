@@ -7,6 +7,7 @@ menu:
   study: Study
   books: Books
   portfolio: Portfolio
+  ichnos: Vestigo
   about: About
 footer:
   brand: What I Think
