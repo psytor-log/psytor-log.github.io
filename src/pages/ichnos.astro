@@ -28,7 +28,7 @@ const entries = (data.entries ?? [])
   .sort((a, b) => (a.iso < b.iso ? 1 : a.iso > b.iso ? -1 : 0));
 ---
 
-<BaseLayout title={`${title} | What I Think`} description={summary} current="ichnos">
+<BaseLayout title={`${title} | What I Think`} description={summary} current="ichnos" robots="noindex, nofollow">
   <section class="hero">
     <p class="eyebrow">{eyebrow}</p>
     <h1>{title}</h1>

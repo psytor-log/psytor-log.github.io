@@ -13,7 +13,8 @@ const footer = siteData.footer ?? {};
 const {
   title = brand,
   description = siteDescription,
-  current = ''
+  current = '',
+  robots = ''
 } = Astro.props;
 
 const nav = [
@@ -39,6 +40,7 @@ const totalLabel = footer.total_label ?? 'Total';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

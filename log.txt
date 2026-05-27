@@ -1,5 +1,32 @@
 # What I Think 작업 로그
 
+## 2026-05-27T02:45:00+09:00 - 발자취(Vestigo) 페이지 검색 제외(noindex) + 배포 (claude-code)
+
+- 사용 도구: claude-code
+- 맥락: 사용자가 "구글/네이버 검색 노출 가능한지, 방법" 문의. SEO 현황 점검 결과 사이트는 공개라 크롤링 가능하나 sitemap/robots.txt 없음, Search Console/서치어드바이저 미등록, 메타 빈약(홈 description 기본값, OG/canonical 없음).
+- 사용자 선택(AskUserQuestion): (1) 사이트 SEO 기반은 "직접 하겠다" → 코드 미변경, 가이드만 제공. (2) 발자취 페이지 개인 기록은 "발자취만 검색 제외(noindex)".
+- 개인정보 관점: 발자취(Vestigo)에 어머니 차량 사고, 연봉 계약, 회사 내부 일 등 사적 기록 포함 → 검색 색인 제외가 적절. 사이트 자체는 이미 공개라 직접 URL 접근은 가능(노출 범위만 축소).
+- 처치:
+  - src/layouts/BaseLayout.astro: robots prop 추가, 값이 있으면 <meta name="robots" content={robots}> 렌더(없으면 미출력 → 기존 페이지 영향 없음).
+  - src/pages/ichnos.astro: BaseLayout 에 robots="noindex, nofollow" 전달.
+- 수정한 파일: src/layouts/BaseLayout.astro, src/pages/ichnos.astro
+- 생성한 파일: work.lock (본 로그 직후 삭제)
+- 검증(빌드): npm run build 12 페이지 성공. dist/ichnos/index.html 에 robots noindex,nofollow 1건. dist/index.html, dist/essay/index.html 에는 robots meta 없음(색인 허용 유지) 확인.
+- 다음: commit + push → Pages 배포, 라이브 재검증.
+- work.lock: 삭제.
+
+## 2026-05-27T02:15:00+09:00 - 워커 + 사이트 라이브 배포 (claude-code)
+
+- 사용 도구: claude-code
+- 사용자 승인: AskUserQuestion 에서 "둘 다 지금 배포" 선택 (§0 외부 작업 예외 → 사전 승인).
+- (A) 워커 배포: npm run oauth:deploy (wrangler 4.92.0) → psytor-log-decap-oauth 업로드/배포 성공. Version ID 53f4879c-43ca-4518-946f-4c7b667f587e. env.VISITOR KV 바인딩 확인.
+  - 라이브 dedup 검증 (UA "wit-verify/1.0"): /count baseline {today:58,total:231} → 1st /hit {today:59,total:232,counted:true} → 2nd/3rd /hit {today:59,total:232,counted:false}. 새로고침 비카운트 확인. (검증 호출로 today/total 이 1 증가 = 실제 방문 1건으로 정상 집계.)
+- (B) 사이트 배포: git add 5개 파일(EDITOR_GUIDE.md, log.txt, oauth-worker/src/index.js, public/admin/config.yml, src/pages/admin.astro) → commit a3b1141 → pull --rebase (원격 284a161: 사용자 CMS 의 ichnos.md/home.md 실제 발자취 기록 + 카테고리 설명 편집) → push (284a161..2ad5fd6). 충돌 없음.
+  - GitHub Actions "Deploy to GitHub Pages" run 26514385540 → completed success 43s.
+  - 라이브 검증: /admin/ 에 "Backend status false-alarm guard" 1건, /admin/config.yml 에 add_to_top: true 1건, /ichnos/ 에 ichnos-item 18건이 최신순(2026-05-27 → 2026-05-17 → ...)으로 렌더 확인.
+- 처리 실패: 없음.
+- work.lock: 삭제.
+
 ## 2026-05-27T02:00:00+09:00 - 방문자 카운터를 클릭 단위 → 일일 unique 방문자 단위로 변경 (claude-code)
 
 - 사용 도구: claude-code
