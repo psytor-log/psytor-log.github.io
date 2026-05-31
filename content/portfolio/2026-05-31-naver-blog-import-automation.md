@@ -1,5 +1,5 @@
 ---
-title: "네이버 블로그 글을 홈페이지로 매일 옮기는 자동화 만들기"
+title: 네이버 블로그 글을 홈페이지로 매일 옮기는 자동화 만들기
 date: 2026-05-31T18:05:00.000+09:00
 category: portfolio
 tags:
@@ -7,12 +7,13 @@ tags:
   - 자동화
   - 네이버블로그
   - GitHub Actions
-summary: "네이버 블로그에 쌓아 둔 글을 개인 홈페이지로 매일 조금씩 옮기기 위해 공개 API, 카테고리 매핑, 비공개 초안, 진행률 로그, GitHub Actions 예약 실행을 연결한 과정."
+summary: 네이버 블로그에 쌓아 둔 글을 개인 홈페이지로 매일 조금씩 옮기기 위해 공개 API, 카테고리 매핑, 비공개 초안, 진행률
+  로그, GitHub Actions 예약 실행을 연결한 과정.
 cover: ""
-draft: true
+draft: false
 source_file: cms
-created_by: codex
 import_review_note: ""
+created_by: codex
 ---
 
 네이버 블로그에 오래 쌓아 둔 글을 지금 홈페이지로 옮기고 싶어졌다.
