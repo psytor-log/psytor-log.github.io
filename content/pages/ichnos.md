@@ -3,6 +3,8 @@ title: Vestigo
 eyebrow: 발자취
 summary: 발자취를 남깁니다
 entries:
+  - date: 2026-05-31
+    text: 홈페이지 색상 디자인 일부 수정. 깔끔해져라
   - date: 2026-05-16
     text: What I Think 개인 홈페이지를 처음 세상에 공개했다.
   - date: 2026-01-24
