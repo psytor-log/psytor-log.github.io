@@ -976,6 +976,32 @@ Check your config.yml file.
   - GitHub Actions가 `contents: write`, `pages: write`, `id-token: write` 권한으로 실행되는지 원격 Actions에서 1회 확인 필요.
 - work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
 
+## 2026-05-31 17:39:00 +09:00 - 네이버 import 변경사항 원격 반영
+
+- 작업 시작: 2026-05-31 17:36 +09:00
+- 작업 종료: 2026-05-31 17:39 +09:00
+- 사용한 도구: codex
+- 사용자 요청 요약: admin까지 올라가고 비공개 초안으로 설정된 상태를 기대했다는 점 확인 후 로컬 변경사항을 GitHub main에 반영.
+- 처리 내용:
+  - `feat: import Naver blog drafts` 커밋 생성.
+  - 최초 `git push`는 원격 main 선행 커밋 때문에 거부됨.
+  - `git fetch origin main` 후 `git rebase origin/main` 성공.
+  - `npm run build` 재검증 후 `git push` 성공.
+- 커밋:
+  - `0309750 feat: import Naver blog drafts`
+- 원격 검증:
+  - GitHub Actions `Deploy to GitHub Pages` run `26707909717` 성공.
+  - GitHub API에서 `content/study/2026-05-13-오늘의-문장.md` 존재 확인.
+  - `https://psytor-log.github.io/admin/config.yml`에 `import_review_note` 반영 확인.
+- 검증 결과:
+  - `npm run build` 통과. 12 page(s) built.
+  - `오늘의 문장`은 `draft: true`라 공개 `dist` 라우트에 생성되지 않음.
+- 수정한 파일 목록:
+  - `log.txt`
+- 처리 실패 사유:
+  - 최초 push fast-forward 거부. rebase로 원격 변경 통합 후 해결.
+- work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
+
 ## 2026-05-31 17:31:00 +09:00 - 검증용 import 중복 정정
 
 - 작업 시작: 2026-05-31 17:29 +09:00
