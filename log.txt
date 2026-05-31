@@ -1067,3 +1067,10 @@ Check your config.yml file.
   - `log.txt`
 - 처리 실패 사유: 없음.
 - work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
+
+2026-05-31 19:00 portfolio draft 새 글 작성 (KIS 데이트레이드 전략 검증)
+- 사용자 요청: "오늘 한 작업을 portfolio 새 글에 블로그 형식으로, 의사결정 시점 고민도 드러나게, 비공개로 업로드"
+- 작성 파일: content/portfolio/2026-05-31-day-trade-strategy-verification.md (draft: true)
+- 내용: 매일 1% 익절 데이트레이드 전략을 yfinance/Polygon 으로 4 변형 × 200+ 종목 × 75~486 거래일 검증한 7시간의 의사결정 흐름. 함정 평가 → v1/v2/v3 → Alpaca 막힘 → Polygon 우회 → 소형주 -34.15% / 승률 0%. 결론: 직관 부정, 인프라 보존.
+- 빌드 검증: npm run build 통과 (12 pages). draft 글 URL 미생성 확인.
+- 사전 처리: stale codex work.lock(타임스탬프 18:05, 같은 시각 글이 이미 생성 후 정리 안 됨) 정리하고 claude-code lock 생성 후 작업.
