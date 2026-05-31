@@ -76,12 +76,14 @@ function parseArgs() {
   const parsed = {
     limit: DEFAULT_LIMIT,
     dryRun: false,
+    statusOnly: false,
     pages: Number(process.env.NAVER_IMPORT_PAGES || 30)
   };
 
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg === '--dry-run') parsed.dryRun = true;
+    if (arg === '--status') parsed.statusOnly = true;
     if (arg === '--limit') parsed.limit = Number(args[++i] || parsed.limit);
     if (arg.startsWith('--limit=')) parsed.limit = Number(arg.split('=')[1] || parsed.limit);
     if (arg === '--pages') parsed.pages = Number(args[++i] || parsed.pages);
@@ -100,6 +102,20 @@ async function main() {
   const state = await loadState();
   const categories = await fetchCategories();
   const posts = await fetchPostList(options.pages);
+  const progressBefore = buildProgress(posts, state, categories);
+
+  if (options.statusOnly) {
+    await appendStatusReport(progressBefore, options);
+    console.log(JSON.stringify({
+      status: 'ok',
+      total: progressBefore.total,
+      importedOrSkipped: progressBefore.importedOrSkipped,
+      remainingCount: progressBefore.remainingCount,
+      nextRemaining: progressBefore.remaining.slice(0, 20)
+    }, null, 2));
+    return;
+  }
+
   const candidates = posts.filter((post) => !state.importedLogNos.includes(String(post.logNo)));
   const selected = candidates.slice(0, options.limit);
 
@@ -121,9 +137,9 @@ async function main() {
     const imported = results.filter((result) => result.status === 'imported');
     state.importedLogNos = [...new Set([...state.importedLogNos, ...imported.map((result) => String(result.logNo))])];
     state.lastRunAt = new Date().toISOString();
-    state.lastResult = summarizeResults(results);
+    state.lastResult = summarizeResults(results, posts, state);
     await fs.writeFile(paths.state, `${JSON.stringify(state, null, 2)}\n`, 'utf8');
-    await appendReport(results, options);
+    await appendReport(results, options, buildProgress(posts, state, categories));
   }
 
   console.log(JSON.stringify({ dryRun: options.dryRun, count: results.length, results }, null, 2));
@@ -425,7 +441,7 @@ function slugify(value) {
     .replace(/^-|-$/g, '');
 }
 
-async function appendReport(results, options) {
+async function appendReport(results, options, progress) {
   const now = new Date().toISOString();
   const lines = [
     '',
@@ -434,6 +450,9 @@ async function appendReport(results, options) {
     `- mode: ${options.dryRun ? 'dry-run' : 'import'}`,
     `- limit: ${options.limit}`,
     `- processed: ${results.length}`,
+    `- naver_public_posts_scanned: ${progress.total}`,
+    `- imported_or_skipped: ${progress.importedOrSkipped}`,
+    `- remaining: ${progress.remainingCount}`,
     ''
   ];
 
@@ -449,14 +468,67 @@ async function appendReport(results, options) {
     }
   }
 
+  if (progress.remaining.length) {
+    lines.push('', '### Next remaining posts');
+    for (const post of progress.remaining.slice(0, 10)) {
+      lines.push(`- ${post.logNo} / ${post.date} / ${post.categoryName} / ${post.title}`);
+    }
+  }
+
   await fs.appendFile(paths.report, `${lines.join('\n')}\n`, 'utf8');
 }
 
-function summarizeResults(results) {
+async function appendStatusReport(progress, options) {
+  const now = new Date().toISOString();
+  const lines = [
+    '',
+    `## ${now} - Status`,
+    '',
+    `- mode: status`,
+    `- pages_scanned: ${options.pages}`,
+    `- naver_public_posts_scanned: ${progress.total}`,
+    `- imported_or_skipped: ${progress.importedOrSkipped}`,
+    `- remaining: ${progress.remainingCount}`,
+    '',
+    '### Next remaining posts'
+  ];
+
+  for (const post of progress.remaining.slice(0, 20)) {
+    lines.push(`- ${post.logNo} / ${post.date} / ${post.categoryName} / ${post.title}`);
+  }
+
+  if (!progress.remaining.length) lines.push('- none');
+  await fs.appendFile(paths.report, `${lines.join('\n')}\n`, 'utf8');
+}
+
+function buildProgress(posts, state, categories = new Map()) {
+  const imported = new Set(state.importedLogNos.map(String));
+  const normalized = posts.map((post) => ({
+    logNo: String(post.logNo),
+    title: cleanText(decodeMaybe(post.titleWithInspectMessage || post.title || '')),
+    categoryNo: Number(post.categoryNo || 0),
+    categoryName: post.categoryName || categories.get(Number(post.categoryNo || 0))?.categoryName || '',
+    date: parseNaverDate(post.addDate) || post.addDate || ''
+  }));
+  const remaining = normalized.filter((post) => !imported.has(post.logNo));
+
+  return {
+    total: normalized.length,
+    importedOrSkipped: normalized.length - remaining.length,
+    remainingCount: remaining.length,
+    remaining
+  };
+}
+
+function summarizeResults(results, posts, state) {
+  const progress = buildProgress(posts, state);
   return {
     processed: results.length,
     imported: results.filter((result) => result.status === 'imported').length,
-    failed: results.filter((result) => result.status === 'failed').length
+    failed: results.filter((result) => result.status === 'failed').length,
+    naverPublicPostsScanned: progress.total,
+    importedOrSkipped: progress.importedOrSkipped,
+    remaining: progress.remainingCount
   };
 }
 
@@ -476,6 +548,8 @@ async function fetchText(url) {
 }
 
 function parseNaverDate(value) {
+  if (Number.isFinite(value)) return formatDateKst(new Date(value));
+  if (/^\d+$/.test(String(value || ''))) return formatDateKst(new Date(Number(value)));
   const match = String(value || '').match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})/);
   if (!match) return '';
   return `${match[1]}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
@@ -487,13 +561,17 @@ function extractDate(html) {
 }
 
 function todayKst() {
+  return formatDateKst(new Date());
+}
+
+function formatDateKst(date) {
   const formatter = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Seoul',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit'
   });
-  return formatter.format(new Date());
+  return formatter.format(date);
 }
 
 function decodeMaybe(value) {
