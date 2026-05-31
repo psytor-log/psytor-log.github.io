@@ -1167,3 +1167,10 @@ Check your config.yml file.
 - 방식: origin=github.com/psytor-log/psytor-log.github.io, main 브랜치 push → .github/workflows/deploy.yml(Actions: npm ci+build+deploy-pages) 자동 배포.
 - 사전 정리: preview.log를 .gitignore에 추가(로컬 미리보기 산출물).
 - 커밋 대상: 디자인 리뉴얼 v2→v4 전체(global.css, BaseLayout, index/[category]/[slug]/admin, preview.css), OG 생성기/이미지, DESIGN-SYSTEM.md, log.txt.
+
+2026-05-31 19:51 리디자인 작업 히스토리를 portfolio 블로그 글로 저장 (claude-code)
+- 사용자 요청: 이번 작업 히스토리를 홈페이지 portfolio에 블로그 형식으로 저장, 가능하면 이미지 캡처 포함.
+- 이미지: 브라우저 캡처 도구(bun/browse) 미설치로 실제 페이지 스크린샷 불가 → 사용자에게 고지. 대신 사이트 톤(sharp/SVG→PNG)으로 시각 자산 3종 생성: redesign-cover.png(커버), redesign-palette.png(v2→v3→v4 팔레트 변천), redesign-scores.png(체크리스트 전후 점수). 생성기: scripts/generate-post-images.mjs. 3종 모두 Read로 렌더 시각 확인.
+- 글: content/portfolio/2026-05-31-homepage-redesign-log.md 신규. 의사결정 흐름(점검→시스템→구현→3번 방향전환→⑤⑧보강→OG카드→배포→회고) 블로그 형식. 본문에 팔레트/OG카드/점수 이미지 figure 삽입.
+- draft 처리: draft: true (비공개 저장). 사용자가 명시적으로 공개 요청하지 않아 안전 기본값. 발행은 draft:false 또는 admin에서 토글.
+- 검증: npm run build 통과(14 pages — 원격 CMS가 별도로 day-trade 글을 발행해 페이지 수 증가). redesign 글은 draft라 미렌더 확인, 이미지 4종 dist 복사 확인.
