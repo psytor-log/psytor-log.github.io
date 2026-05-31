@@ -1,12 +1,18 @@
 {
   "importedLogNos": [
     "224287569845",
-    "224284673217"
+    "224284673217",
+    "224282294258",
+    "224269790743",
+    "224268536893"
   ],
-  "lastRunAt": "2026-05-31T08:30:09.945Z",
+  "lastRunAt": "2026-05-31T22:13:55.729Z",
   "lastResult": {
-    "processed": 1,
-    "imported": 1,
-    "failed": 0
+    "processed": 3,
+    "imported": 3,
+    "failed": 0,
+    "naverPublicPostsScanned": 680,
+    "importedOrSkipped": 5,
+    "remaining": 675
   }
 }
