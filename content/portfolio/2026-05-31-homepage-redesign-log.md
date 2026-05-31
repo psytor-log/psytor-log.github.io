@@ -8,9 +8,10 @@ tags:
   - Astro
   - 접근성
   - Claude Code
-summary: "$10K 웹사이트 체크리스트로 내 홈페이지를 점검하고, 디자인 시스템을 뽑아 라이트·다크·코발트로 세 번 방향을 바꿔 보고, 접근성과 공유 카드까지 손본 뒤 배포한 하루의 의사결정 기록."
+summary: $10K 웹사이트 체크리스트로 내 홈페이지를 점검하고, 디자인 시스템을 뽑아 라이트·다크·코발트로 세 번 방향을 바꿔 보고,
+  접근성과 공유 카드까지 손본 뒤 배포한 하루의 의사결정 기록.
 cover: /images/uploads/redesign-cover.png
-draft: true
+draft: false
 source_file: cms
 import_review_note: ""
 created_by: claude-code
