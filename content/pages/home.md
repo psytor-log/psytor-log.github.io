@@ -26,6 +26,6 @@ categories:
 section_featured_label: Latest
 section_recent_label: Recent
 section_view_all_label: View all  →
-section_view_all_href: /essay/
+section_view_all_href: /archive/
 read_button_label_template: Read {category}  →
 ---

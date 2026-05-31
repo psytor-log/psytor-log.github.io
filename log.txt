@@ -1174,3 +1174,8 @@ Check your config.yml file.
 - 글: content/portfolio/2026-05-31-homepage-redesign-log.md 신규. 의사결정 흐름(점검→시스템→구현→3번 방향전환→⑤⑧보강→OG카드→배포→회고) 블로그 형식. 본문에 팔레트/OG카드/점수 이미지 figure 삽입.
 - draft 처리: draft: true (비공개 저장). 사용자가 명시적으로 공개 요청하지 않아 안전 기본값. 발행은 draft:false 또는 admin에서 토글.
 - 검증: npm run build 통과(14 pages — 원격 CMS가 별도로 day-trade 글을 발행해 페이지 수 증가). redesign 글은 draft라 미렌더 확인, 이미지 4종 dist 복사 확인.
+
+2026-05-31 19:55 메인 "View all" 버튼 → 전체 글 아카이브로 변경 (claude-code)
+- 사용자 요청: 메인의 View all 클릭 시 essay 글만 보임 → 전체 글을 최신순으로 보이도록.
+- 처리: src/pages/archive.astro 신규(essay/study/books/portfolio 전 카테고리 glob, !draft 필터, 날짜 desc 정렬, 기존 post-list/cat-badge 스타일 재사용, 카테고리 배지로 구분). content/pages/home.md의 section_view_all_href /essay/ → /archive/. index.astro fallback도 /archive/. config.yml hint 갱신.
+- 검증: npm run build 통과(15 pages). /archive/ 생성, 홈 view-all href=/archive/, 아카이브에 portfolio6/essay4/books2 혼합·최신순 확인(study는 비공개 draft라 미표시 정상). 리디자인 회고 글은 draft라 아카이브 미포함.
