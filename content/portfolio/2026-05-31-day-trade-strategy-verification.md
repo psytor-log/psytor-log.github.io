@@ -1,5 +1,5 @@
 ---
-title: "매일 1% 수익을 내는 자동매매 전략을 데이터로 검증해봤다"
+title: 매일 1% 수익을 내는 자동매매 전략을 데이터로 검증해봤다
 date: 2026-05-31T19:00:00.000+09:00
 category: portfolio
 tags:
@@ -9,12 +9,13 @@ tags:
   - 자동매매
   - KIS
   - Polygon
-summary: "미국 급등주에서 매일 1% 익절을 노리는 데이트레이드 전략이 정말 작동할까. 4가지 변형, 두 개의 데이터 소스, 200개가 넘는 종목으로 검증한 7시간의 기록과 의사결정."
+summary: 미국 급등주에서 매일 1% 익절을 노리는 데이트레이드 전략이 정말 작동할까. 4가지 변형, 두 개의 데이터 소스, 200개가
+  넘는 종목으로 검증한 7시간의 기록과 의사결정.
 cover: ""
-draft: true
+draft: false
 source_file: cms
-created_by: claude-code
 import_review_note: ""
+created_by: claude-code
 ---
 
 머릿속에 좋은 전략 같아 보이는 게 있을 때, 보통 우리는 그게 진짜 좋은지 확인하지 않고 시도해버린다.
