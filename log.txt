@@ -976,6 +976,26 @@ Check your config.yml file.
   - GitHub Actions가 `contents: write`, `pages: write`, `id-token: write` 권한으로 실행되는지 원격 Actions에서 1회 확인 필요.
 - work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
 
+## 2026-05-31 18:05:00 +09:00 - 네이버 import 자동화 작업 portfolio 초안 작성
+
+- 작업 시작: 2026-05-31 18:05 +09:00
+- 작업 종료: 2026-05-31 18:05 +09:00
+- 사용한 도구: codex
+- 사용자 요청 요약: 오늘 진행한 네이버 블로그 자동 이전 작업을 홈페이지 portfolio 새 글로 작성하고, 처리 순서와 의사결정 이유가 드러나도록 블로그 형식으로 정리해 비공개 업로드.
+- 처리 내용:
+  - `content/portfolio/2026-05-31-naver-blog-import-automation.md` 작성.
+  - frontmatter에 `category: portfolio`, `draft: true`, `created_by: codex` 설정.
+  - 글 내용은 네이버 공개 API 확인, 카테고리 매핑, 최종 카테고리 + draft 결정, admin 반영, GitHub Actions 예약, 토큰 절약 구조, 진행률 로그 추가 순서로 구성.
+- 검증 결과:
+  - `npm run build` 통과. 12 page(s) built.
+  - `dist/portfolio/2026-05-31-naver-blog-import-automation/index.html` 미생성 확인.
+  - build 산출물에서 글 제목과 본문 핵심 문구 검색 결과 없음. draft 비노출 정상.
+- 수정한 파일 목록:
+  - `content/portfolio/2026-05-31-naver-blog-import-automation.md`
+  - `log.txt`
+- 처리 실패 사유: 없음.
+- work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
+
 ## 2026-05-31 17:50:00 +09:00 - 네이버 import 진행률 로그 기능 추가
 
 - 작업 시작: 2026-05-31 17:48 +09:00
