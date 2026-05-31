@@ -4,14 +4,16 @@ import { formatKoreanDateTime, getMachineDateTime } from '../../utils/posts.js';
 
 export function getStaticPaths() {
   const modules = import.meta.glob('../../../content/{essay,study,books,portfolio}/*.md', { eager: true });
-  return Object.entries(modules).map(([path, mod]) => {
-    const category = path.split('/').at(-2);
-    const slug = path.split('/').at(-1).replace(/\.md$/, '');
-    return {
-      params: { category, slug },
-      props: { post: mod, frontmatter: mod.frontmatter, category }
-    };
-  });
+  return Object.entries(modules)
+    .filter(([, mod]) => !mod.frontmatter?.draft)
+    .map(([path, mod]) => {
+      const category = path.split('/').at(-2);
+      const slug = path.split('/').at(-1).replace(/\.md$/, '');
+      return {
+        params: { category, slug },
+        props: { post: mod, frontmatter: mod.frontmatter, category }
+      };
+    });
 }
 
 const { post, frontmatter, category } = Astro.props;

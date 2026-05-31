@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "new-post": "node scripts/new-post.mjs",
+    "import:naver": "node scripts/import-naver-posts.mjs",
     "oauth:deploy": "wrangler deploy --config oauth-worker/wrangler.toml",
     "oauth:secret": "wrangler secret put --config oauth-worker/wrangler.toml"
   },

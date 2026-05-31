@@ -132,6 +132,7 @@ collections:
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
 
@@ -154,6 +155,7 @@ collections:
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
 
@@ -176,6 +178,7 @@ collections:
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
 
@@ -198,5 +201,6 @@ collections:
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
       - { label: "비공개 초안", name: "draft", widget: "boolean", default: false, required: false, hint: "켜두면 사이트에는 노출되지 않습니다 (DRAFT 표시)." }
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
+      - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
       - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }

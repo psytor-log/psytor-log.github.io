@@ -938,3 +938,62 @@ Check your config.yml file.
   - --cat-books #b8902c 위 흰색 read-btn 텍스트는 대비 4.5:1 부근으로 경계선. Featured 가 books 일 때 가독성 추가 검증 권장.
 - Improvement pattern:
   - CSS 토큰을 두 종(--cat-color 와 --cat-color-soft) 으로 분리하고 [data-cat] 공용 셀렉터로 동시 노출하면, 자식 컴포넌트는 추가 셀렉터 없이 두 톤을 자유롭게 조합 가능. 향후 카테고리 추가 시 토큰 2개와 [data-cat="새카테고리"] 한 줄만 더하면 끝.
+
+## 2026-05-31 17:26:00 +09:00 - 네이버 블로그 일일 자동 이전 준비
+
+- 작업 시작: 2026-05-31 16:30 +09:00
+- 작업 종료: 2026-05-31 17:26 +09:00
+- 사용한 도구: codex
+- 사용자 요청 요약: 네이버 블로그 `coaching_blog` 글을 최종 카테고리에 바로 넣되 `draft: true`로 숨기고, `import_review_note`만 검토 메모로 추가하며, PC가 꺼져 있어도 매일 자동 이전되도록 구성.
+- 자동 판단 근거:
+  - Codex 예약보다 GitHub Actions schedule이 PC off 상태에서 안정적임.
+  - LLM 호출 없이 Node 스크립트가 네이버 공개 API/HTML을 규칙 기반으로 처리하면 토큰 사용량이 거의 없음.
+  - 초기 처리량은 하루 3개가 안전하며 workflow_dispatch 입력값으로 수동 실행 시 개수 조정 가능.
+- 수정한 파일 목록:
+  - `src/pages/[category]/[slug].astro`: `draft: true` 글의 개별 정적 URL 생성 제외.
+  - `scripts/import-naver-posts.mjs`: 네이버 공개 카테고리/글 목록/본문을 가져와 최종 카테고리 폴더에 draft Markdown 생성.
+  - `.github/workflows/import-naver-posts.yml`: 매일 06:10 KST 자동 import, build, commit, GitHub Pages deploy workflow 추가.
+  - `package.json`: `npm run import:naver` 스크립트 추가.
+  - `public/admin/config.yml`: essay/study/books/portfolio 컬렉션에 `import_review_note` 필드 추가.
+  - `content/study/.gitkeep`: 비어 있던 study 폴더를 Git 추적 가능하게 생성.
+  - `content/naver-import-state.json`: 이미 가져온 네이버 `logNo` 상태 기록.
+  - `content/portfolio/2026-05-16-홈페이지-인공지능으로-만들어-버리기.md`: 실제 검증용 draft 1건 가져오기.
+  - `NAVER_IMPORT_REPORT.md`: import 결과 리포트 생성.
+- 검증 결과:
+  - `node --check scripts/import-naver-posts.mjs` 통과.
+  - `npm run import:naver -- --limit 3 --dry-run` 통과. 첫 글은 `portfolio`, 다음 두 글은 `study`로 분류됨.
+  - `npm run import:naver -- --limit 1` 실제 실행 성공. 최신 글 1건을 `draft: true`로 가져옴.
+  - `npm run build` 통과. 12 page(s) built.
+  - `dist/portfolio/2026-05-16-홈페이지-인공지능으로-만들어-버리기/index.html` 미생성 확인. draft 숨김 정상.
+  - build 산출물에서 가져온 draft 제목 검색 결과 없음. 목록/개별 페이지 모두 비노출 확인.
+  - 상태 파일 기준으로 이미 가져온 `224287569845`는 다음 dry-run에서 건너뜀 확인.
+- 처리 실패 사유:
+  - 최초 dry-run은 로컬 샌드박스의 새 디렉터리 생성 제한으로 `content/study` 생성에 실패. `content/study/.gitkeep` 추가로 해결.
+  - 네이버 공개 API 호출은 로컬 sandbox network 제한으로 escalation 후 검증.
+- 검토 필요 항목:
+  - 실제 첫 주 운영 후 카테고리 분류 규칙을 10~20건 기준으로 조정 권장.
+  - 이미지가 있는 글은 다음 실제 실행에서 이미지 다운로드 결과 확인 필요.
+  - GitHub Actions가 `contents: write`, `pages: write`, `id-token: write` 권한으로 실행되는지 원격 Actions에서 1회 확인 필요.
+- work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
+
+## 2026-05-31 17:31:00 +09:00 - 검증용 import 중복 정정
+
+- 작업 시작: 2026-05-31 17:29 +09:00
+- 작업 종료: 2026-05-31 17:31 +09:00
+- 사용한 도구: codex
+- 사용자 요청 요약: 검증용으로 가져온 `홈페이지 인공지능으로 만들어 버리기`가 이미 what-i-think에 있던 글이라는 지적 확인.
+- 처리 내용:
+  - 중복으로 생성했던 `content/portfolio/2026-05-16-홈페이지-인공지능으로-만들어-버리기.md` draft 파일 제거.
+  - `content/naver-import-state.json`에는 `224287569845`를 유지해 다음 자동 실행에서 다시 가져오지 않도록 처리.
+  - 다음 네이버 글 `224284673217` / `오늘의 문장`을 실제 검증용으로 `content/study/2026-05-13-오늘의-문장.md`에 import.
+- 검증 결과:
+  - `npm run build` 통과. 12 page(s) built.
+  - `dist/study/2026-05-13-오늘의-문장/index.html` 미생성 확인. draft 숨김 정상.
+  - build 산출물에서 `오늘의 문장`, `You can outsource your thinking` 검색 결과 없음.
+- 수정한 파일 목록:
+  - `content/study/2026-05-13-오늘의-문장.md`
+  - `content/naver-import-state.json`
+  - `NAVER_IMPORT_REPORT.md`
+  - `log.txt`
+- 처리 실패 사유: 없음.
+- work.lock 생성/삭제 여부: codex가 생성했고 작업 종료 시 삭제 예정.
