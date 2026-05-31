@@ -1074,3 +1074,96 @@ Check your config.yml file.
 - 내용: 매일 1% 익절 데이트레이드 전략을 yfinance/Polygon 으로 4 변형 × 200+ 종목 × 75~486 거래일 검증한 7시간의 의사결정 흐름. 함정 평가 → v1/v2/v3 → Alpaca 막힘 → Polygon 우회 → 소형주 -34.15% / 승률 0%. 결론: 직관 부정, 인프라 보존.
 - 빌드 검증: npm run build 통과 (12 pages). draft 글 URL 미생성 확인.
 - 사전 처리: stale codex work.lock(타임스탬프 18:05, 같은 시각 글이 이미 생성 후 정리 안 됨) 정리하고 claude-code lock 생성 후 작업.
+
+2026-05-31 18:10 홈페이지/admin UI 전면 리디자인 작업 시작 (claude-code)
+- 사용자 요청 요약: 업로드한 구글문서(Metics Media "The $10K Checklist", 8개 항목)로 what-i-think 홈페이지를 점검 → 평가 결과를 참고해 ui-ux-pro-max로 디자인 시스템 도출 → frontend-design 기준으로 홈페이지 전체 UI를 가독성 있고 세련된 개인 블로그로 개선 → astro 구조에 맞춰 구현 + build 검증 → 동일 문법으로 admin 페이지도 개선.
+- 체크리스트 원문 요약(한국어): ①관점(템플릿이 아닌 명확한 디자인 방향) ②일하는 타이포(Inter/Roboto 금지, display+body 페어링) ③절제된 컬러 3~5색 ④숨 쉬는 위계(여백·대비) ⑤의도 있는 이미지 ⑥속삭이는 모션(AOS 슬롭 금지) ⑦축소가 아닌 설계된 모바일 ⑧보이지 않는 고급(2s 미만 로드, WCAG AA, 키보드 내비, 시맨틱 HTML, 메타태그).
+- 사전 상태: work.lock 없음(Codex 미작업) 확인 후 claude-code lock 생성.
+- yes/no 컨펌 자동 진행(Auto-Yes 대원칙).
+
+2026-05-31 18:20 홈페이지/admin UI 전면 리디자인 작업 종료 (claude-code)
+- 처리 내용:
+  - 점검: Metics Media "$10K Checklist" 8항목 점검 결과 평균 약 5.75/10. 최약점 ⑤이미지(4), ③컬러(5), ⑥모션(5). 강점 ②세리프 타이포(7), ④위계(7) 유지.
+  - 디자인 시스템: ui-ux-pro-max(python search.py --design-system + typography/color/ux 도메인)로 Editorial/Swiss Modernism 2.0 방향 도출. design-proposals/DESIGN-SYSTEM.md 신규 작성(미학·타이포 스케일·컬러 토큰·공간·모션·접근성·플레이스홀더).
+  - 구현(frontend-design 기준):
+    - src/styles/global.css 전면 재작성: 잉크/종이/단일 강조색 스파인, 카테고리 5색을 저채도 흙빛 패밀리로 재튜닝(무지개 제거, 체크리스트 ③), Public Sans+Noto Sans KR 본문 페어링 추가(②), :focus-visible·skip-link·prefers-reduced-motion 추가(⑧), 일관된 모노그램 플레이스홀더(⑤), sticky 헤더+backdrop, 히어로 staggered 진입 모션(⑥), 종이 그레인 텍스처, 모바일 nav 재배치(⑦).
+    - src/layouts/BaseLayout.astro: 폰트 링크(Public Sans/Noto Sans KR 추가), skip-link, main#main 추가.
+    - src/pages/index.astro: featured 플레이스홀더에 data-monogram + aria-hidden.
+    - src/pages/admin.astro: :root 토큰을 사이트와 동일하게 교체, Public Sans 본문, AppHeader 틴트, focus-visible, reduced-motion, 인라인 프리뷰 colorMap/보더/뮤트색 신규 팔레트로 교체.
+    - public/admin/preview.css: 토큰·타이포 weight(700→600)·본문 line-height·ink-soft 색 동기화.
+- 검증 결과:
+  - npm run build 통과. 13 page(s) built in ~1.1s.
+  - dist 산출물 확인: skip-link, Public+Sans, data-monogram="P", #2f5d50 존재. 구 팔레트(#fbfaf7/#245c4f) dist HTML 에서 제거 확인.
+  - 대비: muted #5d584f on paper #f7f4ee ≈ 6.4:1 (WCAG AA 통과, 기존 경계값 개선).
+  - 미리보기: astro preview http://localhost:4321/ 로 시각 확인 가능(브라우저 바이너리 미설치로 자동 스크린샷은 미수행).
+- 기존 success_metrics 10항목 영향: 카테고리 그리드 위치/세리프 제목/컬러 스트라이프/배지+읽는시간/푸터 요소/admin 프리뷰 타이포/사이드바 활성/DRAFT·PUBLISHED pill/커버 4:3 안내 모두 보존됨.
+- 수정/생성 파일:
+  - design-proposals/DESIGN-SYSTEM.md (신규)
+  - src/styles/global.css (전면 재작성)
+  - src/layouts/BaseLayout.astro
+  - src/pages/index.astro
+  - src/pages/admin.astro
+  - public/admin/preview.css
+  - log.txt
+- 처리 실패 사유: 없음. (브라우저 미설치로 스크린샷 자동화만 보류 — 검토 필요 시 bun/gstack browse 빌드 후 재시도 가능.)
+- yes/no 컨펌 자동 진행(Auto-Yes 대원칙).
+- work.lock: claude-code 생성, 작업 종료 시 삭제.
+
+2026-05-31 18:31 다크 에디토리얼(Cold Steel)로 컨셉 전환 (claude-code)
+- 사용자 요청 요약: "미리보기와 현재 모습이 큰 차이가 없네. 컨셉을 좀 어둡고 전문적인 느낌으로 가볼까?"
+- 사용자 선택(AskUserQuestion): 강조색 무드 = "콜드 스틸/블루". (yes/no 컨펌이 아닌 실질 선택 → 질문함, Auto-Yes 예외)
+- 처리 내용:
+  - src/styles/global.css: v2 라이트 종이 → v3 다크 스파인 전면 반전. bg #131519(쿨 슬레이트 차콜), ink #e4e7ec, accent #6f9fd0(steel blue), muted #8b909b. 카테고리 5색을 차콜 위 쿨 패밀리로 재정의(blue/teal/sand/periwinkle/mauve). cat-badge를 다크 칩+밝은 텍스트+보더로 재작성. 버튼 텍스트는 밝은 강조색 위라 다크 잉크(--btn-ink #0f1115)로 반전. 배경 쿨 글로우/그라데이션, 브랜드 도트 글로우 추가. 구조/타이포 스케일/모션/접근성 원칙은 유지.
+  - src/layouts/BaseLayout.astro: meta theme-color #131519 추가.
+  - src/pages/admin.astro: 에디터 크롬 토큰을 라이트-쿨 + 진한 스틸블루(#3f6f9e, 라이트 배경 가독성)로, 인라인 home/site 프리뷰 템플릿 색을 다크 팔레트로 반전(보더 #2a2e36, surface #1b1e24, muted #8b909b), colorMap을 v3 카테고리색으로 교체.
+  - public/admin/preview.css: 미리보기 페인을 다크로(사이트 미러링). 토큰 다크화, published pill 다크 그린, code/pre 배경 surface-soft.
+  - design-proposals/DESIGN-SYSTEM.md: v3 Dark Editorial 섹션 추가, v2는 보존 기록으로 이동.
+- 검증: npm run build 통과(13 pages, ~1.4s). dist CSS 에 #131519/#6f9fd0/#e4e7ec 존재, theme-color 존재 확인. dist home/admin HTML 에서 구 팔레트(#f7f4ee/#2f5d50/#fbfaf7/#245c4f) 제거 확인.
+- 대비 검산: muted #8b909b on #131519 ≈ 5.7:1, accent ≈ 6.6:1, 버튼 다크잉크 ≈ 6.6:1 모두 WCAG AA 통과.
+- 참고: 이전 세션에서 미리보기와 차이가 작게 느껴진 건 브라우저 CSS 캐시 가능성. 다크 전환은 시각적으로 명확히 구분됨.
+- 처리 실패 사유: 없음.
+
+2026-05-31 18:42 모던 라이트(Cool White / Cobalt)로 색 조합 재변경 (claude-code)
+- 사용자 요청: "다른 색 조합을 추천해줘. 모던한 스타일을 개인 블로그 느낌이면 좋겠어."
+- 사용자 선택(AskUserQuestion, 4개 큐레이션 옵션 제시): "쿨 화이트 + 코발트". (실질 선택 → 질문함)
+- 처리 내용:
+  - src/styles/global.css: v3 다크 → v4 라이트 코발트 전면 반전. bg #fbfbfc, ink #16181d, accent #2563eb(코발트), muted #5b5f6a. 카테고리 = 모던 라벨 팔레트(-700 계열: blue/teal/amber/violet/pink). cat-badge 라이트 칩+깊은 텍스트로 재작성. 버튼 흰 텍스트 복귀. 배경 코발트 미세 글로우.
+  - 강조색 AA 처리: 사용자가 고른 스와치 원안 #2f6df6는 흰 배경 링크 대비 4.4:1로 AA 미달 → 한 단계 깊은 #2563eb(링크/버튼 5:1)로 조정. 코발트 인상 유지. 근거를 사용자에게 고지.
+  - src/layouts/BaseLayout.astro: theme-color #fbfbfc.
+  - src/pages/admin.astro: 에디터 크롬+인라인 프리뷰 토큰을 라이트 코발트로, colorMap을 v4 카테고리색으로.
+  - public/admin/preview.css: 라이트 코발트로 미러링, published pill 라이트 그린 복귀, code/pre는 surface-soft 토큰 유지.
+  - design-proposals/DESIGN-SYSTEM.md: v4 섹션 추가(현재 적용본), v3는 보존 기록으로.
+- 검증: npm run build 통과(13 pages, ~1.1s). dist CSS 에 #fbfbfc/#2563eb/#16181d, theme-color 확인. dist home/admin 에서 v3 다크값(#131519/#6f9fd0/#1b1e24/#8b909b) 제거 확인.
+- 대비 검산: muted #5b5f6a on #fbfbfc ≈ 6.1:1, accent #2563eb 링크/버튼 ≈ 5:1 모두 AA 통과.
+
+2026-05-31 18:50 체크리스트 재점검 + ⑤/⑧ 점수 향상 + 타이포·여백 손질 (claude-code)
+- 사용자 요청: 체크리스트 재점검, "의도 있는 이미지(⑤)"·"보이지 않는 고급(⑧)" 점수 향상, 제목 폰트 크기/한글 폰트 종류/줄간격 점검, 모던·심플 개인 블로그에 맞게 여백 확대.
+- 재점검(현 v4 Cool White/Cobalt): ①8 ②7.5 ③8 ④7.5 ⑤5 ⑥7 ⑦7 ⑧6. → ⑤,⑧ 타깃.
+- ⑧ 보이지 않는 고급:
+  - BaseLayout.astro: canonical(Astro.url+site), Open Graph(type/site_name/title/description/url/image/published_time), Twitter card(summary/large) 메타 추가. ogType/image/publishedTime props 신설. nav active 에 aria-current="page".
+  - [category]/[slug].astro: BlogPosting JSON-LD(application/ld+json) 주입(headline/description/datePublished/articleSection/keywords/url/image/author), ogType=article·image=cover·publishedTime 전달. cover 이미지 decoding=async.
+  - index/[category] 썸네일에 decoding=async 추가(디코드/지연로딩 위생).
+  - 검증: 빌드 산출물에서 canonical 절대 URL, og:type(article/website), 유효한 JSON-LD(@type BlogPosting), twitter 메타 확인.
+- ⑤ 의도 있는 이미지:
+  - thumb-placeholder를 "편집형 마크"로 업그레이드: 톤 패널 + 도트 텍스처 + 세리프 모노그램 + 카테고리 워드마크(data-label) + 미세 인셋 프레임(box-shadow inset). 사진 없어도 커미션된 인상.
+  - index.astro featured 플레이스홀더에 data-label(카테고리명) 추가.
+- 타이포/여백(모던·심플):
+  - 한글 폰트: Noto Sans KR → Pretendard Variable(모던 한글)로 본문/UI 교체. Latin=Public Sans, 한글=Pretendard 글리프별 폴백. (admin, preview.css 동일 적용)
+  - 제목 크기 점검: h1 clamp(2.6→2.5rem, 6→5.4vw, 4.4→4.1rem) line 1.08→1.1, max 15ch. h3/post-title 1.3→1.28. (모던·심플하게 약간 절제)
+  - 줄간격: body 1.72→1.75, lead 1.6→1.68, article 1.78→1.85, summary 1.62→1.7, .body(preview) 1.78→1.85. word-break: keep-all(한글 단어 줄바꿈).
+  - 여백 확대: main 64/88→92/124, hero 6/40→8/56, category-grid gap 14→18·margin 34→44, category-link pad/min-h 키움, featured-strip 44→68·card gap 36→48, section-head 64→92, post-item pad 28→34·gap 28→32, footer 34/40→44/52.
+- 검증: npm run build 통과(13 pages, ~1.1s). dist 에 pretendardvariable, aria-current="page", data-label, canonical, JSON-LD 확인.
+- 결과 점수(추정): ⑤ 5→7, ⑧ 6→8.5. ② 7.5→8(Pretendard+줄간격). ④ 7.5→8(여백).
+- 참고: og:image 는 cover 있는 글만. 기본 OG 대표이미지(default share image)는 추후 자산 생성 시 추가 가능(검토 필요 항목).
+
+2026-05-31 19:43 기본 OG 대표 공유 이미지(og-default.png) 생성 + 폴백 연결 (claude-code)
+- 사용자 요청: 배포 전, 사이트 톤에 맞는 기본 대표 공유 이미지(OG default) 먼저 생성.
+- 처리: scripts/generate-og.mjs 신규(브라우저 없이 sharp/librsvg로 SVG→PNG 1200×630 래스터). Cool White/Cobalt 톤, 세리프 워드마크 "What I Think"(Georgia), eyebrow THINKING LOG, 한글 태그라인(Malgun Gothic), 도메인, 카테고리 5색 편집형 틱. public/og-default.png(53KB) 생성, Read로 렌더 시각 확인(폰트/레이아웃/색 정상).
+- BaseLayout.astro: ogImage 폴백을 image||'/og-default.png'로. cover 있는 글은 자기 이미지, 없는 글·사이트 페이지는 기본 카드. twitter:card=summary_large_image.
+- 검증: npm run build 통과. dist/index.html → og-default.png, cover 있는 essay 글 → 자기 cover, cover 없는 글 → og-default.png 폴백, og-default.png dist 복사 확인.
+
+2026-05-31 19:44 GitHub Pages 배포 (claude-code)
+- 사용자 요청: "배포해줘".
+- 방식: origin=github.com/psytor-log/psytor-log.github.io, main 브랜치 push → .github/workflows/deploy.yml(Actions: npm ci+build+deploy-pages) 자동 배포.
+- 사전 정리: preview.log를 .gitignore에 추가(로컬 미리보기 산출물).
+- 커밋 대상: 디자인 리뉴얼 v2→v4 전체(global.css, BaseLayout, index/[category]/[slug]/admin, preview.css), OG 생성기/이미지, DESIGN-SYSTEM.md, log.txt.

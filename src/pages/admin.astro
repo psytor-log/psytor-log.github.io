@@ -9,9 +9,14 @@
     <meta name="robots" content="noindex, nofollow" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap"
     />
     <link
       href="/admin/config.yml?v=20260527-0130"
@@ -20,21 +25,39 @@
     />
     <title>What I Think Editor</title>
     <style is:global>
+      /* Modern Editorial v4 (Cool White / Cobalt) — 미리보기 페인은 사이트(라이트)를
+         그대로 반영하고(preview.css), 에디터 크롬도 동일 토큰으로 라이트 코발트. */
       :root {
-        --wit-bg: #f6f4ee;
+        --wit-bg: #fbfbfc;
         --wit-surface: #ffffff;
-        --wit-line: #dedbd3;
-        --wit-text: #222222;
-        --wit-muted: #6b6b6b;
-        --wit-accent: #245c4f;
-        --wit-accent-soft: #e6f0ec;
+        --wit-surface-soft: #f1f2f5;
+        --wit-line: #e7e9ee;
+        --wit-line-strong: #d4d8e0;
+        --wit-text: #16181d;
+        --wit-ink-soft: #3d414b;
+        --wit-muted: #5b5f6a;
+        --wit-accent: #2563eb;
+        --wit-accent-ink: #1d4ed8;
+        --wit-accent-soft: #e7efff;
         --wit-serif: "Source Serif Pro", "Noto Serif KR", Georgia,
           "Apple SD Gothic Neo", "Malgun Gothic", serif;
+        --wit-sans: "Public Sans", "Pretendard Variable", Pretendard, "Noto Sans KR",
+          ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo",
+          "Malgun Gothic", sans-serif;
       }
 
       html, body { background: var(--wit-bg); }
-      body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+      body {
+        font-family: var(--wit-sans);
+        color: var(--wit-text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Top app bar tint to match the warm-paper site */
+      [class*="AppHeader"] {
+        background: color-mix(in srgb, var(--wit-bg) 86%, white) !important;
+        border-bottom: 1px solid var(--wit-line) !important;
+      }
 
       /* Title in the entry editor — best-effort selector */
       [class*="EntryEditor"] input[type="text"][class*="title" i],
@@ -42,9 +65,10 @@
       [class*="EditorControlPane"] input[id*="title" i] {
         font-family: var(--wit-serif) !important;
         font-size: 1.6rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0 !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.015em !important;
         line-height: 1.2 !important;
+        color: var(--wit-text) !important;
       }
 
       /* Sidebar / nav accents (best-effort across Decap class names) */
@@ -53,6 +77,7 @@
         color: var(--wit-accent) !important;
         background: var(--wit-accent-soft) !important;
         border-left: 3px solid var(--wit-accent) !important;
+        font-weight: 600 !important;
       }
 
       /* Buttons */
@@ -60,16 +85,35 @@
       button[class*="Primary"] {
         background-color: var(--wit-accent) !important;
         border-color: var(--wit-accent) !important;
+        border-radius: 8px !important;
+      }
+      button[class*="primary"]:hover,
+      button[class*="Primary"]:hover {
+        background-color: var(--wit-accent-ink) !important;
+        border-color: var(--wit-accent-ink) !important;
       }
 
       /* Field labels: small caps */
       label[class*="ControlContainer"] > [class*="Label"],
       label[class*="FieldLabel"] {
         text-transform: uppercase !important;
-        letter-spacing: 0.12em !important;
+        letter-spacing: 0.13em !important;
         font-size: 0.72rem !important;
         color: var(--wit-muted) !important;
         font-weight: 700 !important;
+      }
+
+      /* Keyboard focus visibility inside the editor chrome */
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: 2px solid var(--wit-accent) !important;
+        outline-offset: 2px !important;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
       }
     </style>
   </head>
@@ -351,8 +395,8 @@
                     gap: '14px',
                     flexWrap: 'wrap',
                     padding: '14px 0',
-                    borderTop: '1px solid #dedbd3',
-                    borderBottom: '1px solid #dedbd3',
+                    borderTop: '1px solid #e7e9ee',
+                    borderBottom: '1px solid #e7e9ee',
                     margin: '18px 0'
                   }
                 },
@@ -361,7 +405,7 @@
                     'span',
                     {
                       key: 'm-' + i,
-                      style: { color: '#6b6b6b', fontWeight: 600 }
+                      style: { color: '#5b5f6a', fontWeight: 600 }
                     },
                     m.label
                   );
@@ -374,7 +418,7 @@
                       style: {
                         padding: '18px',
                         background: '#ffffff',
-                        border: '1px solid #dedbd3',
+                        border: '1px solid #e7e9ee',
                         borderRadius: '8px'
                       }
                     },
@@ -385,12 +429,12 @@
                     ),
                     h(
                       'p',
-                      { style: { margin: '4px 0 14px', color: '#6b6b6b', fontSize: '0.86rem' } },
+                      { style: { margin: '4px 0 14px', color: '#5b5f6a', fontSize: '0.86rem' } },
                       footer.get('tagline') || ''
                     ),
                     h(
                       'div',
-                      { style: { display: 'flex', gap: '14px', alignItems: 'center', fontSize: '0.82rem', color: '#6b6b6b' } },
+                      { style: { display: 'flex', gap: '14px', alignItems: 'center', fontSize: '0.82rem', color: '#5b5f6a' } },
                       h('span', null, footer.get('admin_label') || '/admin/'),
                       h('span', null, (footer.get('today_label') || 'Today') + ': 0'),
                       h('span', null, (footer.get('total_label') || 'Total') + ': 0')
@@ -433,12 +477,12 @@
                     },
                     categories.map(function (c, i) {
                       const colorMap = {
-                        essay: '#245c4f',
-                        study: '#b3633c',
-                        books: '#7c6a3a',
-                        portfolio: '#3a5a78'
+                        essay: '#2563eb',
+                        study: '#0f766e',
+                        books: '#a16207',
+                        portfolio: '#6d28d9'
                       };
-                      const stripe = colorMap[c.key] || '#245c4f';
+                      const stripe = colorMap[c.key] || '#2563eb';
                       return h(
                         'div',
                         {
@@ -446,7 +490,7 @@
                           style: {
                             position: 'relative',
                             padding: '16px 16px 16px 22px',
-                            border: '1px solid #dedbd3',
+                            border: '1px solid #e7e9ee',
                             borderRadius: '8px',
                             background: '#ffffff'
                           }
@@ -468,7 +512,7 @@
                         ),
                         h(
                           'span',
-                          { style: { color: '#6b6b6b', fontSize: '0.88rem' } },
+                          { style: { color: '#5b5f6a', fontSize: '0.88rem' } },
                           c.description
                         )
                       );
@@ -481,16 +525,16 @@
                   style: {
                     marginTop: '28px',
                     padding: '14px',
-                    border: '1px dashed #dedbd3',
+                    border: '1px dashed #e7e9ee',
                     borderRadius: '8px',
-                    color: '#6b6b6b',
+                    color: '#5b5f6a',
                     fontSize: '0.86rem'
                   }
                 },
                 'Featured/Recent 카드의 실제 데이터는 글 콘텐츠에서 채워집니다. 여기서는 라벨만 미리보기 합니다: ',
                 h(
                   'span',
-                  { style: { color: '#245c4f', fontWeight: 700 } },
+                  { style: { color: '#2563eb', fontWeight: 700 } },
                   (data.get('section_featured_label') || 'Latest') +
                     '  /  ' +
                     (data.get('section_recent_label') || 'Recent') +

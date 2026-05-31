@@ -1,30 +1,38 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Source+Serif+Pro:wght@600;700&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap");
 
+/* Modern Editorial v4 (Cool White / Cobalt) — 사이트(라이트)를 그대로 미러링.
+   global.css 스파인과 동일 토큰. */
 :root {
-  --bg: #fbfaf7;
+  color-scheme: light;
+  --bg: #fbfbfc;
   --surface: #ffffff;
-  --text: #222222;
-  --muted: #6b6b6b;
-  --line: #dedbd3;
-  --accent: #245c4f;
-  --accent-soft: #e6f0ec;
+  --surface-soft: #f1f2f5;
+  --text: #16181d;
+  --ink-soft: #3d414b;
+  --muted: #5b5f6a;
+  --line: #e7e9ee;
+  --accent: #2563eb;
+  --accent-soft: #e7efff;
 
-  --cat-essay: #245c4f;
-  --cat-study: #b3633c;
-  --cat-books: #7c6a3a;
-  --cat-portfolio: #3a5a78;
+  --cat-essay: #2563eb;
+  --cat-study: #0f766e;
+  --cat-books: #a16207;
+  --cat-portfolio: #6d28d9;
 
   --serif: "Source Serif Pro", "Noto Serif KR", Georgia, "Apple SD Gothic Neo",
     "Malgun Gothic", serif;
-  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --sans: "Public Sans", "Pretendard Variable", Pretendard, "Noto Sans KR",
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
 html, body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
-  line-height: 1.72;
+  line-height: 1.75;
+  word-break: keep-all;
   margin: 0;
 }
 
@@ -51,28 +59,32 @@ html, body {
 .wit-preview h1 {
   font-family: var(--serif);
   font-size: clamp(2rem, 5.5vw, 3.4rem);
-  line-height: 1.18;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
   margin: 0 0 16px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .wit-preview h2 {
   font-family: var(--serif);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin: 36px 0 12px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .wit-preview h3 {
   font-family: var(--serif);
-  font-size: 1.18rem;
+  font-size: 1.22rem;
   margin: 28px 0 8px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .wit-preview .lead {
-  font-size: 1.06rem;
-  color: #4b4b4b;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
   margin: 0 0 18px;
 }
 
@@ -100,9 +112,9 @@ html, body {
 }
 
 .wit-preview .status[data-state="published"] {
-  background: #eef5e9;
-  color: #2e6a1f;
-  border-color: #b9dba4;
+  background: #e7f6ea;
+  color: #1f7a35;
+  border-color: #b8e0c0;
 }
 
 .wit-preview .tag-row {
@@ -133,7 +145,9 @@ html, body {
 }
 
 .wit-preview .body {
-  font-size: 1.04rem;
+  font-size: 1.06rem;
+  line-height: 1.85;
+  color: var(--text);
   border-top: 1px solid var(--line);
   padding-top: 24px;
 }
@@ -181,7 +195,7 @@ html, body {
 .wit-preview .body code {
   padding: 0.15em 0.3em;
   border-radius: 4px;
-  background: #ece8df;
+  background: var(--surface-soft);
   font-family: ui-monospace, Consolas, monospace;
 }
 
@@ -189,7 +203,7 @@ html, body {
   overflow-x: auto;
   padding: 16px;
   border-radius: 8px;
-  background: #ece8df;
+  background: var(--surface-soft);
 }
 
 .wit-preview .empty {

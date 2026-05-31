@@ -89,9 +89,9 @@ const readButtonLabel = featured
       <article class="featured-card" data-cat={featured.category}>
         <a class="thumb" href={featured.url} aria-label={`${featured.title} thumbnail`}>
           {featured.thumbnail ? (
-            <img src={featured.thumbnail} alt="" loading="lazy" />
+            <img src={featured.thumbnail} alt="" loading="lazy" decoding="async" />
           ) : (
-            <span class="thumb-placeholder" />
+            <span class="thumb-placeholder" data-monogram={featured.category.charAt(0).toUpperCase()} data-label={featured.category} aria-hidden="true" />
           )}
         </a>
         <div class="featured-body">
@@ -121,7 +121,7 @@ const readButtonLabel = featured
         <time class="post-date" datetime={post.machineDate}>{post.displayDate}</time>
         {post.thumbnail && (
           <a class="post-thumb" href={post.url} aria-label={`${post.title} thumbnail`}>
-            <img src={post.thumbnail} alt="" loading="lazy" />
+            <img src={post.thumbnail} alt="" loading="lazy" decoding="async" />
           </a>
         )}
         <div class="post-body">

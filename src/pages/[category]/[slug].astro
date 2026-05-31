@@ -20,9 +20,32 @@ const { post, frontmatter, category } = Astro.props;
 const Content = post.Content;
 const displayDate = formatKoreanDateTime(frontmatter.date);
 const machineDate = getMachineDateTime(frontmatter.date);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: frontmatter.title,
+  description: frontmatter.summary ?? '',
+  datePublished: machineDate,
+  articleSection: category,
+  keywords: (frontmatter.tags ?? []).join(', '),
+  url: new URL(Astro.url.pathname, Astro.site).href,
+  ...(frontmatter.cover
+    ? { image: new URL(frontmatter.cover, Astro.site).href }
+    : {}),
+  author: { '@type': 'Person', name: 'What I Think' },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href
+};
 ---
 
-<BaseLayout title={`${frontmatter.title} | What I Think`} description={frontmatter.summary} current={category}>
+<BaseLayout
+  title={`${frontmatter.title} | What I Think`}
+  description={frontmatter.summary}
+  current={category}
+  ogType="article"
+  image={frontmatter.cover ?? ''}
+  publishedTime={machineDate}
+>
   <article class="article">
     <header class="article-header">
       <p class="article-meta"><time datetime={machineDate}>{displayDate}</time> / {category}</p>
@@ -32,9 +55,12 @@ const machineDate = getMachineDateTime(frontmatter.date);
         {(frontmatter.tags ?? []).map((tag) => <span class="tag">{tag}</span>)}
       </div>
     </header>
-    {frontmatter.cover && <img class="cover" src={frontmatter.cover} alt="" />}
+    {frontmatter.cover && (
+      <img class="cover" src={frontmatter.cover} alt="" decoding="async" loading="eager" />
+    )}
     <div class="article-content">
       <Content />
     </div>
   </article>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 </BaseLayout>
