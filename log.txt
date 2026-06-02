@@ -1258,3 +1258,8 @@ Check your config.yml file.
 - 검증 결과: `npm.cmd run check` 통과. `npm.cmd run build` 통과, 23개 정적 페이지 생성. `npm.cmd run test:smoke` 통과.
 - 검토 필요 항목: `npm.cmd audit --omit=dev` 결과 Astro 5 계열 취약점 2개가 남아 있으며, 해결은 Astro 6 강제 업그레이드가 필요해 별도 breaking-change 작업으로 분리한다.
 - work.lock: 작업 종료 후 삭제.
+
+2026-06-03 00:59 GitHub Actions Node 20 런타임 경고 추가 정리 (codex)
+- 처리 내용: 첫 배포 run `26831756331`은 build/typecheck/lint/test/smoke/deploy 모두 성공했으나, GitHub Actions JavaScript action 런타임이 Node 20으로 실행된다는 annotation이 남았다.
+- 자동 판단 근거: 직전 권장사항의 Node.js 20 deprecation 경고 정리를 완료하려면 프로젝트 `node-version`뿐 아니라 GitHub Actions 런타임 강제 전환도 필요하다고 판단했다.
+- 수정 내용: `deploy.yml`, `import-naver-posts.yml`에 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` 환경변수를 추가했다.
