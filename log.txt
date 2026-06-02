@@ -1222,3 +1222,9 @@ Check your config.yml file.
 - 참고 근거: Decap CMS 공식 문서에서 markdown widget의 `modes` 옵션(raw/rich_text)과 custom editor component 지원을 확인함.
 - 처리 실패 사유: in-app Browser 도구가 현재 callable tool로 노출되지 않아 실제 브라우저 조작 대신 로컬 HTTP 응답과 빌드 산출물로 검증함. 로컬 dev 서버 시작은 Windows sandbox 제한으로 승인 실행을 사용했고, 검증 후 포트 4321 프로세스를 종료함.
 - 다음 작업: 변경사항을 커밋/푸시하고 GitHub Pages 배포 상태와 운영 `/admin/config.yml` 반영 여부를 확인한다.
+
+2026-06-03 00:39 홈페이지 에디터 연속 줄바꿈 및 카테고리 변경 기능 배포 완료 (codex)
+- 처리 내용: `Improve editor spacing and post categories` 커밋(`711ab88`) 생성 후 `origin/main`에 푸시.
+- 배포 검증: GitHub Actions `Deploy to GitHub Pages` run `26830598343` 성공. 운영 `https://psytor-log.github.io/admin/` HTTP 200 및 config cache version `20260603-0024`, `preserveExtraBlankLines`, `line-space` 포함 확인. 운영 `https://psytor-log.github.io/admin/config.yml` HTTP 200 및 UTF-8 기준 `게시판 변경`, `line-space`, `modes: ["raw", "rich_text"]` 반영 확인.
+- 검토 필요 항목: GitHub Actions에서 Node.js 20 actions deprecated 경고가 계속 표시됨. 2026-06-16 이후 Node.js 24 기본 전환 전 workflow 업데이트 검토 필요.
+- work.lock: 작업 종료 후 삭제.
