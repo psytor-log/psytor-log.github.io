@@ -1263,3 +1263,8 @@ Check your config.yml file.
 - 처리 내용: 첫 배포 run `26831756331`은 build/typecheck/lint/test/smoke/deploy 모두 성공했으나, GitHub Actions JavaScript action 런타임이 Node 20으로 실행된다는 annotation이 남았다.
 - 자동 판단 근거: 직전 권장사항의 Node.js 20 deprecation 경고 정리를 완료하려면 프로젝트 `node-version`뿐 아니라 GitHub Actions 런타임 강제 전환도 필요하다고 판단했다.
 - 수정 내용: `deploy.yml`, `import-naver-posts.yml`에 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` 환경변수를 추가했다.
+
+2026-06-03 01:01 GitHub Actions 공식 action 버전 업그레이드 (codex)
+- 처리 내용: run `26831933818`은 성공했지만 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24` 사용 시 "Node 20 대상 action을 Node 24에서 강제 실행 중" annotation이 남았다.
+- 확인 근거: GitHub API로 공식 action 최신 릴리스를 확인했다. `actions/checkout` 최신 `v6.0.3`, `actions/setup-node` 최신 `v6.4.0`, `actions/upload-pages-artifact` 최신 `v5.0.0`, `actions/deploy-pages` 최신 `v5.0.0`.
+- 수정 내용: workflow의 action 참조를 `checkout@v6`, `setup-node@v6`, `upload-pages-artifact@v5`, `deploy-pages@v5`로 올리고 강제 env 설정은 제거했다.
