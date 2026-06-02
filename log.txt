@@ -1179,3 +1179,29 @@ Check your config.yml file.
 - 사용자 요청: 메인의 View all 클릭 시 essay 글만 보임 → 전체 글을 최신순으로 보이도록.
 - 처리: src/pages/archive.astro 신규(essay/study/books/portfolio 전 카테고리 glob, !draft 필터, 날짜 desc 정렬, 기존 post-list/cat-badge 스타일 재사용, 카테고리 배지로 구분). content/pages/home.md의 section_view_all_href /essay/ → /archive/. index.astro fallback도 /archive/. config.yml hint 갱신.
 - 검증: npm run build 통과(15 pages). /archive/ 생성, 홈 view-all href=/archive/, 아카이브에 portfolio6/essay4/books2 혼합·최신순 확인(study는 비공개 draft라 미표시 정상). 리디자인 회고 글은 draft라 아카이브 미포함.
+2026-06-03 00:06 네이버 글 가져오기 줄바꿈 보존, 편집기 연속 줄바꿈, 게시글 게시판 이동 기능 수정 시작 (codex)
+- 사용자 요청 요약: what-i-think에서 네이버 블로그 글을 매일 옮길 때 문장이 모두 붙는 문제를 고치고, 홈페이지 관리자 편집기에서 엔터로 2줄 이상 줄바꿈을 계속 넣을 수 있게 하며, 이미 게시된 글을 다른 게시판으로 옮기는 기능을 추가한다.
+- 자동 판단 근거: 단순 진행 여부 확인은 AGENTS.md §0에 따라 yes/no 컨펌 자동 진행.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock: codex가 생성함.
+- 다음 작업: import 스크립트, Decap CMS 설정, 관리자 페이지 스크립트, Astro 렌더링 경로를 조사해 원인 확인 후 수정한다.
+
+2026-06-03 00:08 사용자 요청 변경에 따른 Study 글 작성 (codex)
+- 사용자 요청 요약: 직전 스킬 경로 오류 메시지가 뜨는 이유를 분석하고, Codex에서 스킬을 잘 쓰기 위한 노하우를 홈페이지 글로 정리한다. 카테고리는 study로 지정.
+- 자동 판단 근거: 단순 진행 여부 확인은 AGENTS.md §0에 따라 yes/no 컨펌 자동 진행. 사용자가 study 카테고리를 명시했으므로 새 글을 `content/study`에 게시 상태로 작성.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- 기존 작업 조정: 직전 요청의 줄바꿈/CMS/게시판 이동 수정 작업은 사용자 요청 변경으로 중단하고, work.lock의 task와 target_files를 현재 글 작성 작업으로 갱신.
+- 원인 분석 요약: `C:\Users\dejan\.codex\skills\gstack-investigate\SKILL.md` 경로 없음 메시지는 스킬 미설치가 아니라, 실제 스킬 위치가 프로젝트 로컬 `I:\AI for works\.agents\skills\gstack-investigate\SKILL.md`였는데 전역 `.codex\skills` 경로를 먼저 조회했기 때문에 발생한 경로 해석 문제로 판단.
+- 수정한 파일 목록: `content/study/2026-06-03-codex-skills-guide.md`, `work.lock`, `log.txt`.
+- 검증 결과: `npm run build` 통과. `dist/study/2026-06-03-codex-skills-guide/index.html` 생성 확인. 홈 Latest, `/study/`, `/archive/`에 새 글 노출 확인.
+- 처리 실패 사유: 없음.
+- 검토 필요 항목: 사용자가 처음 요청한 네이버 글 줄바꿈/CMS 줄바꿈/게시판 이동 기능 수정은 이후 별도 작업으로 재개 필요.
+- work.lock: 작업 종료 후 삭제.
+
+2026-06-03 00:14 Study 글 운영 배포 시작 (codex)
+- 사용자 요청 요약: 홈페이지에 글이 보이지 않는다고 지적하며 어디에 올린 것인지 확인 요청.
+- 원인 분석 요약: 직전 작업은 로컬 파일 작성과 `npm run build` 검증까지만 수행했고, `git commit`/`git push` 및 GitHub Pages 배포 확인은 수행하지 않아 운영 홈페이지에는 아직 반영되지 않았음.
+- 자동 판단 근거: 사용자가 홈페이지에 글이 보이지 않는 문제를 제기했으므로, 로컬 작성 글을 운영 사이트에 반영하는 배포 작업으로 판단. 단순 진행 여부 확인은 AGENTS.md §0에 따라 yes/no 컨펌 자동 진행.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock: codex가 생성함.
+- 다음 작업: 변경 파일을 커밋하고 origin/main에 푸시한 뒤 GitHub Actions 배포 상태와 운영 URL을 확인한다.
