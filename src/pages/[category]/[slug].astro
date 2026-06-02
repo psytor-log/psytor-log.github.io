@@ -1,13 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatKoreanDateTime, getMachineDateTime } from '../../utils/posts.js';
+import { formatKoreanDateTime, getMachineDateTime, getPostCategory } from '../../utils/posts.js';
 
 export function getStaticPaths() {
   const modules = import.meta.glob('../../../content/{essay,study,books,portfolio}/*.md', { eager: true });
   return Object.entries(modules)
     .filter(([, mod]) => !mod.frontmatter?.draft)
     .map(([path, mod]) => {
-      const category = path.split('/').at(-2);
+      const folderCategory = path.split('/').at(-2);
+      const category = getPostCategory(mod.frontmatter ?? {}, folderCategory);
       const slug = path.split('/').at(-1).replace(/\.md$/, '');
       return {
         params: { category, slug },

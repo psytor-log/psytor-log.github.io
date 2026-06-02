@@ -1,5 +1,20 @@
 const KOREA_TIME_ZONE = 'Asia/Seoul';
 
+export const POST_CATEGORIES = ['essay', 'study', 'books', 'portfolio'];
+
+export function normalizePostCategory(category, fallback = 'essay') {
+  return POST_CATEGORIES.includes(category) ? category : fallback;
+}
+
+export function getPostCategory(frontmatter = {}, fallback = 'essay') {
+  return normalizePostCategory(frontmatter.category, fallback);
+}
+
+export function getPostUrl(frontmatter = {}, fallbackCategory = 'essay', slug = '') {
+  const category = getPostCategory(frontmatter, fallbackCategory);
+  return `/${category}/${slug}/`;
+}
+
 const dayFormatter = new Intl.DateTimeFormat('ko-KR', {
   timeZone: KOREA_TIME_ZONE,
   weekday: 'short'

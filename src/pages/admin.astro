@@ -19,7 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap"
     />
     <link
-      href="/admin/config.yml?v=20260527-0130"
+      href="/admin/config.yml?v=20260603-0024"
       type="text/yaml"
       rel="cms-config-url"
     />
@@ -103,6 +103,19 @@
         font-weight: 700 !important;
       }
 
+      [class*="EditorControlPane"] select[id*="category"],
+      [class*="EditorControlPane"] select[name*="category"] {
+        border-color: color-mix(in srgb, var(--wit-accent) 42%, var(--wit-line)) !important;
+        background: var(--wit-accent-soft) !important;
+        color: var(--wit-text) !important;
+        font-weight: 700 !important;
+      }
+
+      [class*="MarkdownControl"] textarea,
+      [class*="MarkdownControl"] [contenteditable="true"] {
+        line-height: 1.9 !important;
+      }
+
       /* Keyboard focus visibility inside the editor chrome */
       a:focus-visible,
       button:focus-visible,
@@ -184,6 +197,23 @@
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
 
+      const preserveExtraBlankLinesInText = (text = '') =>
+        String(text).replace(/\n{3,}/g, function (match) {
+          const spacerCount = Math.max(1, match.length - 2);
+          const spacers = Array.from({ length: spacerCount }, function () {
+            return '<div class="cms-spacer cms-spacer--1" aria-hidden="true"></div>';
+          }).join('\n');
+          return '\n\n' + spacers + '\n\n';
+        });
+
+      const preserveExtraBlankLines = (body = '') =>
+        String(body)
+          .split(/(```[\s\S]*?```|~~~[\s\S]*?~~~)/g)
+          .map(function (part, index) {
+            return index % 2 === 1 ? part : preserveExtraBlankLinesInText(part);
+          })
+          .join('');
+
       /* ===== Sized image editor component (preserved from existing code) ===== */
       CMS.registerEditorComponent({
         id: 'sized-image',
@@ -258,6 +288,48 @@
         }
       });
 
+      CMS.registerEditorComponent({
+        id: 'line-space',
+        label: 'Blank line',
+        fields: [
+          {
+            name: 'size',
+            label: 'Spacing',
+            widget: 'select',
+            default: '1',
+            options: [
+              { label: 'One line', value: '1' },
+              { label: 'Two lines', value: '2' },
+              { label: 'Three lines', value: '3' }
+            ]
+          }
+        ],
+        pattern: /^<div class="cms-spacer cms-spacer--([123])" aria-hidden="true"><\/div>$/,
+        fromBlock(match) {
+          return { size: match[1] || '1' };
+        },
+        toBlock(data) {
+          const size = ['1', '2', '3'].includes(data.size) ? data.size : '1';
+          return `<div class="cms-spacer cms-spacer--${size}" aria-hidden="true"></div>`;
+        },
+        toPreview(data) {
+          const size = ['1', '2', '3'].includes(data.size) ? data.size : '1';
+          return `<div class="cms-spacer cms-spacer--${size}" aria-hidden="true"></div>`;
+        }
+      });
+
+      if (CMS.registerEventListener) {
+        CMS.registerEventListener({
+          name: 'preSave',
+          handler: function ({ entry }) {
+            const data = entry && entry.get && entry.get('data');
+            const body = data && data.get && data.get('body');
+            if (typeof body !== 'string') return entry;
+            return entry.set('data', data.set('body', preserveExtraBlankLines(body)));
+          }
+        });
+      }
+
       /* ===== Live preview styling — matches the site ===== */
       CMS.registerPreviewStyle('/admin/preview.css');
 
@@ -284,11 +356,16 @@
         return Math.max(1, Math.round(koreanChars / 500 + englishWords / 220));
       };
 
-      const buildPostPreview = (category) =>
+      const postCategories = ['essay', 'study', 'books', 'portfolio'];
+      const normalizePreviewCategory = (value, fallback) =>
+        postCategories.includes(value) ? value : fallback;
+
+      const buildPostPreview = (fallbackCategory) =>
         createClass({
           render: function () {
             const entry = this.props.entry;
             const data = entry.get('data');
+            const category = normalizePreviewCategory(data.get('category'), fallbackCategory);
             const title = data.get('title') || '(제목 없음)';
             const summary = data.get('summary') || '';
             const cover = this.props.getAsset

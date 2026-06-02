@@ -2,9 +2,11 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
   formatKoreanDateTime,
+  getPostCategory,
   getMachineDateTime,
   getPostDateValue,
   getPostThumbnail,
+  getPostUrl,
   getReadingTime
 } from '../../utils/posts.js';
 
@@ -20,21 +22,24 @@ const rawModules = import.meta.glob('../../../content/{essay,study,books,portfol
   import: 'default'
 });
 const posts = Object.entries(modules)
-  .filter(([path]) => path.includes(`/content/${category}/`))
   .map(([path, mod]) => {
+    const folderCategory = path.split('/').at(-2);
     const slug = path.split('/').at(-1).replace(/\.md$/, '');
     const frontmatter = mod.frontmatter ?? {};
+    const postCategory = getPostCategory(frontmatter, folderCategory);
     const raw = rawModules[path] ?? '';
     return {
       ...frontmatter,
+      category: postCategory,
       slug,
-      url: `/${category}/${slug}/`,
+      url: getPostUrl(frontmatter, folderCategory, slug),
       displayDate: formatKoreanDateTime(frontmatter.date),
       machineDate: getMachineDateTime(frontmatter.date),
       thumbnail: getPostThumbnail(frontmatter, raw),
       readingTime: getReadingTime(raw)
     };
   })
+  .filter((post) => post.category === category)
   .filter((post) => !post.draft)
   .sort((a, b) => getPostDateValue(b.date) - getPostDateValue(a.date));
 
@@ -57,7 +62,7 @@ const [label, description] = labels[category];
 
   <section class="post-list">
     {posts.map((post) => (
-      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`} data-cat={category}>
+      <article class={`post-item ${post.thumbnail ? 'has-thumbnail' : ''}`} data-cat={post.category}>
         <time class="post-date" datetime={post.machineDate}>{post.displayDate}</time>
         {post.thumbnail && (
           <a class="post-thumb" href={post.url} aria-label={`${post.title} thumbnail`}>
@@ -66,7 +71,7 @@ const [label, description] = labels[category];
         )}
         <div class="post-body">
           <div class="post-meta-row">
-            <span class="cat-badge" data-cat={category}>{category}</span>
+            <span class="cat-badge" data-cat={post.category}>{post.category}</span>
             <span class="read-time">{post.readingTime} min read</span>
           </div>
           <h3 class="post-title"><a href={post.url}>{post.title}</a></h3>

@@ -156,6 +156,23 @@ html, body {
   margin: 0 0 18px;
 }
 
+.wit-preview .body .cms-spacer,
+.cms-spacer {
+  display: block;
+  height: 1.4em;
+  margin: 0;
+}
+
+.wit-preview .body .cms-spacer--2,
+.cms-spacer--2 {
+  height: 2.8em;
+}
+
+.wit-preview .body .cms-spacer--3,
+.cms-spacer--3 {
+  height: 4.2em;
+}
+
 .wit-preview .body a {
   color: var(--accent);
 }

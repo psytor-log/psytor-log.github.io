@@ -759,6 +759,20 @@ h3 {
   margin: 0 0 1.4em;
 }
 
+.article-content .cms-spacer {
+  display: block;
+  height: 1.4em;
+  margin: 0;
+}
+
+.article-content .cms-spacer--2 {
+  height: 2.8em;
+}
+
+.article-content .cms-spacer--3 {
+  height: 4.2em;
+}
+
 .article-content > * {
   max-width: var(--measure);
 }

@@ -1210,3 +1210,15 @@ Check your config.yml file.
 - 처리 실패 사유: 최초 `git push origin main`은 원격 선행 커밋으로 거절됨. rebase 후 해결.
 - 검토 필요 항목: GitHub Actions에서 Node.js 20 actions deprecated 경고가 표시됨. 2026-06-16 이후 Node.js 24 기본 전환 관련 workflow 업데이트 검토 필요.
 - work.lock: 작업 종료 후 삭제.
+2026-06-03 00:24 홈페이지 에디터 연속 줄바꿈 및 카테고리 변경 기능 수정 시작 (codex)
+- 사용자 요청 요약: 홈페이지 에디터에서 엔터를 여러 번 쳐도 2줄 이상 간격이 생기지 않는 버그를 수정하고, 글의 카테고리를 변경할 수 있는 기능과 UI를 추가한다.
+- 자동 판단 근거: 단순 진행 여부 확인은 AGENTS.md §0에 따라 yes/no 컨펌 자동 진행.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock: codex가 생성함.
+- 다음 작업: Decap CMS markdown widget 설정, 관리자 페이지 스크립트, Astro 글 목록/상세 URL 생성 로직을 조사해 원인을 확인한 뒤 수정한다.
+- 원인 분석 요약: Decap markdown editor와 Markdown 렌더링은 연속 빈 줄을 의미 있는 HTML 노드로 보존하지 않아 2줄 이상 여백이 접힌다. 또한 기존 프런트 로직은 카테고리를 frontmatter가 아니라 파일 폴더명에서 계산해 에디터에서 카테고리를 변경해도 게시판 이동이 불가능했다.
+- 처리 내용: `public/admin/config.yml`에서 글 카테고리를 숨김 필드에서 `게시판 변경` select로 변경하고 body markdown을 raw 우선 모드로 구성. `src/pages/admin.astro`에 저장 전 연속 빈 줄을 `cms-spacer` HTML 블록으로 변환하는 preSave 처리와 수동 `Blank line` editor component를 추가. `src/utils/posts.js`에 카테고리 정규화/URL 유틸을 추가하고 홈/아카이브/카테고리/상세 페이지가 frontmatter `category`를 기준으로 목록과 URL을 생성하도록 수정. 본문과 CMS 미리보기 CSS에 `cms-spacer` 스타일 추가.
+- 검증 결과: `npm run build` 통과. 로컬 `/admin/` 및 `/admin/config.yml` HTTP 200 확인. 임시 테스트 글을 `content/essay` 폴더에 두고 `category: study`로 빌드했을 때 `/study/2026-06-03-category-routing-test/`가 생성되는 것을 확인한 뒤 테스트 파일 삭제 및 최종 빌드 재통과.
+- 참고 근거: Decap CMS 공식 문서에서 markdown widget의 `modes` 옵션(raw/rich_text)과 custom editor component 지원을 확인함.
+- 처리 실패 사유: in-app Browser 도구가 현재 callable tool로 노출되지 않아 실제 브라우저 조작 대신 로컬 HTTP 응답과 빌드 산출물로 검증함. 로컬 dev 서버 시작은 Windows sandbox 제한으로 승인 실행을 사용했고, 검증 후 포트 4321 프로세스를 종료함.
+- 다음 작업: 변경사항을 커밋/푸시하고 GitHub Pages 배포 상태와 운영 `/admin/config.yml` 반영 여부를 확인한다.

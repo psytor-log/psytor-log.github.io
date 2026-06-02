@@ -2,9 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
   formatKoreanDateTime,
+  getPostCategory,
   getMachineDateTime,
   getPostDateValue,
   getPostThumbnail,
+  getPostUrl,
   getReadingTime
 } from '../utils/posts.js';
 
@@ -17,15 +19,16 @@ const rawModules = import.meta.glob('../../content/{essay,study,books,portfolio}
 
 const posts = Object.entries(modules)
   .map(([path, mod]) => {
-    const category = path.split('/').at(-2);
+    const folderCategory = path.split('/').at(-2);
     const slug = path.split('/').at(-1).replace(/\.md$/, '');
     const frontmatter = mod.frontmatter ?? {};
+    const category = getPostCategory(frontmatter, folderCategory);
     const raw = rawModules[path] ?? '';
     return {
       ...frontmatter,
       category,
       slug,
-      url: `/${category}/${slug}/`,
+      url: getPostUrl(frontmatter, folderCategory, slug),
       displayDate: formatKoreanDateTime(frontmatter.date),
       machineDate: getMachineDateTime(frontmatter.date),
       thumbnail: getPostThumbnail(frontmatter, raw),

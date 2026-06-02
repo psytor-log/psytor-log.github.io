@@ -122,11 +122,20 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
-    preview_path: "essay/{{slug}}/"
+    preview_path: "{{category}}/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
       - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
-      - { label: "카테고리", name: "category", widget: "hidden", default: "essay" }
+      - label: "게시판 변경"
+        name: "category"
+        widget: "select"
+        default: "essay"
+        hint: "저장하면 이 글은 선택한 게시판 목록과 URL로 이동합니다. 예: study를 선택하면 /study/글주소/ 로 노출됩니다."
+        options:
+          - { label: "Essay", value: "essay" }
+          - { label: "Study", value: "study" }
+          - { label: "Books", value: "books" }
+          - { label: "Portfolio", value: "portfolio" }
       - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
@@ -134,7 +143,7 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
+      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
 
   - name: "study"
     label: "Study"
@@ -145,11 +154,20 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
-    preview_path: "study/{{slug}}/"
+    preview_path: "{{category}}/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
       - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
-      - { label: "카테고리", name: "category", widget: "hidden", default: "study" }
+      - label: "게시판 변경"
+        name: "category"
+        widget: "select"
+        default: "study"
+        hint: "저장하면 이 글은 선택한 게시판 목록과 URL로 이동합니다. 예: essay를 선택하면 /essay/글주소/ 로 노출됩니다."
+        options:
+          - { label: "Essay", value: "essay" }
+          - { label: "Study", value: "study" }
+          - { label: "Books", value: "books" }
+          - { label: "Portfolio", value: "portfolio" }
       - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
@@ -157,7 +175,7 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
+      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
 
   - name: "books"
     label: "Books"
@@ -168,11 +186,20 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
-    preview_path: "books/{{slug}}/"
+    preview_path: "{{category}}/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
       - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
-      - { label: "카테고리", name: "category", widget: "hidden", default: "books" }
+      - label: "게시판 변경"
+        name: "category"
+        widget: "select"
+        default: "books"
+        hint: "저장하면 이 글은 선택한 게시판 목록과 URL로 이동합니다. 예: portfolio를 선택하면 /portfolio/글주소/ 로 노출됩니다."
+        options:
+          - { label: "Essay", value: "essay" }
+          - { label: "Study", value: "study" }
+          - { label: "Books", value: "books" }
+          - { label: "Portfolio", value: "portfolio" }
       - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
@@ -180,7 +207,7 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
+      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
 
   - name: "portfolio"
     label: "Portfolio"
@@ -191,11 +218,20 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
-    preview_path: "portfolio/{{slug}}/"
+    preview_path: "{{category}}/{{slug}}/"
     fields:
       - { label: "제목", name: "title", widget: "string", hint: "독자가 가장 먼저 보는 한 줄. 60자 이내 권장." }
       - { label: "작성일시", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ss.SSSZ", date_format: "YYYY-MM-DD", time_format: "HH:mm", hint: "KST 기준. 빈 칸은 현재 시각으로 채워집니다." }
-      - { label: "카테고리", name: "category", widget: "hidden", default: "portfolio" }
+      - label: "게시판 변경"
+        name: "category"
+        widget: "select"
+        default: "portfolio"
+        hint: "저장하면 이 글은 선택한 게시판 목록과 URL로 이동합니다. 예: study를 선택하면 /study/글주소/ 로 노출됩니다."
+        options:
+          - { label: "Essay", value: "essay" }
+          - { label: "Study", value: "study" }
+          - { label: "Books", value: "books" }
+          - { label: "Portfolio", value: "portfolio" }
       - { label: "태그", name: "tags", widget: "list", required: false, hint: "주제 키워드 3~6개 권장.", field: { label: "태그", name: "tag", widget: "string" } }
       - { label: "요약", name: "summary", widget: "text", required: false, hint: "200자 이내. 카드와 메타 description 양쪽에 쓰입니다." }
       - { label: "대표 이미지", name: "cover", widget: "image", required: false, hint: "4:3 권장, 최대 1600×1200. 비워두면 본문 첫 이미지를 자동 사용." }
@@ -203,4 +239,4 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
+      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
