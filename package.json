@@ -7,6 +7,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "test": "node --test tests/posts.test.js",
+    "test:smoke": "node --test tests/admin-smoke.test.js",
+    "check": "npm run typecheck && npm run lint && npm run test",
     "new-post": "node scripts/new-post.mjs",
     "import:naver": "node scripts/import-naver-posts.mjs",
     "oauth:deploy": "wrangler deploy --config oauth-worker/wrangler.toml",
@@ -17,6 +22,7 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
     "wrangler": "^4.92.0"
   }
 }

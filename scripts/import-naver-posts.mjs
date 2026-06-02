@@ -267,7 +267,7 @@ function chooseCategory(categoryNo, sourceCategory, text) {
   return mapped;
 }
 
-function makeReviewNote(sourceCategory, category, text) {
+function makeReviewNote(sourceCategory, category) {
   if (category === 'portfolio') {
     return `네이버 카테고리 '${sourceCategory}' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.`;
   }
@@ -328,7 +328,7 @@ function extractBalancedDiv(html, className) {
   const startMatch = new RegExp(`<div\\b[^>]*class=["'][^"']*${escapeRegex(className)}[^"']*["'][^>]*>`, 'i').exec(html);
   if (!startMatch) return '';
 
-  let index = startMatch.index;
+  const index = startMatch.index;
   let depth = 0;
   const tagRegex = /<\/?div\b[^>]*>/gi;
   tagRegex.lastIndex = index;
@@ -619,7 +619,7 @@ function yamlString(value) {
 }
 
 function escapeMarkdownAlt(value) {
-  return String(value || '').replace(/[\[\]]/g, '');
+  return String(value || '').replaceAll('[', '').replaceAll(']', '');
 }
 
 function escapeRegex(value) {

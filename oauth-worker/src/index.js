@@ -211,7 +211,7 @@ async function readCounters(env) {
   if (!env.VISITOR) {
     throw new Error("Missing KV binding: VISITOR");
   }
-  const todayKey = "today:" + kstDateString();
+  const todayKey = `today:${kstDateString()}`;
   const [todayRaw, totalRaw] = await Promise.all([
     env.VISITOR.get(todayKey),
     env.VISITOR.get("total")
@@ -242,7 +242,7 @@ async function handleHit(request, env) {
   // so page reloads/refreshes by the same visitor no longer inflate the count.
   // The "seen" marker expires at KST midnight, in step with the daily counter,
   // so the same visitor is counted again the next day.
-  const seenKey = "seen:" + counters.todayKey.slice("today:".length) + ":" + (await visitorHash(request));
+  const seenKey = `seen:${counters.todayKey.slice("today:".length)}:${await visitorHash(request)}`;
   const alreadyCounted = await env.VISITOR.get(seenKey);
 
   if (alreadyCounted) {
@@ -273,7 +273,7 @@ async function visitorHash(request) {
     request.headers.get("x-forwarded-for") ||
     "unknown";
   const ua = request.headers.get("user-agent") || "";
-  const data = new TextEncoder().encode(ip + "|" + ua);
+  const data = new TextEncoder().encode(`${ip}|${ua}`);
   const digest = await crypto.subtle.digest("SHA-256", data);
   const bytes = new Uint8Array(digest);
   let hex = "";

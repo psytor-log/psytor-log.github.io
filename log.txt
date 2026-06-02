@@ -1228,3 +1228,33 @@ Check your config.yml file.
 - 배포 검증: GitHub Actions `Deploy to GitHub Pages` run `26830598343` 성공. 운영 `https://psytor-log.github.io/admin/` HTTP 200 및 config cache version `20260603-0024`, `preserveExtraBlankLines`, `line-space` 포함 확인. 운영 `https://psytor-log.github.io/admin/config.yml` HTTP 200 및 UTF-8 기준 `게시판 변경`, `line-space`, `modes: ["raw", "rich_text"]` 반영 확인.
 - 검토 필요 항목: GitHub Actions에서 Node.js 20 actions deprecated 경고가 계속 표시됨. 2026-06-16 이후 Node.js 24 기본 전환 전 workflow 업데이트 검토 필요.
 - work.lock: 작업 종료 후 삭제.
+
+2026-06-03 00:45 $health 개인홈페이지 코드 점검 시작 (codex)
+- 사용자 요청 요약: `$health` 스킬로 개인홈페이지 작업 코드의 현재 품질 상태를 점검한다.
+- 자동 판단 근거: 사용자가 `$health`를 명시했으므로 gstack-health 스킬을 적용한다. 해당 스킬은 읽기 전용 점검이므로 코드 수정은 하지 않는다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행. Default 모드에서 별도 AskUserQuestion 도구가 없으므로 도구 목록 저장은 생략하고, 현재 프로젝트에서 감지 가능한 검사만 실행한다.
+- work.lock: codex가 생성함.
+- 다음 작업: `package.json`, 로컬 검사 도구, 빌드 가능 여부, 테스트/린트/타입체크 구성 유무를 확인하고 점수와 권장 사항을 보고한다.
+
+2026-06-03 00:47 $health 개인홈페이지 코드 점검 완료 (codex)
+- 처리 내용: `tsc --noEmit` 타입체크와 `npm.cmd run build` Astro 빌드를 실행했다.
+- 검증 결과: 타입체크 통과. Astro 빌드 통과. 23개 정적 페이지 생성 확인.
+- 점수 요약: 종합 8.0/10. 타입체크 10/10, 빌드 기반 스모크 테스트 7/10. 린트, 단위 테스트, dead-code, shellcheck, gbrain 검사는 구성 부재로 제외.
+- 처리 실패 사유: `C:\Users\dejan\.gstack` 히스토리 저장은 기본 sandbox에서 권한 거부되어 승인 실행으로 저장했다.
+- 검토 필요 항목: `lint`, `test`, dead-code 검사 도구가 없어 회귀 방지 자동화가 약하다. GitHub Actions의 Node.js 20 deprecation 경고도 별도 workflow 점검이 필요하다.
+- work.lock: 작업 종료 후 삭제.
+
+2026-06-03 00:48 코드 품질 권장사항 실행 시작 (codex)
+- 사용자 요청 요약: 직전 `$health` 결과의 권장 내용인 린트, 테스트, 브라우저/빌드 스모크 검증, GitHub Actions Node.js 경고 정리를 실제 코드 작업으로 반영한다.
+- 자동 판단 근거: 사용자가 "권장내용 실행"을 명시했으므로 별도 yes/no 확인 없이 진행한다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock: codex가 생성함.
+- 다음 작업: 기존 코드 구조와 CI 구성을 확인한 뒤 프로젝트에 맞는 최소 검사 도구와 테스트 스크립트를 추가한다.
+
+2026-06-03 00:56 코드 품질 권장사항 실행 완료 (codex)
+- 처리 내용: `@biomejs/biome` 기반 `lint`, `tsc --noEmit` 기반 `typecheck`, Node 기본 테스트 러너 기반 `test`, 관리자 페이지 산출물 검증용 `test:smoke`, 통합 `check` 스크립트를 추가했다. 게시글 카테고리/URL/썸네일/날짜/읽기 시간 유틸 테스트와 Decap 관리자 줄바꿈·카테고리 변경 스모크 테스트를 추가했다.
+- CI 변경: `deploy.yml`, `import-naver-posts.yml`의 Node.js 버전을 24로 올리고, 빌드 후 typecheck/lint/test/smoke 단계를 실행하도록 수정했다.
+- 추가 정리: Biome 경고를 줄이기 위해 단순 문자열 결합, 미사용 매개변수, 불필요한 정규식 escape, `let` 사용을 정리했다. CSS의 의도적 cascade/접근성 `!important` 규칙은 Biome 예외로 명시했다.
+- 검증 결과: `npm.cmd run check` 통과. `npm.cmd run build` 통과, 23개 정적 페이지 생성. `npm.cmd run test:smoke` 통과.
+- 검토 필요 항목: `npm.cmd audit --omit=dev` 결과 Astro 5 계열 취약점 2개가 남아 있으며, 해결은 Astro 6 강제 업그레이드가 필요해 별도 breaking-change 작업으로 분리한다.
+- work.lock: 작업 종료 후 삭제.
