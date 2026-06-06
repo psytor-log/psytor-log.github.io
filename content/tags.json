@@ -1,9 +1,9 @@
 {
   "AI": {
     "first_used_date": "2026-05-16",
-    "last_used_date": "2026-05-16",
-    "count": 1,
-    "related_categories": ["essay"]
+    "last_used_date": "2026-06-07",
+    "count": 2,
+    "related_categories": ["essay", "portfolio"]
   },
   "이해": {
     "first_used_date": "2026-05-16",
@@ -134,6 +134,36 @@
   "프로토타입": {
     "first_used_date": "2026-05-16",
     "last_used_date": "2026-05-16",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "멀티에이전트": {
+    "first_used_date": "2026-06-07",
+    "last_used_date": "2026-06-07",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "팀협업": {
+    "first_used_date": "2026-06-07",
+    "last_used_date": "2026-06-07",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "React": {
+    "first_used_date": "2026-06-07",
+    "last_used_date": "2026-06-07",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "FastAPI": {
+    "first_used_date": "2026-06-07",
+    "last_used_date": "2026-06-07",
+    "count": 1,
+    "related_categories": ["portfolio"]
+  },
+  "Claude Code": {
+    "first_used_date": "2026-06-07",
+    "last_used_date": "2026-06-07",
     "count": 1,
     "related_categories": ["portfolio"]
   }
