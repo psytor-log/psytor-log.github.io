@@ -9,7 +9,7 @@ tags:
 summary: "Reality is stranger than fiction. 가끔은 내가 경험하고 있는 상황, 보고 듣는 현실이 소설보다
   기묘하다고 느낄 때가 있다. "
 cover: ""
-draft: true
+draft: false
 source_file: naver-blog
 created_by: naver-import
 source_blog_log_no: "224252604750"
