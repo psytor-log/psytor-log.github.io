@@ -160,15 +160,18 @@
     "223838068942",
     "223831748821",
     "223831741197",
-    "223831733306"
+    "223831733306",
+    "223831728546",
+    "223831722216",
+    "223831716293"
   ],
-  "lastRunAt": "2026-07-22T22:15:27.507Z",
+  "lastRunAt": "2026-07-23T22:13:49.455Z",
   "lastResult": {
     "processed": 3,
     "imported": 3,
     "failed": 0,
     "naverPublicPostsScanned": 680,
-    "importedOrSkipped": 161,
-    "remaining": 519
+    "importedOrSkipped": 164,
+    "remaining": 516
   }
 }
