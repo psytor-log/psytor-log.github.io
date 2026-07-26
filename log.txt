@@ -1393,3 +1393,16 @@ Check your config.yml file.
 - 기존 변경 보존: `content/essay/2026-02-24-글을-쓴다-생성하지-않는다.md`는 이번 작업과 무관한 기존 수정이므로 배포 커밋에서 제외한다.
 - 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
 - work.lock 생성 여부: 생성.
+
+[2026-07-26 23:50:00 +09:00] codex - 에디터 개선 운영 배포 완료
+- 배포 커밋: `59f4e9451dfa1fb1a7cda66ed4fa991f9f0ee197` (`fix: improve admin publishing and rich text editing`).
+- 배포 방식: 최신 `origin/main`을 기능 브랜치에 fast-forward 반영하고 검증 후 `main`에 fast-forward 병합해 push했다.
+- GitHub Actions 결과: `Deploy to GitHub Pages` run `30206833391` 성공.
+- 배포 URL: https://github.com/psytor-log/psytor-log.github.io/actions/runs/30206833391
+- 운영 검증 결과: `https://psytor-log.github.io/admin/` 및 `/admin/config.yml` HTTP 200.
+- 운영 반영 확인: Decap CMS `3.15.1`, `enableDirectPublish`, 전역 `window.h` helper가 운영 HTML에 포함됐다. 본문 필드는 `richtext` 5개, `markdown` 0개다.
+- 최종 로컬 검증: 최신 `origin/main` 병합 후 `npm.cmd run check` 통과, `npm.cmd run build` 통과(55페이지), `npm.cmd run test:smoke` 6건 통과, `git diff --check` 통과.
+- 배포 워크플로 대체 사유: 설치된 gstack 패키지에 `ship` 실행 바이너리와 필수 review checklist가 없고 GitHub CLI 토큰이 만료되어 자동 PR 생성은 불가능했다. Git push 인증은 정상이어서 동일한 테스트 및 검토 게이트를 수동 실행하고 직접 배포했다.
+- 기존 변경 보존: `content/essay/2026-02-24-글을-쓴다-생성하지-않는다.md` 수정은 커밋하거나 변경하지 않았다.
+- 검토 필요 항목: 없음.
+- work.lock 삭제 여부: 삭제 완료.
