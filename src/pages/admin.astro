@@ -19,7 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap"
     />
     <link
-      href="/admin/config.yml?v=20260603-0024"
+      href="/admin/config.yml?v=20260726-2318"
       type="text/yaml"
       rel="cms-config-url"
     />
@@ -112,8 +112,25 @@
       }
 
       [class*="MarkdownControl"] textarea,
-      [class*="MarkdownControl"] [contenteditable="true"] {
+      [class*="MarkdownControl"] [contenteditable="true"],
+      [class*="RichtextControl"] [contenteditable="true"],
+      [data-slate-editor="true"] {
         line-height: 1.9 !important;
+        min-height: 28rem;
+      }
+
+      [data-slate-editor="true"] > p {
+        min-height: 1.9em;
+        margin: 0 !important;
+      }
+
+      [data-slate-editor="true"] > p + p {
+        margin-top: 0.45em !important;
+      }
+
+      html.wit-direct-publish-pending [role="menu"] {
+        visibility: hidden !important;
+        pointer-events: none !important;
       }
 
       /* Keyboard focus visibility inside the editor chrome */
@@ -182,8 +199,48 @@
         };
       })();
     </script>
-    <script is:inline src="https://unpkg.com/decap-cms@3.12.2/dist/decap-cms.js"></script>
+    <script is:inline src="https://unpkg.com/decap-cms@3.15.1/dist/decap-cms.js"></script>
     <script is:inline>
+      const enableDirectPublish = () => {
+        const publishButtonLabels = new Set(['게시', 'Publish']);
+        const publishNowLabels = new Set(['지금 게시', 'Publish now']);
+        let directPublishPending = false;
+        let pendingTimer;
+
+        const labelOf = (element) => (element?.textContent || '').replace(/\s+/g, ' ').trim();
+        const clearPending = () => {
+          directPublishPending = false;
+          window.clearTimeout(pendingTimer);
+          document.documentElement.classList.remove('wit-direct-publish-pending');
+        };
+        const publishFromOpenedMenu = () => {
+          if (!directPublishPending) return;
+          const publishNowItem = Array.from(document.querySelectorAll('[role="menuitem"]'))
+            .find((item) => publishNowLabels.has(labelOf(item)));
+          if (!publishNowItem) return;
+          clearPending();
+          publishNowItem.click();
+        };
+
+        document.addEventListener('click', (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          const button = target?.closest('button, [role="button"]');
+          if (!button || button.disabled || !publishButtonLabels.has(labelOf(button))) return;
+
+          directPublishPending = true;
+          document.documentElement.classList.add('wit-direct-publish-pending');
+          pendingTimer = window.setTimeout(clearPending, 1500);
+          queueMicrotask(publishFromOpenedMenu);
+        }, true);
+
+        new MutationObserver(publishFromOpenedMenu).observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      };
+
+      enableDirectPublish();
+
       const escapeAttribute = (value = '') =>
         String(value)
           .replace(/&/g, '&amp;')
@@ -324,8 +381,8 @@
           handler: function ({ entry }) {
             const data = entry && entry.get && entry.get('data');
             const body = data && data.get && data.get('body');
-            if (typeof body !== 'string') return entry;
-            return entry.set('data', data.set('body', preserveExtraBlankLines(body)));
+            if (typeof body !== 'string') return data;
+            return data.set('body', preserveExtraBlankLines(body));
           }
         });
       }
@@ -334,8 +391,8 @@
       CMS.registerPreviewStyle('/admin/preview.css');
 
       /* ===== Preview template that mirrors src/pages/[category]/[slug].astro ===== */
-      const h = CMS.h;
-      const createClass = CMS.createClass;
+      const h = window.h;
+      const createClass = window.createClass;
 
       const formatPreviewDate = (raw) => {
         if (!raw) return '';
@@ -359,6 +416,12 @@
       const postCategories = ['essay', 'study', 'books', 'portfolio'];
       const normalizePreviewCategory = (value, fallback) =>
         postCategories.includes(value) ? value : fallback;
+      const bodyWidgetWithPreservedBlankLines = (props, data) => {
+        const body = data && data.get && data.get('body');
+        const previewData =
+          typeof body === 'string' ? data.set('body', preserveExtraBlankLines(body)) : data;
+        return props.widgetFor('body', undefined, previewData);
+      };
 
       const buildPostPreview = (fallbackCategory) =>
         createClass({
@@ -413,7 +476,7 @@
               cover
                 ? h('img', { className: 'cover', src: cover.toString(), alt: '' })
                 : null,
-              h('div', { className: 'body' }, this.props.widgetFor('body'))
+              h('div', { className: 'body' }, bodyWidgetWithPreservedBlankLines(this.props, data))
             );
           }
         });
@@ -439,7 +502,7 @@
               h('p', { className: 'eyebrow' }, eyebrow),
               h('h1', null, title),
               summary ? h('p', { className: 'lead' }, summary) : null,
-              h('div', { className: 'body' }, this.props.widgetFor('body'))
+              h('div', { className: 'body' }, bodyWidgetWithPreservedBlankLines(this.props, data))
             );
           }
         })

@@ -1268,3 +1268,128 @@ Check your config.yml file.
 - 처리 내용: run `26831933818`은 성공했지만 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24` 사용 시 "Node 20 대상 action을 Node 24에서 강제 실행 중" annotation이 남았다.
 - 확인 근거: GitHub API로 공식 action 최신 릴리스를 확인했다. `actions/checkout` 최신 `v6.0.3`, `actions/setup-node` 최신 `v6.4.0`, `actions/upload-pages-artifact` 최신 `v5.0.0`, `actions/deploy-pages` 최신 `v5.0.0`.
 - 수정 내용: workflow의 action 참조를 `checkout@v6`, `setup-node@v6`, `upload-pages-artifact@v5`, `deploy-pages@v5`로 올리고 강제 env 설정은 제거했다.
+
+2026-06-06 18:03 admin 에디터 줄바꿈 보존 수정 시작 (codex)
+- 사용자 요청 요약: 홈페이지 admin에서 글 편집 시 여러 번 입력한 줄바꿈이 한 칸만 반영되는 문제를 수정한다.
+- 자동 판단 근거: 기존 `preserveExtraBlankLines` 구현과 Decap CMS `preSave` 훅 반환 계약을 비교해 원인을 진단했다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock: codex가 생성함.
+
+2026-06-06 18:05 admin 에디터 줄바꿈 보존 수정 완료 (codex)
+- 원인: Decap CMS `preSave` 훅은 수정된 `data` 맵을 반환해야 하지만 기존 구현이 전체 `entry`를 반환해 연속 빈 줄 변환 결과가 저장에 반영되지 않을 수 있었다.
+- 구현 결과: `src/pages/admin.astro`의 `preSave` 훅이 `data.set('body', preserveExtraBlankLines(body))`를 반환하도록 수정했다.
+- 수정한 파일 목록: `src/pages/admin.astro`, `tests/admin-smoke.test.js`, `project.meta.json`, `log.txt`.
+- 검증 결과: `npm.cmd run check` 통과, `npm.cmd run build` 통과, `npm.cmd run test:smoke` 통과.
+- 처리 실패 사유: 최초 `npm.cmd run build`는 `.astro/content.d.ts` 쓰기 중 Windows `EPERM`으로 실패했으며, 승인된 권한 방식으로 재실행해 정상 통과했다.
+- 개선 패턴: 외부 라이브러리 이벤트 훅은 반환값 계약까지 회귀 테스트로 검증한다.
+- 검토 필요 항목: 없음.
+- work.lock: 작업 종료 후 삭제함.
+
+2026-06-06 18:18 admin 실시간 미리보기 연속 빈 줄 보존 수정 (codex)
+- 사용자 요청 요약: 에디터 본문에서 약 3칸 띄운 문단 간격이 우측 실시간 미리보기에서는 1칸으로 접히는 문제를 수정한다.
+- 원인: 저장 직전 `preSave` 변환과 별개로, 실시간 미리보기의 `widgetFor('body')`는 원본 Markdown을 바로 파싱하여 3개 이상의 연속 줄바꿈을 일반 문단 간격 하나로 합쳤다.
+- 자동 판단 근거: Decap CMS 공식 `EditorPreviewPane` 소스에서 `widgetFor(name, fields, values)`가 미리보기 전용 values 맵을 받을 수 있음을 확인했다.
+- 구현 결과: 게시글 및 About 미리보기에서 원본 편집 데이터는 유지하면서, `preserveExtraBlankLines`를 적용한 `previewData`를 `widgetFor` 세 번째 인자로 전달한다.
+- 수정한 파일 목록: `src/pages/admin.astro`, `tests/admin-smoke.test.js`, `project.meta.json`, `log.txt`.
+- 검증 결과: `npm.cmd run check` 통과, `npm.cmd run build` 통과, `npm.cmd run test:smoke` 4건 통과.
+- 기능 테스트: 3개 줄바꿈은 spacer 1개, 4개 줄바꿈은 spacer 2개로 변환되며 fenced code block 내부 줄바꿈은 그대로 유지됨을 확인했다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- 검토 필요 항목: 운영 admin 반영은 배포 후 확인이 필요하다.
+- work.lock: 작업 종료 후 삭제함.
+
+[2026-06-07] claude-code — 포트폴리오 글 1건 추가 (home-budget 작업 정리)
+- 작업 목적: 별도 프로젝트 home-budget(우리집 가계부) 제작 결과를 이 홈페이지 portfolio 카테고리에 정리·게시
+- 수정/추가 파일: content/portfolio/2026-06-07-home-budget-ai-team.md(신규), content/tags.json(신규 태그 등록)
+- 글 형식: 기존 portfolio 글과 동일 프론트매터(title/date/category/tags/summary/cover/draft/source_file/import_review_note/created_by), WRITING_RULES의 portfolio 구조(문제/목표/접근/구현/결과/배운 점/다음 개선) 적용, 톤은 1인칭 기록체
+- 신규 태그(TAG_RULES 10항 기록): 멀티에이전트, 팀협업, React, FastAPI, Claude Code. AI 태그 count 2로 갱신·related_categories에 portfolio 추가
+- 검증: 프론트매터 YAML parse OK, tags.json JSON valid. 로컬 astro build/sync는 node_modules rollup 네이티브 바이너리 누락(@rollup/rollup-linux-x64-gnu, drvfs 설치 환경 npm optional-deps 버그)으로 불가 — 콘텐츠 무관, 실제 빌드는 CI가 수행
+  · 원문: Error: Cannot find module @rollup/rollup-linux-x64-gnu
+  · 한국어 요약: 로컬 의존성 설치 환경 문제로 로컬 빌드 불가. 코드/콘텐츠 잘못 아님
+- 무관 변경 미포함: 작업 트리의 53개 M 파일은 CRLF↔LF 줄바꿈 노이즈(--ignore-all-space diff 빈값)라 스테이징에서 제외. 신규 글+tags.json 2개만 커밋
+- 커밋: 493bf9e "Add portfolio post: home-budget AI team build" (로컬 main)
+- 미완 항목(사용자 조치 필요): origin/main push 미수행. 사유 — (1) 안전 분류기가 기본 브랜치 직접 push를 명시 승인 없이 차단, (2) 이 환경에 gh 미설치·credential helper 미설정으로 HTTPS 인증 불가. push 시 GitHub Actions가 자동 배포됨
+- 다음 액션: 사용자가 push 승인 또는 직접 push (git push origin main) → Actions 배포 확인
+
+[2026-06-07] 세션 종료 — 다음 작업 인계
+- ★ 다음 작업: 포트폴리오 신규 글 push (미완)
+  · 로컬 main 커밋 493bf9e 존재(content/portfolio/2026-06-07-home-budget-ai-team.md + content/tags.json), origin/main 미반영
+  · 실행: git -C "/mnt/i/ai for works/what-i-think" push origin main
+  · push 후 GitHub Actions 빌드·배포 → https://psytor-log.github.io/ 포트폴리오에서 글 노출 확인
+  · 미push 사유: 안전 분류기의 기본 브랜치 직접 push 차단 + 이 환경 gh 미설치/자격증명 미설정
+- project.meta.json next_action 에도 동일 내용 기록함
+
+[2026-06-14 20:10:20 +09:00] codex — prompt-products 포트폴리오 글 작성 완료
+- 작업 목적: Claude Code가 작성한 prompt-products/summary.md를 what-i-think 홈페이지 portfolio 카테고리 글로 정리한다.
+- 사용자 요청 요약: summary.md 작성 완료 후 해당 내용을 홈페이지 포트폴리오 카테고리에 글로 작성.
+- 자동 판단 근거: 기존 portfolio 글과 WRITING_RULES의 문제/목표/접근/구현/결과/배운 점/다음 개선 구조를 적용하고, summary.md의 판매 패키지 제작 과정을 1인칭 기록체로 재구성했다.
+- 구현 결과: content/portfolio/2026-06-14-prompt-product-package.md 신규 작성. 대상별 프롬프트 60개 선별·특화·검수, 설명서·PDF 자동화, 크몽 상세페이지 제작, 결과와 남은 개선 항목을 포함했다.
+- 태그 처리: 기존 AI·자동화·Codex·Claude Code 사용 횟수 및 날짜 갱신. 신규 태그 프롬프트·디지털상품을 content/tags.json에 등록.
+- 신규 태그: 프롬프트, 디지털상품.
+- 검증 결과: frontmatter·tags.json 유효, portfolio 필수 구조 포함, npm.cmd run build 성공, /portfolio/2026-06-14-prompt-product-package/ 정적 페이지 생성, npm.cmd run test 5건 통과.
+- 기존 변경 보존: src/pages/admin.astro, tests/admin-smoke.test.js, project.meta.json, 기존 log.txt 변경은 되돌리거나 수정하지 않았다.
+- 수정한 파일 목록: content/portfolio/2026-06-14-prompt-product-package.md, content/tags.json, log.txt, work.lock.
+- work.lock 생성 여부: 생성.
+- work.lock 삭제 여부: 삭제.
+[2026-07-26 23:09:49 +09:00] codex - 에디터 게시 및 줄바꿈 개선 작업 시작
+- 작업 목적: 게시 버튼의 드롭다운을 제거하고 클릭 즉시 게시되도록 변경하며, 본문 줄바꿈을 자연스럽게 입력·수정·저장할 수 있도록 개선한다.
+- 사용자 요청 요약: 게시 버튼을 단일 동작으로 바꾸고, 오픈소스 구현과 참고 자료를 조사해 에디터 줄바꿈 편집 불편을 해결한다.
+- 자동 판단 근거: 기존 Decap CMS 기반 구조와 미커밋 변경을 보존하면서 반복된 줄바꿈 문제의 원인을 먼저 추적한다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- 입력값 누락: 없음.
+- 기본값 적용: 없음.
+- 사용 도구: codex, investigate, web search.
+- work.lock 생성 여부: 생성.
+- 다음 작업: 현재 diff, Decap CMS 저장 동작과 Markdown 위젯 구현을 분석하고 회귀 테스트를 먼저 보강한다.
+[2026-07-26 23:22:41 +09:00] codex - 에디터 게시 및 줄바꿈 개선 작업 완료
+- 증상: 게시 버튼을 누르면 `지금 게시`, `게시하고 새로 만들기`, `게시하고 복제` 메뉴가 열렸고, 기존 `markdown` 위젯에서 문단과 빈 줄을 입력·수정하기 불편했다.
+- 원인: Decap CMS `EditorToolbar.renderNewEntrySimplePublishControls`가 simple 모드에서도 게시 버튼을 `ToolbarDropdown`으로 고정하고 실제 `onPersist`를 `지금 게시` 메뉴 항목에만 연결한다. 기존 `markdown` 위젯은 폐기 예정이며, 저장 직전 HTML spacer 변환만으로는 편집 중 줄바꿈 경험을 해결할 수 없었다.
+- 오픈소스 조사 원문: https://decapcms.org/docs/widgets/
+- 한국어 요약: Decap CMS 공식 문서는 `markdown` 위젯을 폐기 예정으로 표시하고 Plate 기반 `richtext` 위젯 사용을 권장한다. `richtext`는 Markdown 문자열 출력을 유지한다.
+- 오픈소스 조사 원문: https://decapcms.org/blog/richtext-widget-replaces-markdown-widget/
+- 한국어 요약: 기존 Markdown 편집기의 장기 문제를 해결하기 위해 Plate 기반 새 위젯을 도입했으며, 기존 설정 옵션을 유지한 채 `widget: richtext`로 전환할 수 있다.
+- 오픈소스 조사 원문: https://github.com/decaporg/decap-cms/blob/e50c1b16fb22421adaaea6aa104cf68045ebdbbf/packages/decap-cms-widget-richtext/src/RichtextControl/plugins/BreakPlugin.js
+- 한국어 요약: 새 편집기는 `Shift+Enter`를 명시적인 `<br>` 줄바꿈으로 처리하고 일반 `Enter`는 문단 편집에 사용한다.
+- 구현 결과: Decap CMS CDN을 `3.12.2`에서 `3.15.1`로 갱신하고 본문 필드 5개를 `richtext` 기본 시각 모드로 전환했다. 편집 영역의 문단 최소 높이와 간격을 조정하고 기존 `Blank line` 블록 및 저장·미리보기 보존 훅을 유지했다.
+- 구현 결과: `enableDirectPublish`가 게시 버튼 클릭 뒤 upstream의 공식 `지금 게시` 메뉴 액션을 즉시 선택한다. 자동 선택 대기 중 메뉴는 숨겨 드롭다운이 사용자에게 노출되지 않는다.
+- 회귀 테스트: 새 기능 구현 전 `npm.cmd run test:smoke`에서 신규 테스트 3건이 실패하는 것을 확인했고, 구현 후 5건 모두 통과했다.
+- 검증 결과: `npm.cmd run check` 통과. typecheck, Biome lint, 기존 단위 테스트 5건 통과.
+- 검증 결과: `npm.cmd run build` 통과. Astro 정적 페이지 42개 생성.
+- 검증 결과: 빌드된 인라인 JavaScript 2개를 `new Function`으로 구문 검사해 모두 통과했다.
+- 검증 결과: 로컬 `http://127.0.0.1:4321/admin/` 및 `/admin/config.yml` HTTP 200. 최신 Decap 번들, `enableDirectPublish`, config cache 버전 반영을 확인했고 `richtext` 본문 필드 5개, `markdown` 본문 필드 0개를 확인했다.
+- 처리 실패 사유: `browse` 스킬 런타임이 머신에 빌드되어 있지 않아 인증된 에디터 DOM을 실제 클릭하는 브라우저 자동화는 수행하지 못했다. 로컬 HTTP, upstream 소스, 회귀 테스트, 빌드 산출물 검사로 대체했다.
+- 수정한 파일 목록: `src/pages/admin.astro`, `public/admin/config.yml`, `tests/admin-smoke.test.js`, `project.meta.json`, `log.txt`.
+- 기존 변경 보존: 작업 시작 전 존재하던 `src/pages/admin.astro`, `tests/admin-smoke.test.js`, `project.meta.json`, `log.txt` 미커밋 변경을 유지하고 그 위에 추가했다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- 검토 필요 항목: 배포 후 로그인된 운영 `/admin/`에서 실제 글 1건으로 게시 단일 클릭과 Enter/Shift+Enter 저장 결과를 최종 확인한다.
+- 개선 패턴: 폐기 예정 편집기의 저장 후 문자열 우회보다 유지보수되는 upstream 편집 엔진으로 전환하고, 프로젝트 고유의 추가 여백 블록만 얇게 유지한다.
+- work.lock 삭제 여부: 삭제.
+[2026-07-26 23:29:30 +09:00] codex - 에디터 브라우저 검증 재시도 시작
+- 작업 목적: 직전 작업에서 수행하지 못한 실제 브라우저 기반 검증을 다시 시도한다.
+- 사용자 요청 요약: 검증 시도 재실행.
+- 자동 판단 근거: 소스 수정 없이 `browse` 및 사용 가능한 대체 브라우저 경로를 순서대로 확인한다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- 사용 도구: codex, browse.
+- work.lock 생성 여부: 생성.
+
+[2026-07-26 23:43:00 +09:00] codex - 에디터 실제 브라우저 검증 및 보완 완료
+- 검증 환경: 로컬 Astro 개발 서버 `http://127.0.0.1:4321/admin/`, Decap local backend, Chrome 브라우저 자동화.
+- 발견 및 수정 1: Decap CMS 3.15.1은 미리보기용 React helper를 `CMS.h`와 `CMS.createClass`가 아니라 전역 `window.h`와 `window.createClass`로 제공한다. 기존 접근에서 발생한 `TypeError: createClass is not a function`을 전역 helper 사용으로 수정했다.
+- 발견 및 수정 2: 실제 게시 컨트롤은 `<button>`이 아니라 `role="button"`인 요소였다. 직접 게시 어댑터의 탐색 범위를 `button, [role="button"]`으로 확장했다.
+- 게시 검증 결과: 빈 필수 필드 상태에서 `게시`를 한 번 클릭하자 드롭다운 없이 즉시 필수 필드 검증 알림이 나타났다. `지금 게시` menuitem은 DOM에 0개였으며 테스트 글은 저장되지 않았다.
+- 줄바꿈 검증 결과: 실제 `richtext` 본문에 `첫 문단`, Enter, `둘째 문단`, Shift+Enter, `같은 문단 다음 줄`을 입력했다. DOM에서 첫 문단과 둘째 문단이 별도 paragraph로 생성되고, Shift+Enter 이후 텍스트는 둘째 paragraph 내부의 다음 줄로 유지됐다. 우측 미리보기에도 동일하게 반영됐다.
+- 회귀 테스트: Decap 3.15 전역 React helper와 `role="button"` 게시 컨트롤 탐색 조건을 `tests/admin-smoke.test.js`에 추가했다.
+- 최종 검증 결과: `npm.cmd run check` 통과(typecheck, Biome lint, 단위 테스트 5건), `npm.cmd run build` 통과(정적 페이지 42개), `npm.cmd run test:smoke` 6건 통과, `git diff --check` 통과.
+- 환경 정리: 검증용 Decap local backend의 `8081` 리스너가 종료됐음을 확인했다. Astro 개발 서버는 `http://127.0.0.1:4321/admin/`에서 HTTP 200으로 유지했다.
+- 수정한 파일 목록: `src/pages/admin.astro`, `tests/admin-smoke.test.js`, `project.meta.json`, `log.txt`.
+- 처리 실패 사유: gstack browse 런타임은 설치가 필요해 사용할 수 없었으며, 설치된 Chrome Browser 도구로 실제 DOM 검증을 완료했다.
+- 검토 필요 항목: 배포 후 운영 `/admin/` 반영 여부만 확인하면 된다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock 삭제 여부: 삭제 완료.
+
+[2026-07-26 23:47:00 +09:00] codex - 에디터 개선 배포 시작
+- 작업 목적: 검증 완료된 게시 단일 클릭 및 richtext 줄바꿈 개선을 GitHub에 반영하고 GitHub Pages 배포를 확인한다.
+- 사용자 요청 요약: 변경 사항 배포.
+- 자동 판단 근거: `ship` 워크플로에 따라 테스트, diff 검토, 커밋, push, 배포 확인을 순서대로 수행한다.
+- 기존 변경 보존: `content/essay/2026-02-24-글을-쓴다-생성하지-않는다.md`는 이번 작업과 무관한 기존 수정이므로 배포 커밋에서 제외한다.
+- 사용자 컨펌 여부: yes/no 컨펌 자동 진행.
+- work.lock 생성 여부: 생성.

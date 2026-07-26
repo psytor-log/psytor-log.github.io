@@ -91,7 +91,7 @@ collections:
           - { label: "제목", name: "title", widget: "string" }
           - { label: "요약", name: "summary", widget: "text" }
           - { label: "상단 라벨", name: "eyebrow", widget: "string", default: "About" }
-          - { label: "본문", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image"] }
+          - { label: "본문", name: "body", widget: "richtext", default_mode: "rich_text", modes: ["rich_text", "raw"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "Enter는 새 문단, Shift+Enter는 같은 문단 안 줄바꿈입니다. 여러 줄 여백은 Blank line 블록을 사용하세요." }
 
       - name: "ichnos"
         label: "Vestigo (발자취)"
@@ -143,7 +143,7 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
+      - { label: "본문", name: "body", widget: "richtext", default_mode: "rich_text", modes: ["rich_text", "raw"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "Enter는 새 문단, Shift+Enter는 같은 문단 안 줄바꿈입니다. 여러 줄 여백은 Blank line 블록을 사용하세요." }
 
   - name: "study"
     label: "Study"
@@ -175,7 +175,7 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
+      - { label: "본문", name: "body", widget: "richtext", default_mode: "rich_text", modes: ["rich_text", "raw"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "Enter는 새 문단, Shift+Enter는 같은 문단 안 줄바꿈입니다. 여러 줄 여백은 Blank line 블록을 사용하세요." }
 
   - name: "books"
     label: "Books"
@@ -207,7 +207,7 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
+      - { label: "본문", name: "body", widget: "richtext", default_mode: "rich_text", modes: ["rich_text", "raw"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "Enter는 새 문단, Shift+Enter는 같은 문단 안 줄바꿈입니다. 여러 줄 여백은 Blank line 블록을 사용하세요." }
 
   - name: "portfolio"
     label: "Portfolio"
@@ -239,4 +239,4 @@ collections:
       - { label: "원본 파일", name: "source_file", widget: "hidden", default: "cms" }
       - { label: "Import 검토 메모", name: "import_review_note", widget: "text", required: false, hint: "네이버 블로그 자동 이전 시 카테고리 판단 근거를 남깁니다." }
       - { label: "작성 도구", name: "created_by", widget: "hidden", default: "decap-cms" }
-      - { label: "본문", name: "body", widget: "markdown", default_mode: "raw", modes: ["raw", "rich_text"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "여러 번 엔터를 쳐서 만든 빈 줄은 저장 시 실제 여백으로 보존됩니다." }
+      - { label: "본문", name: "body", widget: "richtext", default_mode: "rich_text", modes: ["rich_text", "raw"], buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list", "code"], editor_components: ["sized-image", "line-space"], hint: "Enter는 새 문단, Shift+Enter는 같은 문단 안 줄바꿈입니다. 여러 줄 여백은 Blank line 블록을 사용하세요." }
