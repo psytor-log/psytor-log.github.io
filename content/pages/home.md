@@ -23,10 +23,6 @@ categories:
     name: Vestigo
     description: 히스토리
     href: /ichnos/
-  - name: social
-    description: 사회 이슈나 기사를 읽다
-    href: /socail/
-    key: essay
 section_featured_label: Latest
 section_recent_label: Recent
 section_view_all_label: View all  →
