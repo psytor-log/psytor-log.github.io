@@ -9,7 +9,7 @@ categories:
     href: /essay/
   - key: study
     name: Study
-    description: 공부한 개념
+    description: 시사, 과학, AI 공부
     href: /study/
   - key: books
     name: Books
