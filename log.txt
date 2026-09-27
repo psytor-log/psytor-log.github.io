@@ -1415,6 +1415,8 @@ Check your config.yml file.
 - 기존 사이트 상태: 사용자의 교체 결정에 따라 What I Think 프로젝트 상태를 `중단`으로 표시하고, 게시물 원본은 복구 가능한 백업으로 저장소에 보존한다.
 - 외부 영향: `main`에 변경 사항을 push하면 Pages 배포가 실행되어 기존 글 공개가 중단되고, `psytor-log.github.io` 방문자는 새 무료 Worker 홈페이지로 이동한다. 복구 방법은 배포 워크플로를 Git 이력에서 되돌려 재배포하는 것이다.
 - 사용자 컨펌: 공개 사이트 교체 및 무료 Worker URL 사용은 사용자의 명시 요청에 따라 진행한다.
-- 검토/검증: push 전에 redirect HTML·워크플로를 점검하고, 배포 뒤 Actions 결과와 `psytor-log.github.io` 이동 응답을 확인한다.
-- 배포 결과: GitHub Pages 공개 전환 완료 후 Actions 실행 결과, 공개 redirect 응답, 원본 글 보존 상태를 기록한다.
+- 검증: GitHub Actions `36326687020` 배포 성공(24초). `https://psytor-log.github.io/` HTTP 200에서 Worker 목적지를 확인했고, `https://psytor-log.github.io/what-i-think/`는 404 페이지에서 같은 주소로 안내한다. 브라우저에서 기본 주소를 열어 자동 이동 뒤 새 홈페이지 렌더링을 확인했다.
+- 원본 보존: 글·책 파일 및 72건의 원격 네이버 가져오기 커밋은 그대로 유지했다. 공개 artifact만 redirect-site로 바뀌어 기존 글은 공개 배포에서 빠졌다. 작업 전 로컬 미커밋 파일은 원래 작업트리에 그대로 두고 이번 커밋에서 제외했다.
+- 수정 파일: `.github/workflows/deploy.yml`, `redirect-site/index.html`, `redirect-site/404.html`, `project.meta.json`, `log.txt`.
+- 작업 종료: 2026-09-27 23:41 KST. work.lock 생성 후 정상 종료에 따라 삭제한다.
 
