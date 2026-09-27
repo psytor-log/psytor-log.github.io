@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Redirect to personal homepage
 
 on:
   push:
@@ -15,40 +15,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Typecheck
-        run: npm run typecheck
-      - name: Lint
-        run: npm run lint
-      - name: Test
-        run: npm run test
-      - name: Smoke test built admin
-        run: npm run test:smoke
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: ./dist
-
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Upload redirect pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./redirect-site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

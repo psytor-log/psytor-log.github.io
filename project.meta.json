@@ -2,9 +2,9 @@
   "project_name": "what-i-think",
   "project_alias": "내 홈페이지",
   "project_type": "personal-homepage",
-  "status": "진행중",
+  "status": "중단",
   "created_at": "2026-05-16",
-  "last_updated_at": "2026-07-26",
+  "last_updated_at": "2026-09-27T23:33:00+09:00",
   "goal": "What I Think 홈페이지와 /admin/ Decap CMS 에디터의 디자인을 사용자 컨펌 범위로 리뉴얼한다. 산출물: 변경된 CSS, 레이아웃, admin 프리뷰 템플릿. 완료 상태: build 통과 + 변경 항목별 시각 확인.",
   "success_metrics": [
     "npm run build 가 에러 없이 통과한다",
@@ -23,9 +23,9 @@
     "log.txt 에 작업 시작/종료/수정 파일이 기록된다",
     "work.lock 이 작업 종료 시 삭제된다"
   ],
-  "current_stage": "admin 게시 단일 동작 및 richtext 편집 개선 운영 배포 완료",
-  "next_action": "운영 `/admin/`을 사용하면서 게시 및 줄바꿈 편집 회귀 여부를 관찰한다.",
-  "blocked_reason": "",
+  "current_stage": "기존 게시물 원본을 저장소에 보존하고 공개 배포를 신규 홈페이지로 전환",
+  "next_action": "기존 게시물은 Git 저장소 이력에 백업으로 보관하며, 필요하면 이전 배포 워크플로를 복구한다.",
+  "blocked_reason": "사용자 결정에 따라 What I Think 공개 사이트를 신규 개인홈페이지로 교체한다.",
   "tags": ["design", "redesign", "astro", "decap-cms"],
   "goal_confirmation": {
     "status": "confirmed",

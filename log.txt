@@ -1406,3 +1406,15 @@ Check your config.yml file.
 - 기존 변경 보존: `content/essay/2026-02-24-글을-쓴다-생성하지-않는다.md` 수정은 커밋하거나 변경하지 않았다.
 - 검토 필요 항목: 없음.
 - work.lock 삭제 여부: 삭제 완료.
+# 2026-09-27T23:33:00+09:00 — 공개 홈페이지를 새 관리자 사이트로 전환
+- 사용 도구: codex, GitHub CLI, GitHub Actions
+- 작업 시작: 2026-09-27 23:25 KST. 사용자 요청: 백업이 있는 기존 What I Think 공개 사이트를 새 홈페이지로 대체하고, 무료 Worker same-origin + HttpOnly 쿠키 방식을 사용한다.
+- 확인: 기본 주소 저장소 `psytor-log/psytor-log.github.io`는 기존 Astro `What I Think` 사이트이며, 다수의 글·책 원본을 포함한다. 별도 `/what-i-think/` 경로는 기존에 404다.
+- 보존: 저장소의 모든 글·책 원본과 커밋 이력은 삭제하지 않는다. 작업 시작 시 이미 수정 상태였던 `content/essay/2026-02-24-...md` 사용자 파일은 무관한 변경으로 판단해 손대지 않고 커밋에서도 제외한다.
+- 변경: GitHub Pages의 공개 산출물만 기존 Astro 빌드 대신 새 Worker 주소 `https://personal-homepage-admin-auth.dejangbu83.workers.dev/`로 안내하는 시작/404 페이지로 교체한다. 이전 주소 방문자는 자동 이동하며 기존 개별 글 주소도 공개 게시에서 제외된다.
+- 기존 사이트 상태: 사용자의 교체 결정에 따라 What I Think 프로젝트 상태를 `중단`으로 표시하고, 게시물 원본은 복구 가능한 백업으로 저장소에 보존한다.
+- 외부 영향: `main`에 변경 사항을 push하면 Pages 배포가 실행되어 기존 글 공개가 중단되고, `psytor-log.github.io` 방문자는 새 무료 Worker 홈페이지로 이동한다. 복구 방법은 배포 워크플로를 Git 이력에서 되돌려 재배포하는 것이다.
+- 사용자 컨펌: 공개 사이트 교체 및 무료 Worker URL 사용은 사용자의 명시 요청에 따라 진행한다.
+- 검토/검증: push 전에 redirect HTML·워크플로를 점검하고, 배포 뒤 Actions 결과와 `psytor-log.github.io` 이동 응답을 확인한다.
+- 배포 결과: GitHub Pages 공개 전환 완료 후 Actions 실행 결과, 공개 redirect 응답, 원본 글 보존 상태를 기록한다.
+
