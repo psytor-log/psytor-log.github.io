@@ -367,15 +367,18 @@
     "223564406649",
     "223563189658",
     "223561883530",
-    "223560570580"
+    "223560570580",
+    "223560254717",
+    "223557483590",
+    "223556261167"
   ],
-  "lastRunAt": "2026-09-30T00:25:15.052Z",
+  "lastRunAt": "2026-10-01T00:32:42.251Z",
   "lastResult": {
     "processed": 3,
     "imported": 3,
     "failed": 0,
     "naverPublicPostsScanned": 680,
-    "importedOrSkipped": 368,
-    "remaining": 312
+    "importedOrSkipped": 371,
+    "remaining": 309
   }
 }
