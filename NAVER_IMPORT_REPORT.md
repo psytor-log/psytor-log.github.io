@@ -5386,3 +5386,40 @@
 - 223325427446 / 2024-01-17 / AI / [AI 배우기 #3] 타이타닉에서 어떤 사람들이 살았을까? 타이타닉 데이터 분석 기초 실습 편
 - 223322263790 / 2024-01-14 / AI / [AI 배우기 #2] scikit-learn 설치하고 맛보기
 - 223322182113 / 2024-01-14 / AI / [AI 배우기 #1] Python 머신러닝 라이브러리 scikit-learn 시작하기 추천 자료들
+
+## 2026-10-22T23:59:09.716Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 437
+- remaining: 243
+
+- IMPORTED 223334715582: [Python] seaborn으로 타이타닉 생존자 그래프 그려보자.
+  - path: content/study/2024-01-26-python-seaborn으로-타이타닉-생존자-그래프-그려보자.md
+  - category: python_라이브러리 -> study
+  - note: 네이버 카테고리 'python_라이브러리' 기준으로 study에 배치.
+  - images: 11
+- IMPORTED 223334636050: [Python] pandas 기초 #13. 테이블에 있는 데이터 변경하기
+  - path: content/study/2024-01-26-python-pandas-기초-13-테이블에-있는-데이터-변경하기.md
+  - category: python_라이브러리 -> study
+  - note: 네이버 카테고리 'python_라이브러리' 기준으로 study에 배치.
+  - images: 3
+- IMPORTED 223332257902: [Data & AI 배우기 #5] 타이타닉 생존자 비율조사와 통계분석해 보기.
+  - path: content/study/2024-01-24-data-ai-배우기-5-타이타닉-생존자-비율조사와-통계분석해-보기.md
+  - category: AI -> study
+  - note: 네이버 카테고리 'AI' 기준으로 study에 배치.
+  - images: 8
+
+### Next remaining posts
+- 223330824723 / 2024-01-23 / AI / [AI 배우기 #4] Machine Learning을 하기 전 데이터 먼저 이해하기. [데이터 요약하기, 결측치 찾기, 변환하기.]
+- 223329317518 / 2024-01-21 / python_라이브러리 / pandas 기초 #12. 텍스트를 나누고, 붙이기
+- 223328724960 / 2024-01-20 / python_라이브러리 / pandas 기초 #11. 테이블 테이블. 두 개 표를 하나로 만들기
+- 223328086918 / 2024-01-20 / coaching / 합리적 의사결정을 내릴 때 도움이 되는 생각 모음.
+- 223325427446 / 2024-01-17 / AI / [AI 배우기 #3] 타이타닉에서 어떤 사람들이 살았을까? 타이타닉 데이터 분석 기초 실습 편
+- 223322263790 / 2024-01-14 / AI / [AI 배우기 #2] scikit-learn 설치하고 맛보기
+- 223322182113 / 2024-01-14 / AI / [AI 배우기 #1] Python 머신러닝 라이브러리 scikit-learn 시작하기 추천 자료들
+- 223317619410 / 2024-01-09 / python_라이브러리 / pandas 기초 #10. column에 있는 데이터 수는 몇 개일까?
+- 223317091489 / 2024-01-09 / python_라이브러리 / pandas 기초 #9. 평균 구하기_기초
+- 223316835538 / 2024-01-09 / python_라이브러리 / 파이썬 leafmap으로 지도 다루기 #1. 설치
