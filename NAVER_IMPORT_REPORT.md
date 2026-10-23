@@ -5423,3 +5423,40 @@
 - 223317619410 / 2024-01-09 / python_라이브러리 / pandas 기초 #10. column에 있는 데이터 수는 몇 개일까?
 - 223317091489 / 2024-01-09 / python_라이브러리 / pandas 기초 #9. 평균 구하기_기초
 - 223316835538 / 2024-01-09 / python_라이브러리 / 파이썬 leafmap으로 지도 다루기 #1. 설치
+
+## 2026-10-23T23:51:39.122Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 440
+- remaining: 240
+
+- IMPORTED 223330824723: [AI 배우기 #4] Machine Learning을 하기 전 데이터 먼저 이해하기. [데이터 요약하기, 결측치 찾기, 변환하기.]
+  - path: content/study/2024-01-23-ai-배우기-4-machine-learning을-하기-전-데이터-먼저-이해하기-데이터-요약하기-결측치-찾기-변환하기.md
+  - category: AI -> study
+  - note: 네이버 카테고리 'AI' 기준으로 study에 배치.
+  - images: 8
+- IMPORTED 223329317518: pandas 기초 #12. 텍스트를 나누고, 붙이기
+  - path: content/study/2024-01-21-pandas-기초-12-텍스트를-나누고-붙이기.md
+  - category: python_라이브러리 -> study
+  - note: 네이버 카테고리 'python_라이브러리' 기준으로 study에 배치.
+  - images: 7
+- IMPORTED 223328724960: pandas 기초 #11. 테이블 테이블. 두 개 표를 하나로 만들기
+  - path: content/portfolio/2024-01-20-pandas-기초-11-테이블-테이블-두-개-표를-하나로-만들기.md
+  - category: python_라이브러리 -> portfolio
+  - note: 네이버 카테고리 'python_라이브러리' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 11
+
+### Next remaining posts
+- 223328086918 / 2024-01-20 / coaching / 합리적 의사결정을 내릴 때 도움이 되는 생각 모음.
+- 223325427446 / 2024-01-17 / AI / [AI 배우기 #3] 타이타닉에서 어떤 사람들이 살았을까? 타이타닉 데이터 분석 기초 실습 편
+- 223322263790 / 2024-01-14 / AI / [AI 배우기 #2] scikit-learn 설치하고 맛보기
+- 223322182113 / 2024-01-14 / AI / [AI 배우기 #1] Python 머신러닝 라이브러리 scikit-learn 시작하기 추천 자료들
+- 223317619410 / 2024-01-09 / python_라이브러리 / pandas 기초 #10. column에 있는 데이터 수는 몇 개일까?
+- 223317091489 / 2024-01-09 / python_라이브러리 / pandas 기초 #9. 평균 구하기_기초
+- 223316835538 / 2024-01-09 / python_라이브러리 / 파이썬 leafmap으로 지도 다루기 #1. 설치
+- 223316084339 / 2024-01-08 / 기술적 지식 / Google 프로그램 매니저가 알려주는 데이터 분석 스킬 체크리스트
+- 223313241095 / 2024-01-05 / AI / AI와 심리검사의 만남을 꿈꾸며
+- 223312099733 / 2024-01-04 / coaching / 논문으로 공부하는 [리더가 의사결정을 할 때 필요한 것?]
