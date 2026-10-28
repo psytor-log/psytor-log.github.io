@@ -5571,3 +5571,40 @@
 - 223307576380 / 2023-12-30 / python_라이브러리 / pandas 기초 #2. 표를 만들고, 통계를 구해보자.
 - 223307376935 / 2023-12-30 / python_라이브러리 / pandas 기초 #1. vs code에서 pandas 설치하기
 - 223305140953 / 2023-12-28 / 오늘부터 독서 / 나는 누구인가. 나를 브랜딩 한다는 것에 대해
+
+## 2026-10-28T00:29:40.200Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 452
+- remaining: 228
+
+- IMPORTED 223312099733: 논문으로 공부하는 [리더가 의사결정을 할 때 필요한 것?]
+  - path: content/study/2024-01-04-논문으로-공부하는-리더가-의사결정을-할-때-필요한-것.md
+  - category: coaching -> study
+  - note: 네이버 카테고리 'coaching' 기준으로 study에 배치.
+  - images: 3
+- IMPORTED 223309975023: pandas 기초 #8. 데이터 추가하기(서울시 대기질 데이터 분석)
+  - path: content/study/2024-01-02-pandas-기초-8-데이터-추가하기-서울시-대기질-데이터-분석.md
+  - category: python_라이브러리 -> study
+  - note: 네이버 카테고리 'python_라이브러리' 기준으로 study에 배치.
+  - images: 10
+- IMPORTED 223308932723: pandas 기초 #7. 두 가지 조건으로 필터링하기.
+  - path: content/study/2024-01-01-pandas-기초-7-두-가지-조건으로-필터링하기.md
+  - category: python_라이브러리 -> study
+  - note: 네이버 카테고리 'python_라이브러리' 기준으로 study에 배치.
+  - images: 4
+
+### Next remaining posts
+- 223308914935 / 2024-01-01 / python_라이브러리 / pandas 기초 #6. 누락된 데이터 빼고 보기
+- 223308622018 / 2023-12-31 / python_라이브러리 / pandas 기초 #5. 데이터를 필터링하기(데이터 골라서 보기)
+- 223308564621 / 2023-12-31 / python_라이브러리 / pandas 기초 #4. 특정 column의 데이터만 골라 보기
+- 223307609109 / 2023-12-30 / python_라이브러리 / pandas 기초 #3. Titanic dataset을 활용한 데이터 다루기 연습
+- 223307576380 / 2023-12-30 / python_라이브러리 / pandas 기초 #2. 표를 만들고, 통계를 구해보자.
+- 223307376935 / 2023-12-30 / python_라이브러리 / pandas 기초 #1. vs code에서 pandas 설치하기
+- 223305140953 / 2023-12-28 / 오늘부터 독서 / 나는 누구인가. 나를 브랜딩 한다는 것에 대해
+- 223301705864 / 2023-12-24 / 프로그래밍 / Data Scientist는 누구인가?
+- 223299997362 / 2023-12-22 / 기술적 지식 / 발목 잡는 수학
+- 223296726692 / 2023-12-18 / 일상의 사건 모음 / 올해 나는 뭘 했나 싶을 때_우리는 꺼낼 볼 수 있는 메모들이 필요하다.
