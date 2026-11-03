@@ -5793,3 +5793,40 @@
 - 222739785801 / 2022-05-29 / 생각아카이브 / [착시와 착각]
 - 222739791129 / 2022-05-29 / coaching / 강점에 투자해 보세요.
 - 222739781967 / 2022-05-28 / coaching / [감정과 비즈니스]
+
+## 2026-11-03T02:54:01.994Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 470
+- remaining: 210
+
+- IMPORTED 222960605208: 탁월한 사람이 하는 3가지
+  - path: content/study/2022-12-20-탁월한-사람이-하는-3가지.md
+  - category: Business -> study
+  - note: 네이버 카테고리 'Business' 기준으로 study에 배치.
+  - images: 3
+- IMPORTED 222792263855: 포켓몬빵 인기! 심리학으로 분석해 보자.
+  - path: content/study/2022-06-29-포켓몬빵-인기-심리학으로-분석해-보자.md
+  - category: psychology  -> study
+  - note: 네이버 카테고리 'psychology ' 기준으로 study에 배치.
+  - images: 2
+- IMPORTED 222792253562: 이 시대 우리에게 필요한 것은 뭐? 시그니처!
+  - path: content/portfolio/2022-06-28-이-시대-우리에게-필요한-것은-뭐-시그니처.md
+  - category: psychology  -> portfolio
+  - note: 네이버 카테고리 'psychology ' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 1
+
+### Next remaining posts
+- 222767167139 / 2022-06-10 / 멘탈충격극복기 / 심리 상담 센터 필터링하는 방법(초간단)
+- 222739817921 / 2022-06-01 / 생각아카이브 / [다양한 정보는 뉴스레터 구독자의 니즈가 아닙니다]
+- 222739801598 / 2022-05-31 / Business / [내가 누군지 알고 싶다면 아티스트처럼]
+- 222739795437 / 2022-05-30 / coaching / [강점 그리고 행복]
+- 222739785801 / 2022-05-29 / 생각아카이브 / [착시와 착각]
+- 222739791129 / 2022-05-29 / coaching / 강점에 투자해 보세요.
+- 222739781967 / 2022-05-28 / coaching / [감정과 비즈니스]
+- 222739778662 / 2022-05-28 / coaching / [결국 질문을 하는 것이 살아 남는 법]
+- 222739774610 / 2022-05-27 / Business / [아이러니한 통찰력 얻는 방법] The bad way : to get insight
+- 222739770675 / 2022-05-26 / Business / CX 잘하는 기업이 되려면?!
