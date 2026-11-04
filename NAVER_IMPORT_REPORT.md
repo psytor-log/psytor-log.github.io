@@ -5830,3 +5830,40 @@
 - 222739778662 / 2022-05-28 / coaching / [결국 질문을 하는 것이 살아 남는 법]
 - 222739774610 / 2022-05-27 / Business / [아이러니한 통찰력 얻는 방법] The bad way : to get insight
 - 222739770675 / 2022-05-26 / Business / CX 잘하는 기업이 되려면?!
+
+## 2026-11-04T01:18:56.772Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 473
+- remaining: 207
+
+- IMPORTED 222767167139: 심리 상담 센터 필터링하는 방법(초간단)
+  - path: content/portfolio/2022-06-10-심리-상담-센터-필터링하는-방법-초간단.md
+  - category: 멘탈충격극복기 -> portfolio
+  - note: 네이버 카테고리 '멘탈충격극복기' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 4
+- IMPORTED 222739817921: [다양한 정보는 뉴스레터 구독자의 니즈가 아닙니다]
+  - path: content/portfolio/2022-06-01-다양한-정보는-뉴스레터-구독자의-니즈가-아닙니다.md
+  - category: 생각아카이브 -> portfolio
+  - note: 네이버 카테고리 '생각아카이브' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 1
+- IMPORTED 222739801598: [내가 누군지 알고 싶다면 아티스트처럼]
+  - path: content/study/2022-05-31-내가-누군지-알고-싶다면-아티스트처럼.md
+  - category: Business -> study
+  - note: 네이버 카테고리 'Business' 기준으로 study에 배치.
+  - images: 3
+
+### Next remaining posts
+- 222739795437 / 2022-05-30 / coaching / [강점 그리고 행복]
+- 222739785801 / 2022-05-29 / 생각아카이브 / [착시와 착각]
+- 222739791129 / 2022-05-29 / coaching / 강점에 투자해 보세요.
+- 222739781967 / 2022-05-28 / coaching / [감정과 비즈니스]
+- 222739778662 / 2022-05-28 / coaching / [결국 질문을 하는 것이 살아 남는 법]
+- 222739774610 / 2022-05-27 / Business / [아이러니한 통찰력 얻는 방법] The bad way : to get insight
+- 222739770675 / 2022-05-26 / Business / CX 잘하는 기업이 되려면?!
+- 222739765194 / 2022-05-25 / 생각아카이브 / [알아보고 싶은 연구주제]
+- 222739759456 / 2022-05-24 / Business / XYX 가설을 설명드려볼게요
+- 222739754493 / 2022-05-23 / coaching / 내가 실패했다고 생각이 들 때, '실패'를 '지연'으로 바꾸기.
