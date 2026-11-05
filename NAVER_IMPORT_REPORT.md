@@ -5867,3 +5867,40 @@
 - 222739765194 / 2022-05-25 / 생각아카이브 / [알아보고 싶은 연구주제]
 - 222739759456 / 2022-05-24 / Business / XYX 가설을 설명드려볼게요
 - 222739754493 / 2022-05-23 / coaching / 내가 실패했다고 생각이 들 때, '실패'를 '지연'으로 바꾸기.
+
+## 2026-11-05T01:27:25.758Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 476
+- remaining: 204
+
+- IMPORTED 222739795437: [강점 그리고 행복]
+  - path: content/study/2022-05-30-강점-그리고-행복.md
+  - category: coaching -> study
+  - note: 네이버 카테고리 'coaching' 기준으로 study에 배치.
+  - images: 3
+- IMPORTED 222739785801: [착시와 착각]
+  - path: content/essay/2022-05-29-착시와-착각.md
+  - category: 생각아카이브 -> essay
+  - note: 네이버 카테고리 '생각아카이브' 기준으로 essay에 배치.
+  - images: 2
+- IMPORTED 222739791129: 강점에 투자해 보세요.
+  - path: content/study/2022-05-29-강점에-투자해-보세요.md
+  - category: coaching -> study
+  - note: 네이버 카테고리 'coaching' 기준으로 study에 배치.
+  - images: 2
+
+### Next remaining posts
+- 222739781967 / 2022-05-28 / coaching / [감정과 비즈니스]
+- 222739778662 / 2022-05-28 / coaching / [결국 질문을 하는 것이 살아 남는 법]
+- 222739774610 / 2022-05-27 / Business / [아이러니한 통찰력 얻는 방법] The bad way : to get insight
+- 222739770675 / 2022-05-26 / Business / CX 잘하는 기업이 되려면?!
+- 222739765194 / 2022-05-25 / 생각아카이브 / [알아보고 싶은 연구주제]
+- 222739759456 / 2022-05-24 / Business / XYX 가설을 설명드려볼게요
+- 222739754493 / 2022-05-23 / coaching / 내가 실패했다고 생각이 들 때, '실패'를 '지연'으로 바꾸기.
+- 222739747580 / 2022-05-22 / Business / 알아도 잘 안 되는 불확실한 미래 대처하기
+- 222739740165 / 2022-05-21 / Business / 미리 한번 생각을 해보는 것만으로도 효과는 확실하다.
+- 222739736927 / 2022-05-20 / Business / 피드백의 흐름도와 기대치를 그려봤다.
