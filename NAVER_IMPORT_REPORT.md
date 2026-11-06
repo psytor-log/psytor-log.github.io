@@ -5904,3 +5904,40 @@
 - 222739747580 / 2022-05-22 / Business / 알아도 잘 안 되는 불확실한 미래 대처하기
 - 222739740165 / 2022-05-21 / Business / 미리 한번 생각을 해보는 것만으로도 효과는 확실하다.
 - 222739736927 / 2022-05-20 / Business / 피드백의 흐름도와 기대치를 그려봤다.
+
+## 2026-11-06T01:31:26.457Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 479
+- remaining: 201
+
+- IMPORTED 222739781967: [감정과 비즈니스]
+  - path: content/study/2022-05-28-감정과-비즈니스.md
+  - category: coaching -> study
+  - note: 네이버 카테고리 'coaching' 기준으로 study에 배치.
+  - images: 1
+- IMPORTED 222739778662: [결국 질문을 하는 것이 살아 남는 법]
+  - path: content/portfolio/2022-05-28-결국-질문을-하는-것이-살아-남는-법.md
+  - category: coaching -> portfolio
+  - note: 네이버 카테고리 'coaching' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 3
+- IMPORTED 222739774610: [아이러니한 통찰력 얻는 방법] The bad way : to get insight
+  - path: content/portfolio/2022-05-27-아이러니한-통찰력-얻는-방법-the-bad-way-to-get-insight.md
+  - category: Business -> portfolio
+  - note: 네이버 카테고리 'Business' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 0
+
+### Next remaining posts
+- 222739770675 / 2022-05-26 / Business / CX 잘하는 기업이 되려면?!
+- 222739765194 / 2022-05-25 / 생각아카이브 / [알아보고 싶은 연구주제]
+- 222739759456 / 2022-05-24 / Business / XYX 가설을 설명드려볼게요
+- 222739754493 / 2022-05-23 / coaching / 내가 실패했다고 생각이 들 때, '실패'를 '지연'으로 바꾸기.
+- 222739747580 / 2022-05-22 / Business / 알아도 잘 안 되는 불확실한 미래 대처하기
+- 222739740165 / 2022-05-21 / Business / 미리 한번 생각을 해보는 것만으로도 효과는 확실하다.
+- 222739736927 / 2022-05-20 / Business / 피드백의 흐름도와 기대치를 그려봤다.
+- 222720943302 / 2022-05-04 / coaching / 좋은 코치는 사람을 볼 때도 다르게 본다.
+- 222718363913 / 2022-05-02 / 생각아카이브 / 고민에 대해서 성심성의껏 피드백 해줬는데...
+- 222715247249 / 2022-04-29 / 멘탈충격극복기 / 멘탈 털리는 데 장사 없음!!!(그러니 미리미리 조심)
