@@ -6718,3 +6718,40 @@
 - 222648724308 / 2022-02-15 / coaching / 코칭은 어떤 서비스일까?
 - 222647735192 / 2022-02-14 / Question / 선택하기를 어려워하는 당신에게
 - 222647564831 / 2022-02-14 / Psychology / 지금 멀어지고 있는 것 챙기기
+
+## 2026-11-28T03:17:13.138Z
+
+- mode: import
+- limit: 3
+- processed: 3
+- naver_public_posts_scanned: 680
+- imported_or_skipped: 545
+- remaining: 135
+
+- IMPORTED 222655448966: 스타트업 CEO가 가져야 할 4가지 얼굴
+  - path: content/study/2022-02-24-스타트업-ceo가-가져야-할-4가지-얼굴.md
+  - category: Business -> study
+  - note: 네이버 카테고리 'Business' 기준으로 study에 배치.
+  - images: 3
+- IMPORTED 222653647897: 스타트업 CEO가 꼭 확인해야 할 자기 질문(Self-Queastion)
+  - path: content/portfolio/2022-02-23-스타트업-ceo가-꼭-확인해야-할-자기-질문-self-queastion.md
+  - category: Business -> portfolio
+  - note: 네이버 카테고리 'Business' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 3
+- IMPORTED 222653038355: 사업을 시작할 때 필수 질문 #당신은 충분히 전문적인가?
+  - path: content/portfolio/2022-02-22-사업을-시작할-때-필수-질문-당신은-충분히-전문적인가.md
+  - category: Question -> portfolio
+  - note: 네이버 카테고리 'Question' 기준으로 확인했고, 제목/본문에 만들기/구현/프로젝트 성격이 있어 portfolio로 배치.
+  - images: 1
+
+### Next remaining posts
+- 222653025125 / 2022-02-21 / Diat  / 다이어트 심리코칭 12주 프로그램 개발 일지 #3 [눈에 보이는 걸 먹게 된다]
+- 222653015651 / 2022-02-20 / Question / 변화를 위한 질문 "나에게 허락하고 싶은 것은?"
+- 222650267254 / 2022-02-18 / Diat  / 다이어트 심리코칭 12주 프로그램 개발 일지 #2 [자기통제력을 높여라]
+- 222650095515 / 2022-02-17 / Toon / 남들과 다르다는 것
+- 222648724308 / 2022-02-15 / coaching / 코칭은 어떤 서비스일까?
+- 222647735192 / 2022-02-14 / Question / 선택하기를 어려워하는 당신에게
+- 222647564831 / 2022-02-14 / Psychology / 지금 멀어지고 있는 것 챙기기
+- 222646005280 / 2022-02-12 / 일상의 사건 모음 / 진심 전문가와 짭 전문가를 구분하는 방법
+- 222644968910 / 2022-02-11 / Psychology / 유니드코칭랩 [고객 만나기 대작전]
+- 222644515089 / 2022-02-11 / Toon / 내 삶에 적용이 어려운 것들
